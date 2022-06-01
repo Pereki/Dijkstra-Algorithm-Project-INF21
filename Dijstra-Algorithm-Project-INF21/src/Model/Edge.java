@@ -1,3 +1,5 @@
+package Model;
+
 public class Edge {
     private Vertex v1;
     private Vertex v2;

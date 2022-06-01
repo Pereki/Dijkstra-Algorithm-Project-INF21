@@ -1,3 +1,8 @@
+package Model;
+
+import Model.Edge;
+import Model.Vertex;
+
 import java.util.ArrayList;
 
 public class Graph {

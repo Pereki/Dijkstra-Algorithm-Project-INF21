@@ -1,4 +1,4 @@
-//represents a node in osm xml
+package Model;//represents a node in osm xml
 
 public class Vertex {
     private int id;
