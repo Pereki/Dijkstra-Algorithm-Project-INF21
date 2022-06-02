@@ -5,7 +5,13 @@ public class Graph {
     private ArrayList<Edge> Edgelist;
     private List<Vertex> VertexList;
 
-    public Graph(ArrayList<Edge> edgesOfGraph){
+    public Graph(){
+        this.Edgelist=null;
+        this.VertexList=null;
+    }
+
+    public Graph(ArrayList<Edge> edgesOfGraph, List<Vertex> vertexList){
+        this.VertexList = vertexList;
         this.Edgelist = edgesOfGraph;
     }
 
@@ -33,7 +39,9 @@ public class Graph {
     }
 
     public void addEdge (Edge edge){
-        Edgelist.add(edge);
+        if(VertexList.contains(edge.getStartingVertex()) && VertexList.contains(edge.getEndingVertex())){
+            Edgelist.add(edge);
+        }
     }
 
     public List<Edge> getEdges(Vertex vertex){
