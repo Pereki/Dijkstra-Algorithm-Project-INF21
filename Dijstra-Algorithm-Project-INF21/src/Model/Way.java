@@ -20,7 +20,7 @@ public class Way {
      * @param start the first Vertex at teh beginning of the Way
      * @param first the first Edge oft the Way connected to the start Vertex.
      */
-    public Way(Vertex start,Edge first){
+    public Way(Vertex start,Edge first) throws Exception {
         this.startVertex = start;
         this.endVertex = first.getOtherVertex(start);
         this.length = first.getLength();
@@ -36,7 +36,7 @@ public class Way {
      * @param way the Way the new is based on.
      * @param edge the new Way.
      */
-    public Way(Way way, Edge edge){
+    public Way(Way way, Edge edge) throws Exception {
         this.startVertex = way.startVertex;
         this.endVertex = way.endVertex;
         this.length = way.length;
@@ -49,7 +49,7 @@ public class Way {
      * Add an Edge to the Way.
      * @param edge the Edge to add to the Way.
      */
-    public void addEdge(Edge edge){
+    public void addEdge(Edge edge) throws Exception {
         this.lastEdge=edge;
         wayGraph.addEdge(edge);
         endVertex = edge.getOtherVertex(endVertex);
