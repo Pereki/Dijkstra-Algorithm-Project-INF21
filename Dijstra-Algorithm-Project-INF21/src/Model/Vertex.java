@@ -52,7 +52,7 @@ public class Vertex implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Vertex)) return false;
         Vertex vertex = (Vertex) o;
-        return getId() == vertex.getId() && getCosts() == vertex.getCosts() && Double.compare(vertex.getLat(), getLat()) == 0 && Double.compare(vertex.getLon(), getLon()) == 0 && getJunction() == vertex.getJunction() && Objects.equals(getIdentifier(), vertex.getIdentifier());
+        return Double.compare(vertex.getLat(), getLat()) == 0 && Double.compare(vertex.getLon(), getLon()) == 0 ;
     }
 
     @Override
