@@ -8,6 +8,8 @@ public class XmlParser {
 
     public XmlParser(String path){
         this.path = path;
+
+        parseXmlToGraph();
     }
 
     public void parseXmlToGraph() {
