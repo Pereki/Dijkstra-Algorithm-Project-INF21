@@ -2,6 +2,7 @@ package Services;
 
 import Model.Graph;
 import Services.XmlElements.Node;
+import Services.XmlElements.Way;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,11 +11,13 @@ import java.util.ArrayList;
 public class XmlParser {
     private String path;
     private ArrayList<Node> listOfNodes;
+    private ArrayList<Way> listOfWays;
     private Graph graph;
 
     public XmlParser(String path){
         this.path = path;
         listOfNodes = new ArrayList<Node>();
+        listOfWays = new ArrayList<Way>();
         graph = new Graph();
 
         parseXmlToGraph();
@@ -81,6 +84,20 @@ public class XmlParser {
                     }
                 } else if (line.contains("</node>")&&areWeInANode) {
                     areWeInANode = false;
+                } else if (line.contains("<way")) {
+                    areWeInANode = false;
+
+                    listOfWays.add(new Way());
+                } else if (line.contains("<nd")) {
+                    String entries[] = line.split(" ");
+
+                    entries[1] = entries[1].replace("ref=\"", "");
+                    entries[1] = entries[1].replace("\"/>", "");
+                    int nodeId = Integer.parseInt(entries[1]);
+
+                    Way speicher = listOfWays.get(listOfWays.size()-1);
+                    speicher.addLastNode(listOfNodes.get(getIndexOfNodeById(nodeId)));
+                    //fertig?
                 }
 
                 line = br.readLine();
@@ -92,14 +109,14 @@ public class XmlParser {
         }
     }
 
-    private void getRelations(String line){
-        String entries [] = line.split(" ");
-
-        if(entries[0].contains("node")){
-
-        } else if (entries[0].contains("way")) {
-
+    private int getIndexOfNodeById(int id){
+        int ergebnis = 0;
+        for(int i=0;i<listOfWays.size();i++){
+            if(listOfNodes.get(i).getId()==id){
+                ergebnis = i;
+            }
         }
+        return ergebnis;
     }
 
     public Graph getGraph(){
