@@ -9,6 +9,7 @@
       <change beforePath="$PROJECT_DIR$/src/Model/Edge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Edge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Graph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Model/Vertex.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model/Vertex.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Services/XmlElements/Way.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Services/XmlElements/Way.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
