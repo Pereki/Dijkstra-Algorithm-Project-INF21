@@ -23,7 +23,7 @@ public class Dijkstra {
  * @param target the target Vertex.
  * @return the Graph with the shortest way.
  */
-public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target){
+public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target) throws Exception {
     ArrayList<Way> possibleWays = new ArrayList<Way>();
     Vertex actualVertex = start;
     //1.Create new Graph with start Vertex as single Vertex
