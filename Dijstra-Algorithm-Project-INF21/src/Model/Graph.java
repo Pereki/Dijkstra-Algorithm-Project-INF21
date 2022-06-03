@@ -1,10 +1,11 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Graph {
+public class Graph implements Serializable {
     private List<Edge> Edgelist;
     private List<Vertex> VertexList;
 
