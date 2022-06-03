@@ -1,6 +1,7 @@
 package Model;//represents a node in osm xml
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Vertex implements Serializable {
     private int id;
@@ -45,15 +46,17 @@ public class Vertex implements Serializable {
     public boolean getJunction(){return junction;}
 
 
-    public boolean equals(Vertex vertex){
-        if(
-            vertex.id == this.id &&
-            vertex.lat == this.lat &&
-            vertex.lon == this.lon &&
-            vertex.identifier == this.identifier &&
-            vertex.junction == this.junction
-        ){
-            return true;
-        }else {return false;}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Vertex)) return false;
+        Vertex vertex = (Vertex) o;
+        return getId() == vertex.getId() && getCosts() == vertex.getCosts() && Double.compare(vertex.getLat(), getLat()) == 0 && Double.compare(vertex.getLon(), getLon()) == 0 && getJunction() == vertex.getJunction() && Objects.equals(getIdentifier(), vertex.getIdentifier());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getCosts(), getLat(), getLon(), getIdentifier(), getJunction());
     }
 }

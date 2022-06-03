@@ -4,18 +4,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Graph implements Serializable {
-    private List<Edge> Edgelist;
-    private List<Vertex> VertexList;
+    private ArrayList<Edge> edgeList;
+    private ArrayList<Vertex> vertexList;
 
     public Graph(){
-        this.Edgelist= Collections.emptyList();
-        this.VertexList=Collections.emptyList();
+        this.edgeList = new ArrayList<Edge>();
+        this.vertexList = new ArrayList<Vertex>();
     }
 
-    public Graph(List<Edge> edgesOfGraph){
-        List<Vertex> vertexList = Collections.emptyList();
+    public Graph(ArrayList<Edge> edgesOfGraph){
+        ArrayList<Vertex> vertexList = new ArrayList<Vertex>();
         for (Edge edge: edgesOfGraph) {
             if (!vertexList.contains(edge.getStartingVertex())) {
                 vertexList.add(edge.getStartingVertex());
@@ -23,12 +24,12 @@ public class Graph implements Serializable {
                 vertexList.add(edge.getEndingVertex());
             }
         }
-        this.VertexList = vertexList;
+        this.vertexList = vertexList;
 
-        this.Edgelist = edgesOfGraph;
+        this.edgeList = edgesOfGraph;
     }
 
-    public Graph(List<Edge> edgelist, List<Vertex> vertexList) throws Exception {
+    public Graph(ArrayList<Edge> edgelist, ArrayList<Vertex> vertexList) throws Exception {
 
         for (Edge edge: edgelist) {
             if (!vertexList.contains(edge.getStartingVertex())) {
@@ -47,51 +48,60 @@ public class Graph implements Serializable {
             }
         }
 
-        this.VertexList = vertexList;
-        this.Edgelist = edgelist;
+        this.vertexList = vertexList;
+        this.edgeList = edgelist;
     }
 
-    public List<Edge> getOptionsOfVertex(Vertex selectedVertex){
-        List<Edge> optionsEdges = Collections.emptyList();
-        for (Edge edge: this.Edgelist) {
-            if(edge.getStartingVertex().getId() == selectedVertex.getId()){
+    /**
+     *
+     * @param selectedVertex The Vertex to get the Options to go to
+     * @return Returns a List of all the Edges connected to the Vertex
+     */
+    public ArrayList<Edge> getOptionsOfVertex(Vertex selectedVertex){
+        ArrayList<Edge> optionsEdges = new ArrayList<Edge>();
+        for (Edge edge: this.edgeList) {
+            if(edge.getStartingVertex().equals(selectedVertex)||edge.getEndingVertex().equals(selectedVertex)){
                 optionsEdges.add(edge);
             }
         }
         return optionsEdges;
     }
 
-    public List<Vertex> getVertexes(){
-        return VertexList;
+    public List<Vertex> getVertexList(){
+        return vertexList;
     }
 
-    public List<Edge> getEdges(){
-        return Edgelist;
+    public List<Edge> getEdgeList(){
+        return edgeList;
     }
 
     public void addVertex(Vertex vertex){
-        VertexList.add(vertex);
+        vertexList.add(vertex);
     }
 
+    /**
+     * Adds the Edge to the List and auto-adds the missing Vertexes
+     * @param edge the Edge which will be added to the EdgeList
+     */
     public void addEdge (Edge edge) {
-        if(VertexList.contains(edge.getStartingVertex()) && VertexList.contains(edge.getEndingVertex())){
-            Edgelist.add(edge);
-        }else if(!VertexList.contains(edge.getStartingVertex()) && VertexList.contains(edge.getEndingVertex())){
-            VertexList.add(edge.getStartingVertex());
-            Edgelist.add(edge);
-        }else if(VertexList.contains(edge.getStartingVertex()) && !VertexList.contains(edge.getEndingVertex())){
-            VertexList.add(edge.getEndingVertex());
-            Edgelist.add(edge);
-        }else if(!VertexList.contains(edge.getStartingVertex()) && !VertexList.contains(edge.getEndingVertex())) {
-            VertexList.add(edge.getStartingVertex());
-            VertexList.add(edge.getEndingVertex());
-            Edgelist.add(edge);
+        if(vertexList.contains(edge.getStartingVertex()) && vertexList.contains(edge.getEndingVertex())){
+            edgeList.add(edge);
+        }else if(!vertexList.contains(edge.getStartingVertex()) && vertexList.contains(edge.getEndingVertex())){
+            vertexList.add(edge.getStartingVertex());
+            edgeList.add(edge);
+        }else if(vertexList.contains(edge.getStartingVertex()) && !vertexList.contains(edge.getEndingVertex())){
+            vertexList.add(edge.getEndingVertex());
+            edgeList.add(edge);
+        }else if(!vertexList.contains(edge.getStartingVertex()) && !vertexList.contains(edge.getEndingVertex())) {
+            vertexList.add(edge.getStartingVertex());
+            vertexList.add(edge.getEndingVertex());
+            edgeList.add(edge);
         }
     }
 
     public List<Edge> getEdges(Vertex vertex){
         List<Edge> edgesOfVertex = Collections.emptyList();
-        for (Edge edge:Edgelist) {
+        for (Edge edge: edgeList) {
             if(edge.getStartingVertex()==vertex||edge.getEndingVertex()==vertex){
                 edgesOfVertex.add(edge);
             }
@@ -100,7 +110,7 @@ public class Graph implements Serializable {
     }
 
     public Edge getEdge(Vertex v1, Vertex v2){
-        for (Edge edge: Edgelist) {
+        for (Edge edge: edgeList) {
             if((v1.equals(edge.getStartingVertex())&&v2.equals(edge.getEndingVertex()))||
                     (v2.equals(edge.getStartingVertex())&&v1.equals(edge.getEndingVertex()))){
                 return edge;
@@ -109,5 +119,16 @@ public class Graph implements Serializable {
         return null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Graph)) return false;
+        Graph graph = (Graph) o;
+        return Objects.equals(edgeList, graph.edgeList) && Objects.equals(getVertexList(), graph.getVertexList());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(edgeList, getVertexList());
+    }
 }
