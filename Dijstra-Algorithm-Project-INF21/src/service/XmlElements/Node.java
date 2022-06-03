@@ -1,4 +1,4 @@
-package Services.XmlElements;
+package service.XmlElements;
 
 public class Node {
     private int id;

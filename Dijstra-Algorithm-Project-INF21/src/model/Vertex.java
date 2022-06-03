@@ -1,4 +1,4 @@
-package Model;//represents a node in osm xml
+package model;//represents a node in osm xml
 
 import java.io.Serializable;
 import java.util.Objects;

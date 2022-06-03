@@ -1,6 +1,6 @@
-package Services;
+package service;
 
-import Model.Graph;
+import model.Graph;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
