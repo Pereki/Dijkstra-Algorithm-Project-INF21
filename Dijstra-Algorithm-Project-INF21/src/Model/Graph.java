@@ -69,11 +69,11 @@ public class Graph implements Serializable {
         return optionsEdges;
     }
 
-    public List<Vertex> getVertexList(){
+    public ArrayList<Vertex> getVertexList(){
         return vertexList;
     }
 
-    public List<Edge> getEdgeList(){
+    public ArrayList<Edge> getEdgeList(){
         return edgeList;
     }
 
