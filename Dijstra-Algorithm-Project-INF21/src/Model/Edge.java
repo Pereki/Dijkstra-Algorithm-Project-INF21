@@ -17,6 +17,12 @@ public class Edge {
 
     public Vertex getEndingVertex(){return v2;}
 
+    public Vertex getOtherVertex(Vertex vertex) throws Exception {
+        if(vertex.equals(v1)){return v2;
+        }else if(vertex.equals(v2)){return v1;
+        }else{throw new Exception("Invalid Vertex");}
+    }
+
     public int getMarking(){return marking;}
 
     public double getLength(){return length;}
