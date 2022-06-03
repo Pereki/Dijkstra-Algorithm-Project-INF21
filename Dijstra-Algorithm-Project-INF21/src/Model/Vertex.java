@@ -41,4 +41,17 @@ public class Vertex {
     public String getIdentifier(){return identifier;}
 
     public boolean getJunction(){return junction;}
+
+
+    public boolean equals(Vertex vertex){
+        if(
+            vertex.id == this.id &&
+            vertex.lat == this.lat &&
+            vertex.lon == this.lon &&
+            vertex.identifier == this.identifier &&
+            vertex.junction == this.junction
+        ){
+            return true;
+        }else {return false;}
+    }
 }
