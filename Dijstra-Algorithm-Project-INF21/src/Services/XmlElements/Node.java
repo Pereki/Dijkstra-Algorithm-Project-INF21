@@ -2,18 +2,18 @@ package Services.XmlElements;
 
 public class Node {
     private int id;
-    private int lat;
-    private int lon;
+    private double lat;
+    private double lon;
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setLat(int lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public void setLon(int lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
@@ -21,11 +21,11 @@ public class Node {
         return id;
     }
 
-    public int getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public int getLon() {
+    public double getLon() {
         return lon;
     }
 }
