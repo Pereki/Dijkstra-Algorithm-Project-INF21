@@ -1,6 +1,8 @@
 package Model;
 
-public class Edge {
+import java.io.Serializable;
+
+public class Edge implements Serializable {
     private Vertex v1;
     private Vertex v2;
     private int marking;

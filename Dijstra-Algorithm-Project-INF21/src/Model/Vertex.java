@@ -1,6 +1,8 @@
 package Model;//represents a node in osm xml
 
-public class Vertex {
+import java.io.Serializable;
+
+public class Vertex implements Serializable {
     private int id;
     private int costs = 0;
     private Vertex precessor;
