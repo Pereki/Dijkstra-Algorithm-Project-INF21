@@ -31,6 +31,9 @@ public class Graph implements Serializable {
 
     public Graph(ArrayList<Edge> edgelist, ArrayList<Vertex> vertexList) throws Exception {
 
+        this.vertexList = vertexList;
+        this.edgeList = edgelist;
+
         for (Edge edge: edgelist) {
             if (!vertexList.contains(edge.getStartingVertex())) {
                 if (!vertexList.contains(edge.getEndingVertex())) {
@@ -48,8 +51,7 @@ public class Graph implements Serializable {
             }
         }
 
-        this.vertexList = vertexList;
-        this.edgeList = edgelist;
+
     }
 
     /**
@@ -99,8 +101,8 @@ public class Graph implements Serializable {
         }
     }
 
-    public List<Edge> getEdges(Vertex vertex){
-        List<Edge> edgesOfVertex = Collections.emptyList();
+    public ArrayList<Edge> getEdges(Vertex vertex){
+        ArrayList<Edge> edgesOfVertex = new ArrayList<Edge>();
         for (Edge edge: edgeList) {
             if(edge.getStartingVertex()==vertex||edge.getEndingVertex()==vertex){
                 edgesOfVertex.add(edge);
