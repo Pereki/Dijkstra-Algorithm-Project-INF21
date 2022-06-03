@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+
+<VBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="473.0" prefWidth="477.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <StackPane fx:id="pane" VBox.vgrow="NEVER">
+        <children>
+            <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="344.0" stroke="#0000002b" strokeType="INSIDE" width="438.0" StackPane.alignment="CENTER" />
+            <Group fx:id="group" StackPane.alignment="CENTER">
+                <StackPane.margin>
+                    <Insets />
+                </StackPane.margin></Group>
+        </children>
+    </StackPane>
+    <GridPane prefHeight="68.0" prefWidth="547.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" percentWidth="229.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="14.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="ALWAYS" percentWidth="170.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="16.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="NEVER" percentWidth="130.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+        <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onDrawButtonClick" prefHeight="25.0" prefWidth="96.0" text="Ok zeichnen" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS">
+            <GridPane.margin>
+                <Insets />
+            </GridPane.margin>
+        </Button>
+        <Button fx:id="buttonClear" mnemonicParsing="false" onAction="#onClearButtonClick" prefHeight="25.0" prefWidth="96.0" text="Mach weg" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+        <TextField fx:id="field1" prefHeight="25.0" prefWidth="213.0" promptText="Amplitude" />
+        <TextField fx:id="field2" promptText="Frequenz" GridPane.rowIndex="1" />
+        <ColorPicker fx:id="colorPicker" editable="true" prefHeight="25.0" prefWidth="133.0" GridPane.columnIndex="2">
+            <value>
+                <Color />
+            </value></ColorPicker>
+        <ProgressBar fx:id="progressbar" prefHeight="25.0" prefWidth="133.0" progress="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+    </GridPane>
+</VBox>

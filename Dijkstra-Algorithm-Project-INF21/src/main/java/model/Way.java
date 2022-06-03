@@ -20,7 +20,7 @@ public class Way {
      */
     public Way(Vertex start,Edge first){
         this.startVertex = start;
-        this.endVertex = first.getOtherVertex(start);
+        //this.endVertex = first.getOtherVertex(start);
         this.length = first.getLength();
         this.wayGraph = new Graph();
         this.lastEdge = first;
@@ -50,7 +50,7 @@ public class Way {
     public void addEdge(Edge edge){
         this.lastEdge=edge;
         wayGraph.addEdge(edge);
-        endVertex = edge.getOtherVertex(endVertex);
+        //endVertex = edge.getOtherVertex(endVertex);
         length += edge.getLength();
     }
 
