@@ -88,6 +88,11 @@ public class GraphRenderer {
     // graphs
     private HashMap<String, Graph> graphs = new HashMap<>();
 
+    /**
+     * Initializes a new {@code GraphRenderer}
+     * @param group A JavaFX {@code Group} where the layers can be placed in
+     * @param pane A JavaFX {@code StackPane} on which the layers will be stacked
+     */
     GraphRenderer(Group group, StackPane pane) {
         this.pane = pane;
         this.height = pane.getHeight();
