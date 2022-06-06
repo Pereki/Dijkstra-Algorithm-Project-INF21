@@ -5,6 +5,8 @@ public class Node {
     private double lat;
     private double lon;
 
+    private boolean isJunction;
+
     public void setId(int id) {
         this.id = id;
     }
@@ -17,6 +19,10 @@ public class Node {
         this.lon = lon;
     }
 
+    public void setJunction(boolean junction) {
+        isJunction = junction;
+    }
+
     public int getId() {
         return id;
     }
@@ -27,5 +33,9 @@ public class Node {
 
     public double getLon() {
         return lon;
+    }
+
+    public boolean isJunction() {
+        return isJunction;
     }
 }
