@@ -121,6 +121,41 @@ public class Graph implements Serializable {
         return null;
     }
 
+    public Vertex getNearestVertex(Vertex vertexInput){
+        Vertex found = vertexList.get(0);
+        for (Vertex vertex:vertexList) {
+            double diffLon;
+            double diffLat;
+            if(vertexInput.getLon() > vertex.getLon()) {
+                diffLon = vertexInput.getLon() - vertex.getLon();
+            }else {
+                 diffLon = vertex.getLon() - vertexInput.getLon();
+            }
+            if(vertexInput.getLat() > vertex.getLat()) {
+                diffLat = vertexInput.getLat() - vertex.getLat();
+            } else {
+                diffLat = vertex.getLat() - vertexInput.getLat();
+            }
+            double diffLonFound;
+            double diffLatFound;
+            if(vertexInput.getLon() > found.getLon()) {
+                diffLonFound = vertexInput.getLon() - found.getLon();
+            }else {
+                diffLonFound = found.getLon() - vertexInput.getLon();
+            }
+            if(vertexInput.getLat() > found.getLat()) {
+                diffLatFound = vertexInput.getLat() - found.getLat();
+            } else {
+                diffLatFound = found.getLat() - vertexInput.getLat();
+            }
+
+            if((diffLat+diffLon)<(diffLatFound+diffLonFound)){
+                found = vertex;
+            }
+        }
+        return found;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
