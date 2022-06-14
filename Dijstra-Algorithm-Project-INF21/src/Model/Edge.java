@@ -20,10 +20,10 @@ public class Edge implements Serializable {
 
     public Vertex getEndingVertex(){return v2;}
 
-    public Vertex getOtherVertex(Vertex vertex) throws Exception {
+    public Vertex getOtherVertex(Vertex vertex){
         if(vertex.equals(v1)){return v2;
         }else if(vertex.equals(v2)){return v1;
-        }else{throw new Exception("Invalid Vertex");}
+        }else{return null;}
     }
 
     public int getMarking(){return marking;}
