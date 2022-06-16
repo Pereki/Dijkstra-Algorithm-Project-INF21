@@ -96,8 +96,9 @@ public class XmlParser {
                     int nodeId = Integer.parseInt(entries[1]);
 
                     Way speicher = listOfWays.get(listOfWays.size()-1);
-                    speicher.addLastNode(listOfNodes.get(getIndexOfNodeById(nodeId)));
-                    //fertig?
+                    speicher.addNode(listOfNodes.get(getIndexOfNodeById(nodeId)));
+                    listOfWays.set(listOfWays.size()-1, speicher);
+                    //fertig? nein, speicher zurück in liste sichern
                 }
 
                 line = br.readLine();
@@ -110,7 +111,7 @@ public class XmlParser {
     }
 
     private int getIndexOfNodeById(int id){
-        int ergebnis = 0;
+        int ergebnis = -1;
         for(int i=0;i<listOfWays.size();i++){
             if(listOfNodes.get(i).getId()==id){
                 ergebnis = i;
