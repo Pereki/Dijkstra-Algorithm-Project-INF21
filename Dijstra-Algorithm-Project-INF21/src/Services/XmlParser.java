@@ -81,6 +81,14 @@ public class XmlParser {
 
                         listOfNodes.remove(listOfNodes.size()-1);
                         listOfNodes.add(listOfNodes.size()-1,speicher);
+                    } else if(entries[1].contains("k=\"name\"")){
+                        Node speicher = listOfNodes.get(listOfNodes.size()-1);
+                        entries[2] = entries[2].replace("v=\"", "");
+                        entries[2] = entries[2].replace("\"", "");
+                        speicher.setIdentifier(entries[2]);
+
+                        listOfNodes.remove(listOfNodes.size()-1);
+                        listOfNodes.add(listOfNodes.size()-1, speicher);
                     }
                 } else if (line.contains("</node>")&&areWeInANode) {
                     areWeInANode = false;
@@ -98,7 +106,6 @@ public class XmlParser {
                     Way speicher = listOfWays.get(listOfWays.size()-1);
                     speicher.addNode(listOfNodes.get(getIndexOfNodeById(nodeId)));
                     listOfWays.set(listOfWays.size()-1, speicher);
-                    //fertig? nein, speicher zurück in liste sichern
                 }
 
                 line = br.readLine();
@@ -108,6 +115,8 @@ public class XmlParser {
         }catch(Exception e){
             System.out.println("File not found or IO Exception!");
         }
+        //fertig mit Parsen
+        //nächster Schritt: Graph bauen
     }
 
     private int getIndexOfNodeById(int id){
