@@ -117,6 +117,10 @@ public class XmlParser {
         }
         //fertig mit Parsen
         //nächster Schritt: Graph bauen
+
+        for(int i = 0; i<listOfWays.size();i++){
+
+        }
     }
 
     private int getIndexOfNodeById(int id){

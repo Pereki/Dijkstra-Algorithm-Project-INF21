@@ -6,11 +6,17 @@ public class Way {
     private ArrayList<Node> nodes;
 
     public Node getNode(){
-        return nodes.get(0);
+        if(!nodes.isEmpty()){
+            return nodes.get(0);
+        }else{
+            return null;
+        }
     }
 
     public void removeNode(){
-        nodes.remove(0);
+        if(!nodes.isEmpty()){
+            nodes.remove(0);
+        }
     }
 
     public void addNode(Node n){
