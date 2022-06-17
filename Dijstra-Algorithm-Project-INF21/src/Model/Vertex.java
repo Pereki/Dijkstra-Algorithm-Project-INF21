@@ -20,6 +20,16 @@ public class Vertex implements Serializable {
         this.identifier = identifier;
         this.junction = junction;
     }
+
+    public Vertex(int id, double lat, double lon, String identifier, boolean junction){
+        this.id = id;
+        this.lat = lat;
+        this.lon = lon;
+        this.predecessor =  null;
+        this.identifier = identifier;
+        this.junction = junction;
+    }
+
     public Vertex(int id, double lat, double lon){
         this.id = id;
         this.lat = lat;
