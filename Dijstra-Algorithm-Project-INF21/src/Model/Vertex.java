@@ -6,25 +6,35 @@ import java.util.Objects;
 public class Vertex implements Serializable {
     private int id;
     private int costs = 0;
-    private Vertex precessor;
+    private Vertex predecessor;
     private double lat;//Breitengrad
     private double lon;//Längengrad
     private String identifier;//Bezeichner
     private boolean junction;//anschlussstelle
 
-    public Vertex(int id, double lat, double lon, Vertex precessor, String identifier, boolean junction){
+    public Vertex(int id, double lat, double lon, Vertex predecessor, String identifier, boolean junction){
         this.id = id;
         this.lat = lat;
         this.lon = lon;
-        this.precessor =  precessor;
+        this.predecessor =  predecessor;
         this.identifier = identifier;
         this.junction = junction;
     }
+
+    public Vertex(int id, double lat, double lon, String identifier, boolean junction){
+        this.id = id;
+        this.lat = lat;
+        this.lon = lon;
+        this.predecessor =  null;
+        this.identifier = identifier;
+        this.junction = junction;
+    }
+
     public Vertex(int id, double lat, double lon){
         this.id = id;
         this.lat = lat;
         this.lon = lon;
-        this.precessor = null;
+        this.predecessor = null;
         this.identifier = null;
         this.junction = false;
     }
@@ -35,7 +45,7 @@ public class Vertex implements Serializable {
 
     public int getCosts(){return costs;}
 
-    public Vertex getPrecessor(){return precessor;}
+    public Vertex getPredecessor(){return predecessor;}
 
     public double getLat(){return lat;}
 
