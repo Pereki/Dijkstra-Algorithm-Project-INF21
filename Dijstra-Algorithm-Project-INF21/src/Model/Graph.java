@@ -2,7 +2,6 @@ package Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,12 +10,12 @@ public class Graph implements Serializable {
     private ArrayList<Vertex> vertexList;
 
     public Graph(){
-        this.edgeList = new ArrayList<Edge>();
-        this.vertexList = new ArrayList<Vertex>();
+        this.edgeList = new ArrayList<>();
+        this.vertexList = new ArrayList<>();
     }
 
     public Graph(ArrayList<Edge> edgesOfGraph){
-        ArrayList<Vertex> vertexList = new ArrayList<Vertex>();
+        ArrayList<Vertex> vertexList = new ArrayList<>();
         for (Edge edge: edgesOfGraph) {
             if (!vertexList.contains(edge.getStartingVertex())) {
                 vertexList.add(edge.getStartingVertex());
@@ -60,7 +59,7 @@ public class Graph implements Serializable {
      * @return Returns a List of all the Edges connected to the Vertex
      */
     public ArrayList<Edge> getOptionsOfVertex(Vertex selectedVertex){
-        ArrayList<Edge> optionsEdges = new ArrayList<Edge>();
+        ArrayList<Edge> optionsEdges = new ArrayList<>();
         for (Edge edge: this.edgeList) {
             if(edge.getStartingVertex().equals(selectedVertex)||edge.getEndingVertex().equals(selectedVertex)){
                 optionsEdges.add(edge);
@@ -102,7 +101,7 @@ public class Graph implements Serializable {
     }
 
     public ArrayList<Edge> getEdges(Vertex vertex){
-        ArrayList<Edge> edgesOfVertex = new ArrayList<Edge>();
+        ArrayList<Edge> edgesOfVertex = new ArrayList<>();
         for (Edge edge: edgeList) {
             if(edge.getStartingVertex()==vertex||edge.getEndingVertex()==vertex){
                 edgesOfVertex.add(edge);
@@ -154,6 +153,20 @@ public class Graph implements Serializable {
             }
         }
         return found;
+    }
+
+    public boolean hasVertex(Vertex v){
+        for (Vertex vertex:vertexList) {
+            if (vertex.equals(v))return true;
+        }
+        return false;
+    }
+
+    public boolean hasEdge(Edge e){
+        for (Edge edge:edgeList) {
+            if (edge.equals(e))return true;
+        }
+        return false;
     }
 
     @Override
