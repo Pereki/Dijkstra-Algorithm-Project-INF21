@@ -5,18 +5,16 @@ import java.util.ArrayList;
 public class Way {
     private ArrayList<Node> nodes;
 
-    public Node getNode(){
-        if(!nodes.isEmpty()){
-            return nodes.get(0);
-        }else{
-            return null;
-        }
+    public Node getNode(int index){
+            return nodes.get(index);
     }
 
-    public void removeNode(){
-        if(!nodes.isEmpty()){
-            nodes.remove(0);
-        }
+    public void removeNode(int index){
+            nodes.remove(index);
+    }
+
+    public int size(){
+        return nodes.size();
     }
 
     public void addNode(Node n){

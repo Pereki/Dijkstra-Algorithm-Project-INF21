@@ -1,6 +1,7 @@
 package Services;
 
 import Model.Graph;
+import Model.Vertex;
 import Services.XmlElements.Node;
 import Services.XmlElements.Way;
 
@@ -119,7 +120,15 @@ public class XmlParser {
         //nächster Schritt: Graph bauen
 
         for(int i = 0; i<listOfWays.size();i++){
+            Way speicher = listOfWays.get(i);
 
+            for(int a = 0;a< speicher.size()-1;a=a+2){
+                Node n1 = speicher.getNode(a);
+                Node n2 = speicher.getNode(a+1);
+                Vertex v1 = new Vertex(n1.getId(),n1.getLat(), n1.getLon(),n1.getIdentifier(),n1.isJunction());
+                Vertex v2 = new Vertex(n2.getId(),n2.getLat(), n2.getLon(),n2.getIdentifier(),n2.isJunction());
+
+            }
         }
     }
 
