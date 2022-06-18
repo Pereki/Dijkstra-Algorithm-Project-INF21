@@ -24,38 +24,46 @@ public class Dijkstra {
  * @return the Graph with the shortest way.
  */
 public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target) throws Exception {
-    ArrayList<Way> possibleWays = new ArrayList<>();
+    ArrayList<Way> possibleWays = new ArrayList<Way>();
     Vertex actualVertex = start;
-    Way shortestWay = new Way(actualVertex);
-    possibleWays.add(shortestWay);
-    //for(int i =0;i<10;i++){
-    while (!actualVertex.equals(target)){
-        for(Edge edge:rawGraph.getEdges(actualVertex)){
-            Way xway = new Way(shortestWay,edge);
-            possibleWays.add(xway);
+    //1.Create new Graph with start Vertex as single Vertex
+    Graph dijkstraGraph = new Graph();
+    dijkstraGraph.addVertex(start);
+    //2.Add all accessible ways to the possible way list
+    for(Edge edge:dijkstraGraph.getEdges(start)){
+        possibleWays.add(new Way(start,edge));
+    }
+    //3.Add the last Edge from the shortest way of the possible way list to the Graph
+    Way shortestWay = possibleWays.get(0);
+    for(Way way:possibleWays){
+        if(way.getLength()<shortestWay.getLength()){
+            shortestWay=way;
+        }
+    }
+    dijkstraGraph.addEdge(shortestWay.getLastEdge());
+    actualVertex = shortestWay.getEndVertex();
+    //5.If the Vertex is the target Vertex, build a Graph with the way and return it, else repeat all from 2. on.
+    if(actualVertex.equals(target)){
+        return shortestWay.getGraph();
+    }
+    while(true){
+        for(Edge edge:dijkstraGraph.getEdges(actualVertex)){
+            possibleWays.add(new Way(shortestWay,edge));
         }
         possibleWays.remove(shortestWay);
-        //get the new shortest Way
         shortestWay = possibleWays.get(0);
         for(Way way:possibleWays){
             if(way.getLength()<shortestWay.getLength()){
                 shortestWay=way;
             }
         }
+        dijkstraGraph.addEdge(shortestWay.getLastEdge());
         actualVertex = shortestWay.getEndVertex();
-        for(Way way:possibleWays){
-            for(Vertex v:way.getGraph().getVertexList()){
-                System.out.print(v.getId());
-            }
-            System.out.printf(" Länge: %f",way.getLength());
-            System.out.println();
+        if(actualVertex.equals(target)){
+            break;
         }
-        System.out.println("Next Line");
     }
-
-
     //This section is a dummy to provide an output for dependent components, this output is not the correct way.
-    System.out.printf("Länge: %f\n",shortestWay.getLength());
     return shortestWay.getGraph();
 }
 }
