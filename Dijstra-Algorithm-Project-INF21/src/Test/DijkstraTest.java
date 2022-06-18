@@ -13,12 +13,12 @@ import java.util.List;
 public class DijkstraTest {
     public static void main(String[] args) throws Exception {
         Vertex A = new Vertex(1,34.4,57.8);
-        Vertex B = new Vertex(2,34.4,57.8);
-        Vertex C = new Vertex(3,34.4,57.8);
-        Vertex D = new Vertex(4,34.4,57.8);
-        Vertex E = new Vertex(5,34.4,57.8);
-        Vertex F = new Vertex(6,34.4,57.8);
-        Vertex G = new Vertex(7,34.4,57.8);
+        Vertex B = new Vertex(2,34.5,57.8);
+        Vertex C = new Vertex(3,34.6,57.8);
+        Vertex D = new Vertex(4,34.7,57.8);
+        Vertex E = new Vertex(5,34.8,57.8);
+        Vertex F = new Vertex(6,34.9,57.8);
+        Vertex G = new Vertex(7,34.0,57.8);
         ArrayList vertexes = new ArrayList(Arrays.asList(new Vertex[]{A,B,C,D,E,F,G}));
 
         Edge e1 = new Edge(C,A,0,4);
@@ -36,8 +36,15 @@ public class DijkstraTest {
 
         Graph raw = new Graph(edges,vertexes);
 
+
+
         Graph g = Dijkstra.getShortWay(raw,C,E);
 
+        for(Vertex v:g.getVertexList()){
+            System.out.print(v.getId());
+        }
+
+        System.out.println("finish");
 
 
 

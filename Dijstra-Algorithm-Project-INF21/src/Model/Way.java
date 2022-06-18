@@ -16,6 +16,19 @@ public class Way {
     private double length;
 
     /**
+     * Constructor for a Way with only a single Vertex
+     * @param vertex the only Vertex in this Way.
+     */
+    public Way(Vertex vertex){
+        this.startVertex = vertex;
+        this.endVertex = vertex;
+        this.length=0;
+        this.wayGraph = new Graph();
+        this.lastEdge = null;
+        wayGraph.addVertex(vertex);
+    }
+
+    /**
      * Returns a new Way.
      * @param start the first Vertex at teh beginning of the Way
      * @param first the first Edge oft the Way connected to the start Vertex.
@@ -95,8 +108,7 @@ public class Way {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Way)) return false;
-        Way way = (Way) o;
+        if (!(o instanceof Way way)) return false;
         return Double.compare(way.getLength(), getLength()) == 0 && Objects.equals(wayGraph, way.wayGraph) && Objects.equals(getStartVertex(), way.getStartVertex()) && Objects.equals(getEndVertex(), way.getEndVertex()) && Objects.equals(getLastEdge(), way.getLastEdge());
     }
 
