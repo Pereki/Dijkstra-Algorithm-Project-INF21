@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Vertex implements Serializable {
-    private int id;
-    private int costs = 0;
-    private Vertex predecessor;
-    private double lat;//Breitengrad
-    private double lon;//Längengrad
-    private boolean junction;//anschlussstelle
+    private final int id;
+    private final int costs = 0;
+    private final Vertex predecessor;
+    private final double lat;//Breitengrad
+    private final double lon;//Längengrad
+    private final boolean junction;//anschlussstelle
 
     public Vertex(int id, double lat, double lon, Vertex predecessor, boolean junction){
         this.id = id;

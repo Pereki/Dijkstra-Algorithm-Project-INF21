@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Edge implements Serializable {
-    private Vertex v1;
-    private Vertex v2;
-    private int marking;
-    private double length;
+    private final Vertex v1;
+    private final Vertex v2;
+    private final int marking;
+    private final double length;
 
     public Edge(Vertex v1, Vertex v2, int marking, double length){
         this.v1 = v1;

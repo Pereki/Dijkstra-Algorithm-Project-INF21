@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class Graph implements Serializable {
-    private ArrayList<Edge> edgeList;
-    private ArrayList<Vertex> vertexList;
+    private final ArrayList<Edge> edgeList;
+    private final ArrayList<Vertex> vertexList;
 
     public Graph(){
         this.edgeList = new ArrayList<>();
