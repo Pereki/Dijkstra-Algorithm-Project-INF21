@@ -1,6 +1,4 @@
-package Model;
-
-import java.util.ArrayList;
+package model;
 
 public class Controller {
     public Graph dijsktra(Vertex start, Vertex end){

@@ -1,13 +1,12 @@
-package Services;
+package service;
 
 
-import Model.Edge;
-import Model.Graph;
-import Model.Vertex;
-import Model.Way;
+import model.Edge;
+import model.Graph;
+import model.Vertex;
+import model.Way;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class provides the function of the Dijkstra algorithm.
