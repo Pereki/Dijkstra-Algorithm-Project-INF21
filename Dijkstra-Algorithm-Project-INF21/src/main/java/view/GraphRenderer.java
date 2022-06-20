@@ -93,7 +93,7 @@ public class GraphRenderer {
      * @param group A JavaFX {@code Group} where the layers can be placed in
      * @param pane A JavaFX {@code StackPane} on which the layers will be stacked
      */
-    GraphRenderer(Group group, StackPane pane) {
+    public GraphRenderer(Group group, StackPane pane) {
         this.pane = pane;
         this.height = pane.getHeight();
         this.width = pane.getWidth();
@@ -130,12 +130,12 @@ public class GraphRenderer {
         for (Edge e : graph.getEdgeList()) {
 
             Vertex start = e.getStartingVertex();
-            double xStart = Math.abs(start.getLat() - geoNorth) / geoHeight * viewHeight;
-            double yStart = Math.abs(start.getLon() - geoWest) / geoWidth * viewWidth;
+            double xStart = Math.abs(start.getLon() - geoWest) / geoWidth * viewWidth;
+            double yStart = Math.abs(start.getLat() - geoNorth) / geoHeight * viewHeight;
 
             Vertex end = e.getEndingVertex();
-            double xEnd = Math.abs(end.getLat() - geoNorth) / geoHeight * viewHeight;
-            double yEnd = Math.abs(end.getLon() - geoWest) / geoWidth * viewWidth;
+            double xEnd = Math.abs(end.getLon() - geoWest) / geoWidth * viewWidth;
+            double yEnd = Math.abs(end.getLat() - geoNorth) / geoHeight * viewHeight;
 
             Line l = new Line(xStart, yStart, xEnd, yEnd);
             l.setStroke(color);
