@@ -9,24 +9,22 @@ public class Vertex implements Serializable {
     private Vertex predecessor;
     private double lat;//Breitengrad
     private double lon;//Längengrad
-    private String identifier;//Bezeichner
     private boolean junction;//anschlussstelle
 
-    public Vertex(int id, double lat, double lon, Vertex predecessor, String identifier, boolean junction){
+    public Vertex(int id, double lat, double lon, Vertex predecessor, boolean junction){
         this.id = id;
         this.lat = lat;
         this.lon = lon;
         this.predecessor =  predecessor;
-        this.identifier = identifier;
         this.junction = junction;
     }
 
-    public Vertex(int id, double lat, double lon, String identifier, boolean junction){
+    public Vertex(int id, double lat, double lon, boolean junction){
         this.id = id;
         this.lat = lat;
         this.lon = lon;
         this.predecessor =  null;
-        this.identifier = identifier;
+
         this.junction = junction;
     }
 
@@ -35,7 +33,6 @@ public class Vertex implements Serializable {
         this.lat = lat;
         this.lon = lon;
         this.predecessor = null;
-        this.identifier = null;
         this.junction = false;
     }
 
@@ -51,8 +48,6 @@ public class Vertex implements Serializable {
 
     public double getLon(){return  lon;}
 
-    public String getIdentifier(){return identifier;}
-
     public boolean getJunction(){return junction;}
 
 
@@ -67,6 +62,6 @@ public class Vertex implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getCosts(), getLat(), getLon(), getIdentifier(), getJunction());
+        return Objects.hash(getId(), getCosts(), getLat(), getLon(), getJunction());
     }
 }
