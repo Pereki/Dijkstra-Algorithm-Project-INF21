@@ -10,4 +10,8 @@ module view {
 
     opens view to javafx.fxml;
     exports view;
+    exports controller;
+    opens controller to javafx.fxml;
+    exports application;
+    opens application to javafx.fxml;
 }
