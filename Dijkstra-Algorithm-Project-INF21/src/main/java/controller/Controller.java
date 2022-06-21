@@ -61,6 +61,8 @@ public class Controller implements Initializable {
             p.setFill(Paint.valueOf("#bfbfbf"));
             this.groupBackground.getChildren().add(p);
         }
+
+        setZoomFactor(0.25);
     }
 
     @FXML
@@ -96,7 +98,7 @@ public class Controller implements Initializable {
     @FXML
     protected void onButtonZoomOutClick() {
         double scale = pane.getScaleX();
-        scale -= 0.1;
+        scale *= 0.75;
         if (scale < 0.1) return;
         setZoomFactor(scale);
     }
@@ -104,8 +106,8 @@ public class Controller implements Initializable {
     @FXML
     protected void onButtonZoomInClick() {
         double scale = pane.getScaleX();
-        scale += 0.1;
-        if (scale > 2) return;
+        scale *= 1.25;
+        if (scale > 1) return;
         setZoomFactor(scale);
     }
 

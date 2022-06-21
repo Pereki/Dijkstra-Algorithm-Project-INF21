@@ -11,7 +11,7 @@
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <ScrollPane fx:id="scrollpane" cacheShape="false" pannable="true" VBox.vgrow="NEVER">
+   <ScrollPane fx:id="scrollpane" cacheShape="false" hmax="2.0" hvalue="1.0" pannable="true" vmax="2.0" vvalue="1.0" VBox.vgrow="NEVER">
       <content>
           <StackPane fx:id="pane">
               <children>
