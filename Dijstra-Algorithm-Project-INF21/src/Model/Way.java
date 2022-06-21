@@ -53,7 +53,7 @@ public class Way {
         this.startVertex = way.startVertex;
         this.endVertex = way.endVertex;
         this.length = way.length;
-        this.wayGraph = way.wayGraph;
+        this.wayGraph = new Graph((ArrayList<Edge>) way.getGraph().getEdgeList().clone(),(ArrayList<Vertex>) way.getGraph().getVertexList().clone()); //use of clone() to force a copy by value not a copy by reference.
         this.lastEdge = way.lastEdge;
         addEdge(edge);
     }
@@ -74,7 +74,7 @@ public class Way {
      * @return a Graph contain a single way.
      */
     public Graph getGraph(){
-        return wayGraph;
+        return this.wayGraph;
     }
 
     /**
