@@ -6,13 +6,11 @@ import java.util.Objects;
 public class Edge implements Serializable {
     private Vertex v1;
     private Vertex v2;
-    private int marking;
     private double length;
 
-    public Edge(Vertex v1, Vertex v2, int marking, double length){
+    public Edge(Vertex v1, Vertex v2, double length){
         this.v1 = v1;
         this.v2 = v2;
-        this.marking = marking;
         this.length = length;
     }
 
@@ -26,7 +24,6 @@ public class Edge implements Serializable {
         }else{return null;}
     }
 
-    public int getMarking(){return marking;}
 
     public double getLength(){return length;}
 
@@ -35,11 +32,11 @@ public class Edge implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Edge)) return false;
         Edge edge = (Edge) o;
-        return getMarking() == edge.getMarking() && Double.compare(edge.getLength(), getLength()) == 0 && Objects.equals(v1, edge.v1) && Objects.equals(v2, edge.v2);
+        return Double.compare(edge.getLength(), getLength()) == 0 && Objects.equals(v1, edge.v1) && Objects.equals(v2, edge.v2);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(v1, v2, getMarking(), getLength());
+        return Objects.hash(v1, v2, getLength());
     }
 }

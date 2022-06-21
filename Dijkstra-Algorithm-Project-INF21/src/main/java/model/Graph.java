@@ -13,7 +13,7 @@ public class Graph implements Serializable {
         this.edgeList = new ArrayList<>();
         this.vertexList = new ArrayList<>();
     }
-
+    
     public Graph(ArrayList<Edge> edgesOfGraph){
         ArrayList<Vertex> vertexList = new ArrayList<>();
         for (Edge edge: edgesOfGraph) {
@@ -42,7 +42,7 @@ public class Graph implements Serializable {
         }
 
         for (Vertex vertex: vertexList){
-            List<Edge> edgesOfVertex = getEdges(vertex);
+            ArrayList<Edge> edgesOfVertex = getEdges(vertex);
             for (Edge edge:edgesOfVertex) {
                 if(!edgelist.contains(edge)){
                     throw new Exception("Edge not includded in Vertexlist");
