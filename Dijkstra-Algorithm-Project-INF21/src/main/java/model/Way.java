@@ -14,11 +14,24 @@ public class Way {
     private double length;
 
     /**
+     * Constructor for a Way with only a single Vertex
+     * @param vertex the only Vertex in this Way.
+     */
+    public Way(Vertex vertex){
+        this.startVertex = vertex;
+        this.endVertex = vertex;
+        this.length=0;
+        this.wayGraph = new Graph();
+        this.lastEdge = null;
+        wayGraph.addVertex(vertex);
+    }
+
+    /**
      * Returns a new Way.
      * @param start the first Vertex at teh beginning of the Way
      * @param first the first Edge oft the Way connected to the start Vertex.
      */
-    public Way(Vertex start,Edge first){
+    public Way(Vertex start,Edge first) throws Exception {
         this.startVertex = start;
         //this.endVertex = first.getOtherVertex(start);
         this.length = first.getLength();
@@ -34,11 +47,11 @@ public class Way {
      * @param way the Way the new is based on.
      * @param edge the new Way.
      */
-    public Way(Way way, Edge edge){
+    public Way(Way way, Edge edge) throws Exception {
         this.startVertex = way.startVertex;
         this.endVertex = way.endVertex;
         this.length = way.length;
-        this.wayGraph = way.wayGraph;
+        this.wayGraph = new Graph((ArrayList<Edge>) way.getGraph().getEdgeList().clone(),(ArrayList<Vertex>) way.getGraph().getVertexList().clone()); //use of clone() to force a copy by value not a copy by reference.
         this.lastEdge = way.lastEdge;
         addEdge(edge);
     }
@@ -47,7 +60,7 @@ public class Way {
      * Add an Edge to the Way.
      * @param edge the Edge to add to the Way.
      */
-    public void addEdge(Edge edge){
+    public void addEdge(Edge edge) throws Exception {
         this.lastEdge=edge;
         wayGraph.addEdge(edge);
         //endVertex = edge.getOtherVertex(endVertex);
@@ -59,7 +72,7 @@ public class Way {
      * @return a Graph contain a single way.
      */
     public Graph getGraph(){
-        return wayGraph;
+        return this.wayGraph;
     }
 
     /**
@@ -93,8 +106,7 @@ public class Way {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Way)) return false;
-        Way way = (Way) o;
+        if (!(o instanceof Way way)) return false;
         return Double.compare(way.getLength(), getLength()) == 0 && Objects.equals(wayGraph, way.wayGraph) && Objects.equals(getStartVertex(), way.getStartVertex()) && Objects.equals(getEndVertex(), way.getEndVertex()) && Objects.equals(getLastEdge(), way.getLastEdge());
     }
 

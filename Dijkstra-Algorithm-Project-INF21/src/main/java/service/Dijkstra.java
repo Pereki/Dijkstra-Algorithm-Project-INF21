@@ -22,47 +22,24 @@ public class Dijkstra {
  * @param target the target Vertex.
  * @return the Graph with the shortest way.
  */
-public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target){
-    ArrayList<Way> possibleWays = new ArrayList<Way>();
+public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target) throws Exception {
+    ArrayList<Way> possibleWays = new ArrayList<>();
     Vertex actualVertex = start;
-    //1.Create new Graph with start Vertex as single Vertex
-    Graph dijkstraGraph = new Graph();
-    dijkstraGraph.addVertex(start);
-    //2.Add all accessible ways to the possible way list
-    for(Edge edge:dijkstraGraph.getEdges(start)){
-        possibleWays.add(new Way(start,edge));
-    }
-    //3.Add the last Edge from the shortest way of the possible way list to the Graph
-    Way shortestWay = possibleWays.get(0);
-    for(Way way:possibleWays){
-        if(way.getLength()<shortestWay.getLength()){
-            shortestWay=way;
-        }
-    }
-    dijkstraGraph.addEdge(shortestWay.getLastEdge());
-    actualVertex = shortestWay.getEndVertex();
-    //5.If the Vertex is the target Vertex, build a Graph with the way and return it, else repeat all from 2. on.
-    if(actualVertex.equals(target)){
-        return shortestWay.getGraph();
-    }
-    while(true){
-        for(Edge edge:dijkstraGraph.getEdges(actualVertex)){
+    Way shortestWay = new Way(actualVertex);
+    possibleWays.add(shortestWay);
+    while (!actualVertex.equals(target)){
+        for(Edge edge:rawGraph.getEdges(actualVertex)){ //generate new possible ways from the actual vertex
             possibleWays.add(new Way(shortestWay,edge));
         }
-        possibleWays.remove(shortestWay);
+        possibleWays.remove(shortestWay); //remove the way to the actual vertex
         shortestWay = possibleWays.get(0);
-        for(Way way:possibleWays){
+        for(Way way:possibleWays){ //get the new shortest way
             if(way.getLength()<shortestWay.getLength()){
                 shortestWay=way;
             }
         }
-        dijkstraGraph.addEdge(shortestWay.getLastEdge());
-        actualVertex = shortestWay.getEndVertex();
-        if(actualVertex.equals(target)){
-            break;
+        actualVertex = shortestWay.getEndVertex(); //set the end vertex of the shortest way as the actual vertex
         }
-    }
-    //This section is a dummy to provide an output for dependent components, this output is not the correct way.
-    return shortestWay.getGraph();
+    return shortestWay.getGraph(); // return the shortest way as a Graph
 }
 }
