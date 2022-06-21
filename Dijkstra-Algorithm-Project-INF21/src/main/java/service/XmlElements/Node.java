@@ -1,11 +1,11 @@
-package Services.XmlElements;
+package service.XmlElements;
 
 public class Node {
     private int id;
     private double lat;
     private double lon;
-
-    private boolean isJunction;
+    private boolean isJunction = false;
+    private String identifier = "";
 
     public void setId(int id) {
         this.id = id;
@@ -23,6 +23,10 @@ public class Node {
         isJunction = junction;
     }
 
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
     public int getId() {
         return id;
     }
@@ -37,5 +41,9 @@ public class Node {
 
     public boolean isJunction() {
         return isJunction;
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 }

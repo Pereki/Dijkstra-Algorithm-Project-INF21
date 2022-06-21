@@ -1,6 +1,7 @@
 package Services;
 
 import Model.Graph;
+import Model.Vertex;
 import Services.XmlElements.Node;
 import Services.XmlElements.Way;
 
@@ -81,6 +82,14 @@ public class XmlParser {
 
                         listOfNodes.remove(listOfNodes.size()-1);
                         listOfNodes.add(listOfNodes.size()-1,speicher);
+                    } else if(entries[1].contains("k=\"name\"")){
+                        Node speicher = listOfNodes.get(listOfNodes.size()-1);
+                        entries[2] = entries[2].replace("v=\"", "");
+                        entries[2] = entries[2].replace("\"", "");
+                        speicher.setIdentifier(entries[2]);
+
+                        listOfNodes.remove(listOfNodes.size()-1);
+                        listOfNodes.add(listOfNodes.size()-1, speicher);
                     }
                 } else if (line.contains("</node>")&&areWeInANode) {
                     areWeInANode = false;
@@ -96,8 +105,8 @@ public class XmlParser {
                     int nodeId = Integer.parseInt(entries[1]);
 
                     Way speicher = listOfWays.get(listOfWays.size()-1);
-                    speicher.addLastNode(listOfNodes.get(getIndexOfNodeById(nodeId)));
-                    //fertig?
+                    speicher.addNode(listOfNodes.get(getIndexOfNodeById(nodeId)));
+                    listOfWays.set(listOfWays.size()-1, speicher);
                 }
 
                 line = br.readLine();
@@ -107,10 +116,24 @@ public class XmlParser {
         }catch(Exception e){
             System.out.println("File not found or IO Exception!");
         }
+        //fertig mit Parsen
+        //nächster Schritt: Graph bauen
+
+        for(int i = 0; i<listOfWays.size();i++){
+            Way speicher = listOfWays.get(i);
+
+            for(int a = 0;a< speicher.size()-1;a=a+2){
+                Node n1 = speicher.getNode(a);
+                Node n2 = speicher.getNode(a+1);
+                Vertex v1 = new Vertex(n1.getId(),n1.getLat(), n1.getLon(),n1.getIdentifier(),n1.isJunction());
+                Vertex v2 = new Vertex(n2.getId(),n2.getLat(), n2.getLon(),n2.getIdentifier(),n2.isJunction());
+
+            }
+        }
     }
 
     private int getIndexOfNodeById(int id){
-        int ergebnis = 0;
+        int ergebnis = -1;
         for(int i=0;i<listOfWays.size();i++){
             if(listOfNodes.get(i).getId()==id){
                 ergebnis = i;
