@@ -51,7 +51,7 @@ public class Controller implements Initializable {
         File f = new File(
                 "C:\\Users\\David\\OneDrive\\Dokumente\\Beruflich\\Duales Studium\\DH\\Vorlesungen\\2. Semester\\Programmieren\\Programmierprojekt\\Sonstige\\de.svg"
         );
-        List<List<SVGPath>> svgs = null;
+        List<List<SVGPath>> svgs;
         try {
             svgs = SVGParser.parse(f);
         } catch (Exception e) {
@@ -98,8 +98,8 @@ public class Controller implements Initializable {
     @FXML
     protected void onButtonZoomOutClick() {
         double scale = pane.getScaleX();
-        scale *= 0.75;
-        if (scale < 0.1) return;
+        scale *= 0.8;
+        if (scale < 0.25) return;
         setZoomFactor(scale);
     }
 
