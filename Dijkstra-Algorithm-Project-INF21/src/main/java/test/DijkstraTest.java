@@ -1,14 +1,15 @@
-package Test;
+package test;
 
-import Model.Edge;
-import Model.Graph;
-import Model.Vertex;
-import Model.Way;
-import Services.Dijkstra;
+import model.Edge;
+import model.Graph;
+import model.Vertex;
+import model.Way;
+import service.Dijkstra;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 
 public class DijkstraTest {
     public static void main(String[] args) throws Exception {
@@ -21,6 +22,7 @@ public class DijkstraTest {
         Vertex G = new Vertex(7,35.0,57.8);
         Vertex H = new Vertex(8,36.0,57.8);
         Vertex I = new Vertex(9,37.0,57.8);
+
 
         ArrayList vertexes = new ArrayList(Arrays.asList(new Vertex[]{A,B,C,D,E,F,G,H,I}));
 
@@ -45,7 +47,7 @@ public class DijkstraTest {
 
 
 
-        Graph g = Dijkstra.getShortWay(raw,A,G);
+        Graph g = Dijkstra.getShortWay(raw,A,D);
 
         for(Vertex v:g.getVertexList()){
             System.out.print(v.getId());
