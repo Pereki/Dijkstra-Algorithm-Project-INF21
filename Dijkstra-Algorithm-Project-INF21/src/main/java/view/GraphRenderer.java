@@ -86,7 +86,7 @@ public class GraphRenderer {
     private GraphRendererBounds geoBounds;
 
     // graphs
-    private HashMap<String, Graph> graphs = new HashMap<>();
+    private final HashMap<String, Graph> graphs = new HashMap<>();
 
     /**
      * Initializes a new {@code GraphRenderer}

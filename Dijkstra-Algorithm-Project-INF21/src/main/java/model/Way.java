@@ -7,8 +7,8 @@ import java.util.Objects;
  * @author i21005
  */
 public class Way {
-    private Graph wayGraph;
-    private Vertex startVertex;
+    private final Graph wayGraph;
+    private final Vertex startVertex;
     private Vertex endVertex;
     private Edge lastEdge;
     private double length;

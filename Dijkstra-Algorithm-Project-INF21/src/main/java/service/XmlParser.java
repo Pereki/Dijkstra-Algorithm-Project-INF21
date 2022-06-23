@@ -1,19 +1,19 @@
-package Services;
+package service;
 
-import Model.Graph;
-import Model.Vertex;
-import Services.XmlElements.Node;
-import Services.XmlElements.Way;
+import model.Graph;
+import model.Vertex;
+import service.XmlElements.Node;
+import service.XmlElements.Way;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 
 public class XmlParser {
-    private String path;
-    private ArrayList<Node> listOfNodes;
-    private ArrayList<Way> listOfWays;
-    private Graph graph;
+    private final String path;
+    private final ArrayList<Node> listOfNodes;
+    private final ArrayList<Way> listOfWays;
+    private final Graph graph;
 
     public XmlParser(String path){
         this.path = path;
@@ -36,15 +36,11 @@ public class XmlParser {
                 line = line.toLowerCase();
 
                 if(line.contains("<node")){
-                    if(line.contains("/>")){
-                        areWeInANode = false;
-                    }else {
-                        areWeInANode = true;
-                    }
+                    areWeInANode = !line.contains("/>");
 
                     listOfNodes.add(new Node());
 
-                    String entries[] = line.split(" ");
+                    String[] entries = line.split(" ");
 
                     for(int i=0; i<entries.length; i++){
                         if(entries[i].contains("id=")){
@@ -74,7 +70,7 @@ public class XmlParser {
                         }
                     }
                 } else if (line.contains("<tag")&&areWeInANode) {
-                    String entries[] = line.split(" ");
+                    String[] entries = line.split(" ");
 
                     if(entries[1].contains("k=\"highway\"")&&entries[2].contains("v=\"motorway_junction\"")){
                         Node speicher = listOfNodes.get(listOfNodes.size()-1);
@@ -98,7 +94,7 @@ public class XmlParser {
 
                     listOfWays.add(new Way());
                 } else if (line.contains("<nd")) {
-                    String entries[] = line.split(" ");
+                    String[] entries = line.split(" ");
 
                     entries[1] = entries[1].replace("ref=\"", "");
                     entries[1] = entries[1].replace("\"/>", "");
@@ -125,9 +121,12 @@ public class XmlParser {
             for(int a = 0;a< speicher.size()-1;a=a+2){
                 Node n1 = speicher.getNode(a);
                 Node n2 = speicher.getNode(a+1);
-                Vertex v1 = new Vertex(n1.getId(),n1.getLat(), n1.getLon(),n1.getIdentifier(),n1.isJunction());
-                Vertex v2 = new Vertex(n2.getId(),n2.getLat(), n2.getLon(),n2.getIdentifier(),n2.isJunction());
+                //Vertex v1 = new Vertex(n1.getId(),n1.getLat(), n1.getLon(),n1.getIdentifier(),n1.isJunction());
+                //Vertex v2 = new Vertex(n2.getId(),n2.getLat(), n2.getLon(),n2.getIdentifier(),n2.isJunction());
 
+                if(!graph.hasVertex(v1)){
+
+                }
             }
         }
     }
