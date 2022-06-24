@@ -5,7 +5,9 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import model.Edge;
 import model.Graph;
 import model.Vertex;
@@ -68,6 +70,43 @@ public class GraphRenderer {
         }
     }
 
+    public class GraphRendererStyle {
+        // styling
+        private double lineWidth;
+        private double dotRadius;
+        private double fontSize;
+
+        public GraphRendererStyle(double lineWidth, double dotRadius, double fontSize) {
+            this.lineWidth = lineWidth;
+            this.dotRadius = dotRadius;
+            this.fontSize = fontSize;
+        }
+
+        public double getLineWidth() {
+            return lineWidth;
+        }
+
+        public void setLineWidth(double lineWidth) {
+            this.lineWidth = lineWidth;
+        }
+
+        public double getDotRadius() {
+            return dotRadius;
+        }
+
+        public void setDotRadius(double dotRadius) {
+            this.dotRadius = dotRadius;
+        }
+
+        public double getFontSize() {
+            return fontSize;
+        }
+
+        public void setFontSize(double fontSize) {
+            this.fontSize = fontSize;
+        }
+    }
+
     // background & size
     private final StackPane pane;
     private final double height;
@@ -87,6 +126,9 @@ public class GraphRenderer {
 
     // graphs
     private HashMap<String, Graph> graphs = new HashMap<>();
+
+    //styling
+    private GraphRendererStyle style = new GraphRendererStyle(4, 8, 16);
 
     /**
      * Initializes a new {@code GraphRenderer}
@@ -128,7 +170,6 @@ public class GraphRenderer {
         double geoWidth = geoBounds.getWidth();
 
         for (Edge e : graph.getEdgeList()) {
-
             Vertex start = e.getStartingVertex();
             double xStart = Math.abs(start.getLon() - geoWest) / geoWidth * viewWidth;
             double yStart = Math.abs(start.getLat() - geoNorth) / geoHeight * viewHeight;
@@ -138,8 +179,24 @@ public class GraphRenderer {
             double yEnd = Math.abs(end.getLat() - geoNorth) / geoHeight * viewHeight;
 
             Line l = new Line(xStart, yStart, xEnd, yEnd);
+            l.setStrokeWidth(style.lineWidth);
             l.setStroke(color);
             g.getChildren().add(l);
+        }
+
+        for (Vertex v : graph.getVertexList()) {
+            double x = Math.abs(v.getLon() - geoWest) / geoWidth * viewWidth;
+            double y = Math.abs(v.getLat() - geoNorth) / geoHeight * viewHeight;
+
+            Circle c = new Circle(x, y, style.dotRadius);
+            c.setFill(color);
+            g.getChildren().add(c);
+
+            Text t = new Text(x, y, v.getIdentifier());
+            t.setVisible(true);
+            t.setFill(color);
+            t.setStroke(color);
+            g.getChildren().add(t);
         }
 
         this.layerList.add(g);
@@ -181,4 +238,7 @@ public class GraphRenderer {
         return this.geoBounds;
     }
 
+    public GraphRendererStyle getStyle() {
+        return this.style;
+    }
 }
