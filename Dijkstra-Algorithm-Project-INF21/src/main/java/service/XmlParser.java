@@ -1,5 +1,6 @@
 package service;
 
+import model.Edge;
 import model.Graph;
 import model.Vertex;
 import service.XmlElements.Node;
@@ -46,7 +47,7 @@ public class XmlParser {
                         if(entries[i].contains("id=")){
                             entries[i]=entries[i].replace("id=","");
                             entries[i]=entries[i].replace("\"","");
-                            
+
                             Node speicher = listOfNodes.get(listOfNodes.size()-1);
                             speicher.setId(Integer.parseInt(entries[i]));
                             listOfNodes.remove(listOfNodes.size()-1);
@@ -115,18 +116,40 @@ public class XmlParser {
         //fertig mit Parsen
         //nächster Schritt: Graph bauen
 
+        //Wege bauen
         for(int i = 0; i<listOfWays.size();i++){
             Way speicher = listOfWays.get(i);
 
-            for(int a = 0;a< speicher.size()-1;a=a+2){
+            for(int a = 0;a< speicher.size()-1;a++){
                 Node n1 = speicher.getNode(a);
                 Node n2 = speicher.getNode(a+1);
-                //Vertex v1 = new Vertex(n1.getId(),n1.getLat(), n1.getLon(),n1.getIdentifier(),n1.isJunction());
-                //Vertex v2 = new Vertex(n2.getId(),n2.getLat(), n2.getLon(),n2.getIdentifier(),n2.isJunction());
+                Vertex v1 = new Vertex(n1.getId(),n1.getLat(), n1.getLon(),n1.getIdentifier(),n1.isJunction());
+                Vertex v2 = new Vertex(n2.getId(),n2.getLat(), n2.getLon(),n2.getIdentifier(),n2.isJunction());
 
                 if(!graph.hasVertex(v1)){
-
+                    graph.addVertex(v1);
                 }
+
+                if(!graph.hasVertex(v2)){
+                    graph.addVertex(v2);
+                }
+
+                Edge e = new Edge(v1,v2,0);//Platzhalter!!!
+
+                if(!graph.hasEdge(e)){
+                    graph.addEdge(e);
+                }
+
+            }
+        }
+
+        //Auffahrten aus Nodes hinzufügen
+        for(int i=0;i<listOfNodes.size()-1;i++){
+            Node speicher = listOfNodes.get(i);
+
+            if(speicher.isJunction()){
+                Vertex near = graph.getNearestVertex(new Vertex(speicher.getId(),speicher.getLat(),speicher.getLon()));
+
             }
         }
     }
@@ -144,5 +167,5 @@ public class XmlParser {
     public Graph getGraph(){
         return graph;
     }
-    
+
 }
