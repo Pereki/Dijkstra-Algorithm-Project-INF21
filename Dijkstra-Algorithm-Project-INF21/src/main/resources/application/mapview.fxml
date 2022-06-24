@@ -4,7 +4,6 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
 <?import javafx.scene.shape.*?>
 
 <VBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="473.0" prefWidth="477.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
@@ -34,33 +33,33 @@
    </ScrollPane>
     <GridPane prefHeight="68.0" prefWidth="547.0">
         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" percentWidth="229.0" />
-            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="14.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="ALWAYS" percentWidth="170.0" />
-            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="16.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="NEVER" percentWidth="130.0" />
+            <ColumnConstraints hgrow="ALWAYS" percentWidth="42.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="299.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="19.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="ALWAYS" percentWidth="96.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="34.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="NEVER" percentWidth="177.0" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onDrawButtonClick" prefHeight="25.0" prefWidth="96.0" text="Ok zeichnen" GridPane.columnIndex="4" GridPane.hgrow="ALWAYS">
+        <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onDrawButtonClick" prefHeight="25.0" prefWidth="124.0" text="Route berechnen" GridPane.columnIndex="5" GridPane.hgrow="ALWAYS">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>
         </Button>
-        <TextField fx:id="field1" prefHeight="25.0" prefWidth="213.0" promptText="Amplitude" />
-        <TextField fx:id="field2" promptText="Frequenz" GridPane.rowIndex="1" />
-        <ColorPicker fx:id="colorPicker" editable="true" prefHeight="25.0" prefWidth="133.0" GridPane.columnIndex="2">
-            <value>
-                <Color />
-            </value></ColorPicker>
-        <ProgressBar fx:id="progressbar" prefHeight="25.0" prefWidth="133.0" progress="0.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="1">
          <children>
-              <Button fx:id="buttonZoomIn" mnemonicParsing="false" onAction="#onButtonZoomInClick" prefHeight="25.0" prefWidth="47.0" text="+" />
-            <Button fx:id="buttonZoomOut" mnemonicParsing="false" onAction="#onButtonZoomOutClick" prefHeight="25.0" prefWidth="49.0" text="-" />
+              <Button fx:id="buttonZoomIn" mnemonicParsing="false" onAction="#onButtonZoomInClick" prefHeight="25.0" prefWidth="63.0" text="+" />
+            <Button fx:id="buttonZoomOut" mnemonicParsing="false" onAction="#onButtonZoomOutClick" prefHeight="25.0" prefWidth="59.0" text="-" />
          </children>
       </HBox>
+      <Label prefHeight="17.0" prefWidth="34.0" text="Start" />
+      <Label prefHeight="17.0" prefWidth="29.0" text="Ziel" GridPane.rowIndex="1" />
+      <TextField editable="false" GridPane.columnIndex="1" />
+      <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <Button mnemonicParsing="false" text="Ändern" GridPane.columnIndex="3" />
+      <Button mnemonicParsing="false" text="Ändern" GridPane.columnIndex="3" GridPane.rowIndex="1" />
     </GridPane>
 </VBox>
