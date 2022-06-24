@@ -7,6 +7,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import model.Edge;
 import model.Graph;
@@ -74,12 +75,12 @@ public class GraphRenderer {
         // styling
         private double lineWidth;
         private double dotRadius;
-        private double fontSize;
+        private Font font;
 
-        public GraphRendererStyle(double lineWidth, double dotRadius, double fontSize) {
+        public GraphRendererStyle(double lineWidth, double dotRadius, Font font) {
             this.lineWidth = lineWidth;
             this.dotRadius = dotRadius;
-            this.fontSize = fontSize;
+            this.font = font;
         }
 
         public double getLineWidth() {
@@ -98,12 +99,12 @@ public class GraphRenderer {
             this.dotRadius = dotRadius;
         }
 
-        public double getFontSize() {
-            return fontSize;
+        public Font getFontSize() {
+            return font;
         }
 
-        public void setFontSize(double fontSize) {
-            this.fontSize = fontSize;
+        public void setFontSize(Font font) {
+            this.font = font;
         }
     }
 
@@ -128,7 +129,9 @@ public class GraphRenderer {
     private HashMap<String, Graph> graphs = new HashMap<>();
 
     //styling
-    private GraphRendererStyle style = new GraphRendererStyle(4, 8, 16);
+    private GraphRendererStyle style = new GraphRendererStyle(
+            4, 8, new Font(24)
+    );
 
     /**
      * Initializes a new {@code GraphRenderer}
@@ -188,17 +191,23 @@ public class GraphRenderer {
             double x = Math.abs(v.getLon() - geoWest) / geoWidth * viewWidth;
             double y = Math.abs(v.getLat() - geoNorth) / geoHeight * viewHeight;
 
-            Circle c = new Circle(x, y, style.dotRadius);
-            c.setFill(color);
-            g.getChildren().add(c);
+            if (v.getJunction() || v.getIdentifier() != null) {
+                Circle c = new Circle(x, y, style.dotRadius);
+                c.setFill(color);
+                g.getChildren().add(c);
+            }
 
-            Text t = new Text(x, y, v.getIdentifier());
-            t.setVisible(true);
-            t.setFill(color);
-            t.setStroke(color);
-            g.getChildren().add(t);
+            if (v.getIdentifier() != null) {
+                Circle csm = new Circle(x, y, 0.5*style.dotRadius);
+                csm.setFill(Color.BLACK);
+                g.getChildren().add(csm);
+
+                Text t = new Text(x + 1.5*style.dotRadius, y, v.getIdentifier());
+                t.setFont(style.font);
+                t.setStroke(Color.BLACK);
+                g.getChildren().add(t);
+            }
         }
-
         this.layerList.add(g);
         return true;
     }

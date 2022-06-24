@@ -69,9 +69,9 @@ public class Controller implements Initializable {
     protected void onDrawButtonClick() {
         Graph g = new Graph();
 
-        Vertex stuttgart = new Vertex(0, 48.800676, 9.143225);
-        Vertex frankfurt = new Vertex(1, 50.102346, 8.703868);
-        Vertex berlin = new Vertex(2, 52.503680, 13.480916);
+        Vertex stuttgart = new Vertex(0, 48.800676, 9.143225, null, "Stuttgart", true);
+        Vertex frankfurt = new Vertex(1, 50.102346, 8.703868, null, "Frankfurt", true);
+        Vertex berlin = new Vertex(2, 52.503680, 13.480916, null, "Berlin", false);
 
         g.addVertex(stuttgart);
         g.addVertex(frankfurt);
@@ -84,15 +84,15 @@ public class Controller implements Initializable {
 
         Graph g2 = new Graph();
 
-        Vertex nuremberg = new Vertex(3, 49.424261, 11.124826);
-        Vertex hamburg = new Vertex(4, 53.484564, 10.249799);
+        Vertex nuremberg = new Vertex(3, 49.424261, 11.124826, null, "Nürnberg", true);
+        Vertex hamburg = new Vertex(4, 53.484564, 10.249799, null, "Hamburg", true);
 
         g2.addVertex(nuremberg);
         g2.addVertex(hamburg);
 
         g2.addEdge(new Edge(nuremberg, hamburg, 0, 3));
 
-        renderer.addGraphLayer("Pendelroute", g2, Color.BLUE);
+        renderer.addGraphLayer("Pendelroute", g2, Color.YELLOW);
     }
 
     @FXML
