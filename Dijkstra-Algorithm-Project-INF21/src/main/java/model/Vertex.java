@@ -56,6 +56,13 @@ public class Vertex implements Serializable {
 
     public boolean getJunction(){return junction;}
 
+    public void setIdentifier(String identifier){
+        this.identifier = identifier;
+    }
+
+    public void setJunction(Boolean b){
+        this.junction = b;
+    }
 
 
     @Override
