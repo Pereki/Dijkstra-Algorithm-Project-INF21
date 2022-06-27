@@ -14,6 +14,29 @@ public class Edge implements Serializable {
         this.length = length;
     }
 
+    /**
+     * Generate a new Edge with integrated calculating of the length based on the coordinates of the vertexes.
+     * @param v1 One Vertex of the Edge
+     * @param v2 The other Vertex of the Edge
+     * @author i21005
+     */
+    public Edge(Vertex v1, Vertex v2){
+        this.v1 = v1;
+        this.v2 = v2;
+        this.length=calcDistance();
+    }
+
+    /**
+     * calculates the distance in km between the two vertexes of this edge.
+     * @return the distance in km.
+     * @author i21005
+     */
+    private double calcDistance(){
+        double dy = 111.3*(v1.getLat()- v2.getLat()); //the y distance between two y coordinates
+        double dx = 111.3*(Math.cos(Math.toRadians((v1.getLat()+v2.getLat())/2)))*(v1.getLon()-v2.getLon());// the x distance between two x coordinates.
+        return Math.sqrt(dx*dx+dy*dy);
+    }
+
     public Vertex getStartingVertex(){return v1;}
 
     public Vertex getEndingVertex(){return v2;}

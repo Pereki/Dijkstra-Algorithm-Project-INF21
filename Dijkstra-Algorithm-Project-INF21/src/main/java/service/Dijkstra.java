@@ -42,4 +42,15 @@ public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target) thro
         }
     return shortestWay.getGraph(); // return the shortest way as a Graph
 }
+
+    /**
+     * For Debugging to print a Graph
+     * @param g the Graph to print out on cmd
+     */
+    private static void printGraph(Graph g){
+    for (Vertex v : g.getVertexList()) {
+        System.out.print(v.getId());
+    }
+    System.out.println();
+}
 }

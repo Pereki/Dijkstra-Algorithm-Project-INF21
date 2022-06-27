@@ -51,8 +51,8 @@ public class Controller implements Initializable {
         g.addVertex(frankfurt);
         g.addVertex(berlin);
 
-        g.addEdge(new Edge(stuttgart, frankfurt, 0, 1));
-        g.addEdge(new Edge(frankfurt, berlin, 1, 2));
+        g.addEdge(new Edge(stuttgart, frankfurt, 1));
+        g.addEdge(new Edge(frankfurt, berlin,  2));
 
         renderer.addGraphLayer("Urlaubsroute", g, Color.RED);
 
@@ -64,7 +64,7 @@ public class Controller implements Initializable {
         g2.addVertex(nuremberg);
         g2.addVertex(hamburg);
 
-        g2.addEdge(new Edge(nuremberg, hamburg, 0, 3));
+        g2.addEdge(new Edge(nuremberg, hamburg,  3));
 
         renderer.addGraphLayer("Pendelroute", g2, Color.BLUE);
     }
