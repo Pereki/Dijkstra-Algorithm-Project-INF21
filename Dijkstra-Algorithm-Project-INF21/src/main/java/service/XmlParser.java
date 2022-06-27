@@ -134,7 +134,7 @@ public class XmlParser {
                     graph.addVertex(v2);
                 }
 
-                Edge e = new Edge(v1,v2,0);//Platzhalter!!!
+                Edge e = new Edge(v1,v2);
 
                 if(!graph.hasEdge(e)){
                     graph.addEdge(e);

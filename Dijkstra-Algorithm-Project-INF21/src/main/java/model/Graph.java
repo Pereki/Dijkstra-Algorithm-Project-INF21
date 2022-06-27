@@ -155,6 +155,10 @@ public class Graph implements Serializable {
         return found;
     }
 
+    public void createCrossingIfNeeded(Edge e){
+        
+    }
+
     public boolean hasVertex(Vertex v){
         for (Vertex vertex:vertexList) {
             if (vertex.equals(v))return true;
