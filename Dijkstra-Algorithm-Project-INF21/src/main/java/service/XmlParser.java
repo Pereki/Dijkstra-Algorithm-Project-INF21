@@ -136,11 +136,11 @@ public class XmlParser {
 
                 Edge e = new Edge(v1,v2);
 
-                if(!graph.hasEdge(e)){
+                if(!graph.hasEdge(e)) {
                     graph.addEdge(e);
-                    //hier fehlt noch die Überprüfung, ob eine andere Edge gekreuzt wird und ein Knotenvertex erstellt werden muss
-                }
 
+                    graph.createCrossingIfNeeded(e);
+                }
             }
         }
 
