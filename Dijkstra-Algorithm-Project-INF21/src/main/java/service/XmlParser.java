@@ -138,6 +138,7 @@ public class XmlParser {
 
                 if(!graph.hasEdge(e)){
                     graph.addEdge(e);
+                    //hier fehlt noch die Überprüfung, ob eine andere Edge gekreuzt wird und ein Knotenvertex erstellt werden muss
                 }
 
             }
@@ -149,7 +150,8 @@ public class XmlParser {
 
             if(speicher.isJunction()){
                 Vertex near = graph.getNearestVertex(new Vertex(speicher.getId(),speicher.getLat(),speicher.getLon()));
-                
+                near.setIdentifier(speicher.getIdentifier());
+                near.setJunction(true);//sollte hoffentlich auch die Werte im graph ändern
             }
         }
     }
