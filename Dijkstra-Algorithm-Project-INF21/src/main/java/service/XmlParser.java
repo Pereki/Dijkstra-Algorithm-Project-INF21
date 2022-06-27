@@ -47,7 +47,7 @@ public class XmlParser {
                         if(entries[i].contains("id=")){
                             entries[i]=entries[i].replace("id=","");
                             entries[i]=entries[i].replace("\"","");
-
+                            
                             Node speicher = listOfNodes.get(listOfNodes.size()-1);
                             speicher.setId(Integer.parseInt(entries[i]));
                             listOfNodes.remove(listOfNodes.size()-1);
@@ -149,7 +149,7 @@ public class XmlParser {
 
             if(speicher.isJunction()){
                 Vertex near = graph.getNearestVertex(new Vertex(speicher.getId(),speicher.getLat(),speicher.getLon()));
-
+                
             }
         }
     }
@@ -167,5 +167,5 @@ public class XmlParser {
     public Graph getGraph(){
         return graph;
     }
-
+    
 }
