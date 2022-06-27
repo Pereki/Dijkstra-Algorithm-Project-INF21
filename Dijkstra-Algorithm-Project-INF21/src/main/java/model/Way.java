@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -31,7 +32,7 @@ public class Way {
      * @param start the first Vertex at teh beginning of the Way
      * @param first the first Edge oft the Way connected to the start Vertex.
      */
-    public Way(Vertex start,Edge first) throws Exception {
+    public Way(Vertex start,Edge first){
         this.startVertex = start;
         //this.endVertex = first.getOtherVertex(start);
         this.length = first.getLength();
@@ -60,10 +61,10 @@ public class Way {
      * Add an Edge to the Way.
      * @param edge the Edge to add to the Way.
      */
-    public void addEdge(Edge edge) throws Exception {
+    public void addEdge(Edge edge){
         this.lastEdge=edge;
         wayGraph.addEdge(edge);
-        //endVertex = edge.getOtherVertex(endVertex);
+        endVertex = edge.getOtherVertex(endVertex);
         length += edge.getLength();
     }
 
