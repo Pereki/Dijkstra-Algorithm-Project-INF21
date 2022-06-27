@@ -122,7 +122,7 @@ public class GraphRenderer {
     private final ObservableList<Node> layerList;
 
     // display properties
-    // for Germany: W: 5.590663; E: 15.587623; N: 55.157607; S: 47.242657;
+    // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
     private GraphRendererBounds geoBounds;
 
     // graphs
@@ -147,7 +147,7 @@ public class GraphRenderer {
         this.layersContainerGroup = new Group();
         this.elements.add(this.layersContainerGroup);
         this.layerList = this.layersContainerGroup.getChildren();
-        this.setViewBounds(5.590663, 15.587623, 55.157607, 47.242657);
+        this.setViewBounds(5.866342, 15.041892, 55.058307, 47.270112);
     }
 
     /**
