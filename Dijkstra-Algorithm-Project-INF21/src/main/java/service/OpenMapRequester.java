@@ -7,15 +7,17 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-
+/**
+ * This class provides an API-Call of the free OpenMapApi that returns a reference value of the effectivness of the Dijsktra Algorithm.
+ * @author i21015
+ */
 public class OpenMapRequester {
-
-    public static void main(String[] args) throws IOException {
-        OpenMapRequester r = new OpenMapRequester();
-        String t = r.getCompleteReturn(new String[]{"8.681495", "49.41461"}, new String[]{"8.5164553", "50.5808110"});
-        System.out.println(t);
-    }
-
+    /**
+     * Returns the duration of the path in seconds.
+     * @param array of the starting coordinates in pattern: east coordinates, north coordinates.
+     * @param array of the ending coordinates in Pattern: East Coordinates, North Coordinates.
+     * @return a double with the duration in seconds.
+     */
     public double getDuration(String[] start, String[] end) throws IOException {
         String result = getCompleteReturn(start, end);
 
