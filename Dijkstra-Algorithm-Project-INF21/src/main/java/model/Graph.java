@@ -156,7 +156,55 @@ public class Graph implements Serializable {
     }
 
     public void createCrossingIfNeeded(Edge e){
-        
+        for(int i=0;i< edgeList.size();i++){
+            Edge compare = edgeList.get(i);
+
+            Vertex e1 = e.getStartingVertex();
+            Vertex e2 = e.getEndingVertex();
+
+            Vertex c1 = compare.getStartingVertex();
+            Vertex c2 = compare.getEndingVertex();
+
+            boolean e1First;
+            boolean c1First;
+
+            double eSteigung;
+            double cSteigung;
+            double eXAchsenKomponente;
+            double cXAchsenKomponente;
+
+            if(e1.getLat()<e2.getLat()){
+                e1First = true;
+            }else{
+                e1First = false;
+            }
+
+            if(c1.getLat()<c2.getLat()){
+                c1First = true;
+            }else{
+                c1First = false;
+            }
+
+            //Steigung von e berechnen
+            if(e1First){
+                eSteigung = (e2.getLat()-e1.getLat())/ (e2.getLon()-e1.getLon());
+            }else{
+                eSteigung = (e1.getLat()-e2.getLat())/ (e1.getLon()-e2.getLon());
+            }
+
+            //Steigung von c berechnen
+            if(c1First){
+                cSteigung = (c2.getLat()-c1.getLat())/ (c2.getLon()-c1.getLon());
+            }else{
+                cSteigung = (c1.getLat()-c2.getLat())/ (c1.getLon()-c2.getLon());
+            }
+
+            //x-Achsenabschnitt von e berechnen
+            eXAchsenKomponente = -1*eSteigung*e1.getLon()+e1.getLat();
+
+            //x-Achsenabschnitt von c berechnen
+            cXAchsenKomponente = -1*cSteigung*c1.getLon()+c1.getLat();
+        }
     }
 
     public boolean hasVertex(Vertex v){
