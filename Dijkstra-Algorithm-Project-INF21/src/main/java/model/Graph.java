@@ -199,11 +199,17 @@ public class Graph implements Serializable {
                 cSteigung = (c1.getLat()-c2.getLat())/ (c1.getLon()-c2.getLon());
             }
 
+            //Steigungen auf andere Seite
+            eSteigung = eSteigung*-1;
+            cSteigung = cSteigung*-1;
+
             //x-Achsenabschnitt von e berechnen
-            eXAchsenKomponente = -1*eSteigung*e1.getLon()+e1.getLat();
+            eXAchsenKomponente = eSteigung*e1.getLon()+e1.getLat();
 
             //x-Achsenabschnitt von c berechnen
-            cXAchsenKomponente = -1*cSteigung*c1.getLon()+c1.getLat();
+            cXAchsenKomponente = cSteigung*c1.getLon()+c1.getLat();
+
+            double lon = 
         }
     }
 
