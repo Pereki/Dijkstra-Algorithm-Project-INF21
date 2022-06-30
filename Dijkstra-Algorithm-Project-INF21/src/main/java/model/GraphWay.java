@@ -7,7 +7,7 @@ import java.util.Objects;
  * Represents a single way in a Graph with start and end Vertex and the length of the complete way.
  * @author i21005
  */
-public class Way {
+public class GraphWay {
     private final Graph wayGraph;
     private final Vertex startVertex;
     private Vertex endVertex;
@@ -18,7 +18,7 @@ public class Way {
      * Constructor for a Way with only a single Vertex
      * @param vertex the only Vertex in this Way.
      */
-    public Way(Vertex vertex){
+    public GraphWay(Vertex vertex){
         this.startVertex = vertex;
         this.endVertex = vertex;
         this.length=0;
@@ -32,7 +32,7 @@ public class Way {
      * @param start the first Vertex at teh beginning of the Way
      * @param first the first Edge oft the Way connected to the start Vertex.
      */
-    public Way(Vertex start,Edge first){
+    public GraphWay(Vertex start, Edge first){
         this.startVertex = start;
         //this.endVertex = first.getOtherVertex(start);
         this.length = first.getLength();
@@ -45,15 +45,15 @@ public class Way {
 
     /**
      * Constructor to make a new Way on base of another one.
-     * @param way the Way the new is based on.
+     * @param graphWay the Way the new is based on.
      * @param edge the new Way.
      */
-    public Way(Way way, Edge edge) throws Exception {
-        this.startVertex = way.startVertex;
-        this.endVertex = way.endVertex;
-        this.length = way.length;
-        this.wayGraph = new Graph((ArrayList<Edge>) way.getGraph().getEdgeList().clone(),(ArrayList<Vertex>) way.getGraph().getVertexList().clone()); //use of clone() to force a copy by value not a copy by reference.
-        this.lastEdge = way.lastEdge;
+    public GraphWay(GraphWay graphWay, Edge edge) throws Exception {
+        this.startVertex = graphWay.startVertex;
+        this.endVertex = graphWay.endVertex;
+        this.length = graphWay.length;
+        this.wayGraph = new Graph((ArrayList<Edge>) graphWay.getGraph().getEdgeList().clone(),(ArrayList<Vertex>) graphWay.getGraph().getVertexList().clone()); //use of clone() to force a copy by value not a copy by reference.
+        this.lastEdge = graphWay.lastEdge;
         addEdge(edge);
     }
 
@@ -107,8 +107,8 @@ public class Way {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Way way)) return false;
-        return Double.compare(way.getLength(), getLength()) == 0 && Objects.equals(wayGraph, way.wayGraph) && Objects.equals(getStartVertex(), way.getStartVertex()) && Objects.equals(getEndVertex(), way.getEndVertex()) && Objects.equals(getLastEdge(), way.getLastEdge());
+        if (!(o instanceof GraphWay graphWay)) return false;
+        return Double.compare(graphWay.getLength(), getLength()) == 0 && Objects.equals(wayGraph, graphWay.wayGraph) && Objects.equals(getStartVertex(), graphWay.getStartVertex()) && Objects.equals(getEndVertex(), graphWay.getEndVertex()) && Objects.equals(getLastEdge(), graphWay.getLastEdge());
     }
 
     @Override
