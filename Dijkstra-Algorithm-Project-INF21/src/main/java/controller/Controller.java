@@ -1,5 +1,6 @@
 package controller;
 
+import com.dlsc.formsfx.model.util.ResourceBundleService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.spi.ResourceBundleProvider;
 
 public class Controller implements Initializable {
 
@@ -48,9 +50,7 @@ public class Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.renderer = new GraphRenderer(groupGraphs, pane);
 
-        File f = new File(
-                "C:\\Users\\David\\OneDrive\\Dokumente\\Beruflich\\Duales Studium\\DH\\Vorlesungen\\2. Semester\\Programmieren\\Programmierprojekt\\Sonstige\\de.svg"
-        );
+        File f = new File("C:\\Users\\David\\OneDrive\\Dokumente\\Beruflich\\Duales Studium\\DH\\Vorlesungen\\2. Semester\\Programmieren\\Programmierprojekt\\Dijstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\resources\\de.svg");
         List<List<SVGPath>> svgs;
         try {
             svgs = SVGParser.parse(f);
