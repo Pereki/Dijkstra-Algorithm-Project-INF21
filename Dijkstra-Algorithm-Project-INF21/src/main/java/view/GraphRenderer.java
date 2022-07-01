@@ -9,9 +9,11 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import model.CoordinatePair;
 import model.Edge;
 import model.Graph;
 import model.Vertex;
+import service.MercatorProjector;
 
 import java.util.HashMap;
 
@@ -128,7 +130,7 @@ public class GraphRenderer {
     // graphs
     private HashMap<String, Graph> graphs = new HashMap<>();
 
-    //styling
+    // styling
     private GraphRendererStyle style = new GraphRendererStyle(
             4, 8, new Font(24)
     );
@@ -164,22 +166,20 @@ public class GraphRenderer {
         Group g = new Group();
         g.setId(key);
 
-        double viewHeight = this.pane.getHeight();
-        double viewWidth = this.pane.getWidth();
-
-        double geoNorth = geoBounds.getNorth();
-        double geoWest = geoBounds.getWest();
-        double geoHeight = geoBounds.getHeight();
-        double geoWidth = geoBounds.getWidth();
+        double centerLat = 0.5 * (geoBounds.getNorth() + geoBounds.getSouth());
+        double centerLon = 0.5 * (geoBounds.getWest() + geoBounds.getEast());
+        MercatorProjector projector = new MercatorProjector(centerLat, centerLon);
 
         for (Edge e : graph.getEdgeList()) {
             Vertex start = e.getStartingVertex();
-            double xStart = Math.abs(start.getLon() - geoWest) / geoWidth * viewWidth;
-            double yStart = Math.abs(start.getLat() - geoNorth) / geoHeight * viewHeight;
+            CoordinatePair cStart = projector.project(start.getLat(), start.getLon());
+            double xStart = this.getX(cStart.getLongitude());
+            double yStart = this.getY(cStart.getLatitude());
 
             Vertex end = e.getEndingVertex();
-            double xEnd = Math.abs(end.getLon() - geoWest) / geoWidth * viewWidth;
-            double yEnd = Math.abs(end.getLat() - geoNorth) / geoHeight * viewHeight;
+            CoordinatePair cEnd = projector.project(end.getLat(), end.getLon());
+            double xEnd = this.getX(cEnd.getLongitude());
+            double yEnd = this.getY(cEnd.getLatitude());
 
             Line l = new Line(xStart, yStart, xEnd, yEnd);
             l.setStrokeWidth(style.lineWidth);
@@ -188,8 +188,9 @@ public class GraphRenderer {
         }
 
         for (Vertex v : graph.getVertexList()) {
-            double x = Math.abs(v.getLon() - geoWest) / geoWidth * viewWidth;
-            double y = Math.abs(v.getLat() - geoNorth) / geoHeight * viewHeight;
+            CoordinatePair cp = projector.project(v.getLat(), v.getLon());
+            double x = this.getX(cp.getLongitude());
+            double y = this.getY(cp.getLatitude());
 
             if (v.getJunction() || v.getIdentifier() != null) {
                 Circle c = new Circle(x, y, style.dotRadius);
@@ -210,6 +211,24 @@ public class GraphRenderer {
         }
         this.layerList.add(g);
         return true;
+    }
+
+//    private double getX(double longitude) {
+//        return Math.abs(longitude - geoBounds.getWest()) / geoBounds.getWidth() * pane.getWidth();
+//    }
+//
+//    private double getY(double latitude) {
+//        //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
+//        return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * pane.getHeight();
+//    }
+
+    private double getX(double longitude) {
+        return Math.abs(longitude - geoBounds.getWest()) / geoBounds.getWidth() * pane.getWidth();
+    }
+
+    private double getY(double latitude) {
+        latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
+        return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * pane.getHeight();
     }
 
     /**
