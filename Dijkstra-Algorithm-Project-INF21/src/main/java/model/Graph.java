@@ -280,6 +280,8 @@ public class Graph implements Serializable {
                 edgeList.add(enew2);
                 edgeList.add(enew3);
                 edgeList.add(enew4);
+
+                break;
             }
         }
     }

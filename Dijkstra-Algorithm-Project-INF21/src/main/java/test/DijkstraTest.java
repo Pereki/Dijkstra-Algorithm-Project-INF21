@@ -3,6 +3,7 @@ package test;
 import model.Edge;
 import model.Graph;
 import model.Vertex;
+import org.junit.Assert;
 import service.Dijkstra;
 
 import java.util.ArrayList;
@@ -54,6 +55,14 @@ public class DijkstraTest {
 
         System.out.println("finish");
 
+
+        XmlParserTest parser = new XmlParserTest();
+
+        if(parser.crossingTest()){
+            System.out.println("Parser läuft");
+        }
+
     }
+
 
 }
