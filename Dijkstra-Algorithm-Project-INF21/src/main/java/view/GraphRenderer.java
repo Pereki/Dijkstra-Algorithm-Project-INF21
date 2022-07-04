@@ -134,6 +134,9 @@ public class GraphRenderer {
     private GraphRendererStyle style = new GraphRendererStyle(
             4, 8, new Font(24)
     );
+    
+    //projection
+    private MercatorProjector projector;
 
     /**
      * Initializes a new {@code GraphRenderer}
@@ -149,7 +152,17 @@ public class GraphRenderer {
         this.layersContainerGroup = new Group();
         this.elements.add(this.layersContainerGroup);
         this.layerList = this.layersContainerGroup.getChildren();
+        
         this.setViewBounds(5.866342, 15.041892, 55.058307, 47.270112);
+
+//        this.projector = new MercatorProjector(
+//                0.5 * (geoBounds.getNorth() + geoBounds.getSouth()),
+//                0.5 * (geoBounds.getWest() + geoBounds.getEast())
+//        );
+        this.projector = new MercatorProjector(
+                geoBounds.getSouth(),
+                geoBounds.getWest()
+        );
     }
 
     /**
@@ -172,14 +185,12 @@ public class GraphRenderer {
 
         for (Edge e : graph.getEdgeList()) {
             Vertex start = e.getStartingVertex();
-            CoordinatePair cStart = projector.project(start.getLat(), start.getLon());
-            double xStart = this.getX(cStart.getLongitude());
-            double yStart = this.getY(cStart.getLatitude());
+            double xStart = this.getX(start.getLon());
+            double yStart = this.getY(start.getLat());
 
             Vertex end = e.getEndingVertex();
-            CoordinatePair cEnd = projector.project(end.getLat(), end.getLon());
-            double xEnd = this.getX(cEnd.getLongitude());
-            double yEnd = this.getY(cEnd.getLatitude());
+            double xEnd = this.getX(end.getLon());
+            double yEnd = this.getY(end.getLat());
 
             Line l = new Line(xStart, yStart, xEnd, yEnd);
             l.setStrokeWidth(style.lineWidth);
@@ -188,9 +199,8 @@ public class GraphRenderer {
         }
 
         for (Vertex v : graph.getVertexList()) {
-            CoordinatePair cp = projector.project(v.getLat(), v.getLon());
-            double x = this.getX(cp.getLongitude());
-            double y = this.getY(cp.getLatitude());
+            double x = this.getX(v.getLon());
+            double y = this.getY(v.getLat());
 
             if (v.getJunction() || v.getIdentifier() != null) {
                 Circle c = new Circle(x, y, style.dotRadius);
@@ -213,21 +223,21 @@ public class GraphRenderer {
         return true;
     }
 
+    private double getX(double longitude) {
+        return projector.getX(longitude) / projector.getX(geoBounds.getEast()) * pane.getWidth();
+    }
+
+//    private double getY(double latitude) {
+//        //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
+//        return pane.getHeight() - ( projector.getY(latitude) / projector.getY(geoBounds.getNorth()) * pane.getHeight() );
+//    }
+
 //    private double getX(double longitude) {
 //        return Math.abs(longitude - geoBounds.getWest()) / geoBounds.getWidth() * pane.getWidth();
 //    }
 //
-//    private double getY(double latitude) {
-//        //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
-//        return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * pane.getHeight();
-//    }
-
-    private double getX(double longitude) {
-        return Math.abs(longitude - geoBounds.getWest()) / geoBounds.getWidth() * pane.getWidth();
-    }
-
     private double getY(double latitude) {
-        latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
+        //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
         return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * pane.getHeight();
     }
 
