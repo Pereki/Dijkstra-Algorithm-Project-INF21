@@ -14,16 +14,6 @@ import java.net.URLConnection;
  * @author i21015
  */
 public class OpenMapRequester {
-    public static void main(String[] args) throws IOException {
-        Vertex v = new Vertex(0, 49.41461, 8.681495 );
-        Vertex b = new Vertex(1,49.420318, 8.687872);
-        OpenMapRequester o = new OpenMapRequester();
-
-        System.out.println(o.getDistance(v,b)+ "\n");
-        System.out.println(o.getDuration(v,b) + "\n");
-        System.out.println(o.getCompleteReturn(v,b)+ "\n");
-
-    }
     /**
      * Returns the duration of the path in seconds.
      * @param start start of the starting coordinates in pattern: east coordinates, North/South coordinates.
