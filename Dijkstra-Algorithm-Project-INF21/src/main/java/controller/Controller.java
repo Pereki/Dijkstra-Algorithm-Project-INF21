@@ -51,7 +51,7 @@ public class Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.renderer = new GraphRenderer(groupGraphs, pane);
 
-        File f = new File("C:\\code\\Dijkstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\resources\\de.svg");
+        File f = new File("src/main/resources/de.svg");
         List<List<SVGPath>> svgs;
         try {
             svgs = SVGParser.parse(f);
@@ -72,8 +72,8 @@ public class Controller implements Initializable {
         parser.parseXmlToGraph();
         Graph finalGraph = parser.getGraph();
         ArrayList<Vertex> v = finalGraph.getVertexList();
-        Vertex startingVertex = new Vertex(2,2,2);
-        Vertex endingVertex = new Vertex(2,2,2);
+        Vertex startingVertex = null;
+        Vertex endingVertex = null;
 
 
         for(int i = 0; i < v.size(); i++){
