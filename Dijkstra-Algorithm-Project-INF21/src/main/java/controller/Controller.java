@@ -3,6 +3,7 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
@@ -12,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
 import model.Edge;
+import model.GeoBounds;
 import model.Graph;
 import model.Vertex;
 import service.SVGParser;
@@ -27,24 +29,16 @@ public class Controller implements Initializable {
     @FXML
     private ScrollPane scrollpane;
     @FXML
-    private StackPane pane;
-    @FXML
     private Group groupGraphs;
-
-    @FXML
-    private TextField field1;
-    @FXML
-    private TextField field2;
-    @FXML
-    private ColorPicker colorPicker;
-    @FXML
-    private ProgressBar progressbar;
 
     private GraphRenderer renderer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.renderer = new GraphRenderer(groupGraphs, pane);
+        // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
+        this.renderer = new GraphRenderer(groupGraphs, new GeoBounds(
+                5.866342, 15.041892, 55.058307, 47.270112
+        ));
 
 //        File f = new File("C:\\Users\\David\\OneDrive\\Dokumente\\Beruflich\\Duales Studium\\DH\\Vorlesungen\\2. Semester\\Programmieren\\Programmierprojekt\\Dijstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\resources\\de.svg");
 //        List<List<SVGPath>> svgs;

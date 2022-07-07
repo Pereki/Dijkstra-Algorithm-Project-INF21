@@ -1,80 +1,18 @@
 package view;
 
-import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import model.CoordinatePair;
-import model.Edge;
-import model.Graph;
-import model.Vertex;
+import model.*;
 import service.MercatorProjector;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class GraphRenderer {
-
-    public class GraphRendererBounds {
-        double north;
-        double east;
-        double south;
-        double west;
-
-        GraphRendererBounds(double westLon, double eastLon, double northLat, double southLat) {
-            this.north = northLat;
-            this.east = eastLon;
-            this.south = southLat;
-            this.west = westLon;
-        }
-
-        public double getWidth() {
-            return Math.abs(this.west - this.east);
-        }
-
-        public double getHeight() {
-            return Math.abs(this.north - this.south);
-        }
-
-        public double getNorth() {
-            return north;
-        }
-
-        public void setNorth(double north) {
-            this.north = north;
-        }
-
-        public double getEast() {
-            return east;
-        }
-
-        public void setEast(double east) {
-            this.east = east;
-        }
-
-        public double getSouth() {
-            return south;
-        }
-
-        public void setSouth(double south) {
-            this.south = south;
-        }
-
-        public double getWest() {
-            return west;
-        }
-
-        public void setWest(double west) {
-            this.west = west;
-        }
-    }
 
     public class GraphRendererStyle {
         // styling
@@ -114,7 +52,6 @@ public class GraphRenderer {
     }
 
     // background & size
-    private final StackPane pane;
     private final double height;
     private final double width;
 
@@ -122,15 +59,14 @@ public class GraphRenderer {
     private final Group group;
 
     // display properties
-    // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
-    private GraphRendererBounds geoBounds;
+    private GeoBounds geoBounds;
 
     // graphs
     private HashMap<String, Graph> graphs = new HashMap<>();
 
     // styling
     private GraphRendererStyle style = new GraphRendererStyle(
-            4, 8, new Font(24)
+            2, 8, new Font(12)
     );
     
     //projection
@@ -139,20 +75,18 @@ public class GraphRenderer {
     /**
      * Initializes a new {@code GraphRenderer}
      * @param group A JavaFX {@code Group} where the layers can be placed in
-     * @param pane A JavaFX {@code StackPane} on which the layers will be stacked
      */
-    public GraphRenderer(Group group, StackPane pane) {
-        this.pane = pane;
-        this.height = pane.getHeight();
-        this.width = pane.getWidth();
+    public GraphRenderer(Group group, GeoBounds geoBounds) {
+        this.height = geoBounds.getWidth() * 100;
+        this.width = geoBounds.getHeight() * 100;
         this.group = group;
-        
-        this.setViewBounds(5.866342, 15.041892, 55.058307, 47.270112);
+        this.geoBounds = geoBounds;
 
 //        this.projector = new MercatorProjector(
 //                0.5 * (geoBounds.getNorth() + geoBounds.getSouth()),
 //                0.5 * (geoBounds.getWest() + geoBounds.getEast())
 //        );
+
         this.projector = new MercatorProjector(
                 geoBounds.getSouth(),
                 geoBounds.getWest()
@@ -171,6 +105,7 @@ public class GraphRenderer {
             return false;
         this.graphs.put(key, graph);
         Canvas c = new Canvas(this.width, this.height);
+        //Canvas c = this.canvas;
         GraphicsContext gc = c.getGraphicsContext2D();
         c.setId(key);
 
@@ -198,12 +133,22 @@ public class GraphRenderer {
 
             if (v.getJunction() || v.getIdentifier() != null) {
                 gc.setFill(color);
-                gc.fillOval(x, y, style.dotRadius, style.dotRadius);
+                gc.fillOval(
+                        x - 0.5*style.getDotRadius(),
+                        y - 0.5*style.getDotRadius(),
+                        style.dotRadius,
+                        style.dotRadius
+                );
             }
 
             if (v.getIdentifier() != null) {
                 gc.setFill(Color.BLACK);
-                gc.fillOval(x, y, 0.5*style.dotRadius, 0.5*style.dotRadius);
+                gc.fillOval(
+                        x - 0.25*style.getDotRadius(),
+                        y - 0.25*style.getDotRadius(),
+                        0.5*style.dotRadius,
+                        0.5*style.dotRadius
+                );
 
                 gc.setFont(style.font);
                 gc.setStroke(Color.BLACK);
@@ -215,7 +160,7 @@ public class GraphRenderer {
     }
 
     private double getX(double longitude) {
-        return projector.getX(longitude) / projector.getX(geoBounds.getEast()) * pane.getWidth();
+        return projector.getX(longitude) / projector.getX(geoBounds.getEast()) * width;
     }
 
 //    private double getY(double latitude) {
@@ -229,7 +174,7 @@ public class GraphRenderer {
 //
     private double getY(double latitude) {
         //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
-        return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * pane.getHeight();
+        return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * height;
     }
 
     /**
@@ -260,11 +205,11 @@ public class GraphRenderer {
 
     // TODO: Add methods to control the layers' order
 
-    public void setViewBounds(double westLon, double eastLon, double northLat, double southLat) {
-        this.geoBounds = new GraphRendererBounds(westLon, eastLon, northLat, southLat);
+    public void setGeoBounds(GeoBounds geoBounds) {
+        this.geoBounds = geoBounds;
     }
 
-    public GraphRendererBounds getGeoBounds() {
+    public GeoBounds getGeoBounds() {
         return this.geoBounds;
     }
 
