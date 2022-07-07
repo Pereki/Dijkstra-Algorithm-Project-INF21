@@ -82,11 +82,6 @@ public class GraphRenderer {
         this.group = group;
         this.geoBounds = geoBounds;
 
-//        this.projector = new MercatorProjector(
-//                0.5 * (geoBounds.getNorth() + geoBounds.getSouth()),
-//                0.5 * (geoBounds.getWest() + geoBounds.getEast())
-//        );
-
         this.projector = new MercatorProjector(
                 geoBounds.getSouth(),
                 geoBounds.getWest()
@@ -113,6 +108,7 @@ public class GraphRenderer {
         double centerLon = 0.5 * (geoBounds.getWest() + geoBounds.getEast());
         MercatorProjector projector = new MercatorProjector(centerLat, centerLon);
 
+        // draw edges
         for (Edge e : graph.getEdgeList()) {
             Vertex start = e.getStartingVertex();
             double xStart = this.getX(start.getLon());
@@ -127,10 +123,12 @@ public class GraphRenderer {
             gc.strokeLine(xStart, yStart, xEnd, yEnd);
         }
 
+        // draw vertices
         for (Vertex v : graph.getVertexList()) {
             double x = this.getX(v.getLon());
             double y = this.getY(v.getLat());
 
+            // draw dot on junctions and cities
             if (v.getJunction() || v.getIdentifier() != null) {
                 gc.setFill(color);
                 gc.fillOval(
@@ -141,6 +139,7 @@ public class GraphRenderer {
                 );
             }
 
+            // draw labels
             if (v.getIdentifier() != null) {
                 gc.setFill(Color.BLACK);
                 gc.fillOval(
@@ -171,7 +170,7 @@ public class GraphRenderer {
 //    private double getX(double longitude) {
 //        return Math.abs(longitude - geoBounds.getWest()) / geoBounds.getWidth() * pane.getWidth();
 //    }
-//
+
     private double getY(double latitude) {
         //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
         return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * height;

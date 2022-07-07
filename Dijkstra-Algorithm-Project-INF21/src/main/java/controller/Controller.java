@@ -5,10 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -113,5 +110,12 @@ public class Controller implements Initializable {
         scrollpane.getContent().setScaleX(factor);
         scrollpane.getContent().setScaleY(factor);
         scrollpane.getContent().setScaleY(factor);
+    }
+
+    @FXML
+    protected void onMenuButtonContributorsClick() {
+        String text = "Lukas Burkhardt (Algorithmus) # Pascal Fuchs (Datenstruktur) # Ruben Kraft (API) # Paul Lehmann (SVG Parser) # David Maier (GUI)";
+        Alert alert = new Alert(Alert.AlertType.NONE, text.replaceAll(" # ", "\n"), ButtonType.CLOSE);
+        alert.showAndWait();
     }
 }

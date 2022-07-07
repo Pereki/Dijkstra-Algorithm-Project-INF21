@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="473.0" prefWidth="573.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="451.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
    <MenuBar fx:id="menuBar">
      <menus>
        <Menu mnemonicParsing="false" text="Datei">
@@ -21,21 +21,21 @@
        </Menu>
          <Menu mnemonicParsing="false" text="Info">
             <items>
-               <MenuItem mnemonicParsing="false" text="Mitwirkende" />
+               <MenuItem fx:id="menuButtonContributors" mnemonicParsing="false" onAction="#onMenuButtonContributorsClick" text="Mitwirkende" />
             </items>
          </Menu>
      </menus>
    </MenuBar>
-   <ScrollPane fx:id="scrollpane" cacheShape="false" hvalue="0.5" pannable="true" prefHeight="345.0" prefWidth="573.0" vvalue="0.5" VBox.vgrow="NEVER">
+   <ScrollPane fx:id="scrollpane" cacheShape="false" hvalue="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true" vvalue="0.5" VBox.vgrow="ALWAYS">
       <content>
-         <StackPane prefHeight="150.0" prefWidth="200.0">
+         <StackPane>
             <children>
                <Group fx:id="groupGraphs" />
             </children>
          </StackPane>
       </content>
    </ScrollPane>
-    <GridPane hgap="5.0" prefHeight="68.0" prefWidth="547.0" vgap="5.0">
+    <GridPane hgap="5.0" prefHeight="68.0" vgap="5.0" VBox.vgrow="NEVER">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" percentWidth="42.0" />
             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="299.0" prefWidth="100.0" />
@@ -58,8 +58,8 @@
       </HBox>
       <Label prefHeight="17.0" prefWidth="34.0" text="Start" />
       <Label prefHeight="17.0" prefWidth="29.0" text="Ziel" GridPane.rowIndex="1" />
-      <ComboBox editable="true" prefHeight="25.0" prefWidth="338.0" GridPane.columnIndex="1" />
-      <ComboBox editable="true" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <ComboBox fx:id="inputStart" editable="true" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" />
+      <ComboBox fx:id="inputDestination" editable="true" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <padding>
          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
       </padding>
