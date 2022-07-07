@@ -33,7 +33,7 @@ public class XmlParser {
             String line = br.readLine();
             Boolean areWeInANode = false;
 
-            while(!(line.equals(null))){
+            while(true){
                 line = line.toLowerCase();
 
                 if(line.contains("<node")){
@@ -49,25 +49,30 @@ public class XmlParser {
                             entries[i]=entries[i].replace("\"","");
                             
                             Node speicher = listOfNodes.get(listOfNodes.size()-1);
-                            speicher.setId(Integer.parseInt(entries[i]));
-                            listOfNodes.remove(listOfNodes.size()-1);
-                            listOfNodes.add(listOfNodes.size()-1,speicher);
+
+                            speicher.setId(Long.parseLong(entries[i]));
+                            //listOfNodes.remove(listOfNodes.size()-1);
+                            //listOfNodes.add(listOfNodes.size()-1,speicher);
                         } else if (entries[i].contains("lat=")) {
                             entries[i]=entries[i].replace("lat=","");
                             entries[i]=entries[i].replace("\"","");
 
                             Node speicher = listOfNodes.get(listOfNodes.size()-1);
+
                             speicher.setLat(Double.parseDouble(entries[i]));
-                            listOfNodes.remove(listOfNodes.size()-1);
-                            listOfNodes.add(listOfNodes.size()-1,speicher);
+                            //listOfNodes.remove(listOfNodes.size()-1);
+                            //listOfNodes.add(listOfNodes.size()-1,speicher);
                         } else if (entries[i].contains("lon=")) {
                             entries[i]=entries[i].replace("lon=","");
                             entries[i]=entries[i].replace("\"","");
+                            entries[i]=entries[i].replace(">","");
+                            entries[i]=entries[i].replace("/","");
 
                             Node speicher = listOfNodes.get(listOfNodes.size()-1);
+
                             speicher.setLon(Double.parseDouble(entries[i]));
-                            listOfNodes.remove(listOfNodes.size()-1);
-                            listOfNodes.add(listOfNodes.size()-1,speicher);
+                            //listOfNodes.remove(listOfNodes.size()-1);
+                            //listOfNodes.add(listOfNodes.size()-1,speicher);
                         }
                     }
                 } else if (line.contains("<tag")&&areWeInANode) {
@@ -77,16 +82,16 @@ public class XmlParser {
                         Node speicher = listOfNodes.get(listOfNodes.size()-1);
                         speicher.setJunction(true);
 
-                        listOfNodes.remove(listOfNodes.size()-1);
-                        listOfNodes.add(listOfNodes.size()-1,speicher);
+                        //listOfNodes.remove(listOfNodes.size()-1);
+                        //listOfNodes.add(listOfNodes.size()-1,speicher);
                     } else if(entries[1].contains("k=\"name\"")){
                         Node speicher = listOfNodes.get(listOfNodes.size()-1);
                         entries[2] = entries[2].replace("v=\"", "");
                         entries[2] = entries[2].replace("\"", "");
                         speicher.setIdentifier(entries[2]);
 
-                        listOfNodes.remove(listOfNodes.size()-1);
-                        listOfNodes.add(listOfNodes.size()-1, speicher);
+                        //listOfNodes.remove(listOfNodes.size()-1);
+                        //listOfNodes.add(listOfNodes.size()-1, speicher);
                     }
                 } else if (line.contains("</node>")&&areWeInANode) {
                     areWeInANode = false;
@@ -96,22 +101,33 @@ public class XmlParser {
                     listOfWays.add(new Way());
                 } else if (line.contains("<nd")) {
                     String[] entries = line.split(" ");
+                    long nodeId = 0;
 
-                    entries[1] = entries[1].replace("ref=\"", "");
-                    entries[1] = entries[1].replace("\"/>", "");
-                    int nodeId = Integer.parseInt(entries[1]);
+                    for(int i = 0; i< entries.length;i++){
+                        if(entries[i].contains("ref")){
+                            entries[i] = entries[i].replace("ref=\"", "");
+                            entries[i] = entries[i].replace("\"/>", "");
+                            nodeId = Long.parseLong(entries[i]);
+                        }
+                    }
 
                     Way speicher = listOfWays.get(listOfWays.size()-1);
                     speicher.addNode(listOfNodes.get(getIndexOfNodeById(nodeId)));
-                    listOfWays.set(listOfWays.size()-1, speicher);
+                    //listOfWays.set(listOfWays.size()-1, speicher);
                 }
 
                 line = br.readLine();
+                System.out.println(listOfNodes.size());
+                System.out.println(listOfWays.size());
+
+                if(line==null){
+                    break;
+                }
             }
 
             br.close();
         }catch(Exception e){
-            System.out.println("File not found or IO Exception!");
+            System.out.println(e.toString());
         }
         //fertig mit Parsen
         //nächster Schritt: Graph bauen
@@ -142,6 +158,9 @@ public class XmlParser {
                     graph.createCrossingIfNeeded(e);
                 }
             }
+
+            System.out.println(graph.getVertexList().size());
+            System.out.println(graph.getEdgeList().size());
         }
 
         //Auffahrten aus Nodes hinzufügen
@@ -154,11 +173,14 @@ public class XmlParser {
                 near.setJunction(true);//sollte hoffentlich auch die Werte im graph ändern
             }
         }
+
+        System.out.println(graph.getVertexList().size());
+        System.out.println(graph.getEdgeList().size());
     }
 
-    private int getIndexOfNodeById(int id){
+    private int getIndexOfNodeById(long id){
         int ergebnis = -1;
-        for(int i=0;i<listOfWays.size();i++){
+        for(int i=0;i<listOfNodes.size();i++){
             if(listOfNodes.get(i).getId()==id){
                 ergebnis = i;
             }
