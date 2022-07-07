@@ -14,11 +14,14 @@ import javafx.scene.shape.SVGPath;
 import model.Edge;
 import model.Graph;
 import model.Vertex;
+import service.Dijkstra;
 import service.SVGParser;
+import service.XmlParser;
 import view.GraphRenderer;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -48,7 +51,7 @@ public class Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.renderer = new GraphRenderer(groupGraphs, pane);
 
-        File f = new File("C:\\Users\\David\\OneDrive\\Dokumente\\Beruflich\\Duales Studium\\DH\\Vorlesungen\\2. Semester\\Programmieren\\Programmierprojekt\\Dijstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\resources\\de.svg");
+        File f = new File("C:\\code\\Dijkstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\resources\\de.svg");
         List<List<SVGPath>> svgs;
         try {
             svgs = SVGParser.parse(f);
@@ -64,33 +67,27 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    protected void onDrawButtonClick() {
-        Graph g = new Graph();
+    protected void onDrawButtonClick() throws Exception {
+        XmlParser parser = new XmlParser("test");
+        parser.parseXmlToGraph();
+        Graph finalGraph = parser.getGraph();
+        ArrayList<Vertex> v = finalGraph.getVertexList();
+        Vertex startingVertex = new Vertex(2,2,2);
+        Vertex endingVertex = new Vertex(2,2,2);
 
-        Vertex stuttgart = new Vertex(0, 48.800676, 9.143225, null, "Stuttgart", true);
-        Vertex frankfurt = new Vertex(1, 50.102346, 8.703868, null, "Frankfurt", true);
-        Vertex berlin = new Vertex(2, 52.503680, 13.480916, null, "Berlin", false);
 
-        g.addVertex(stuttgart);
-        g.addVertex(frankfurt);
-        g.addVertex(berlin);
+        for(int i = 0; i < v.size(); i++){
+            if(v.get(i).getIdentifier() == field1.getText()){
+                startingVertex = v.get(i);
+            }
+            else if(v.get(i).getIdentifier() == field2.getText()){
+                endingVertex = v.get(i);
+            }
+        }
 
-        g.addEdge(new Edge(stuttgart, frankfurt, 1));
-        g.addEdge(new Edge(frankfurt, berlin,  2));
 
-        renderer.addGraphLayer("Urlaubsroute", g, Color.RED);
-
-        Graph g2 = new Graph();
-
-        Vertex nuremberg = new Vertex(3, 49.424261, 11.124826, null, "Nürnberg", true);
-        Vertex hamburg = new Vertex(4, 53.484564, 10.249799, null, "Hamburg", true);
-
-        g2.addVertex(nuremberg);
-        g2.addVertex(hamburg);
-
-        g2.addEdge(new Edge(nuremberg, hamburg,  3));
-
-        renderer.addGraphLayer("Pendelroute", g2, Color.YELLOW);
+        Graph shortestWay = Dijkstra.getShortWay(finalGraph, startingVertex, endingVertex);
+        renderer.addGraphLayer("Urlaubsroute", shortestWay, Color.RED);
     }
 
     @FXML
