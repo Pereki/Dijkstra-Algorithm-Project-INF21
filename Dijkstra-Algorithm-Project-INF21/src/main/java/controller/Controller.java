@@ -30,8 +30,6 @@ public class Controller implements Initializable {
     private StackPane pane;
     @FXML
     private Group groupGraphs;
-    @FXML
-    private Group groupBackground;
 
     @FXML
     private TextField field1;
@@ -48,17 +46,17 @@ public class Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.renderer = new GraphRenderer(groupGraphs, pane);
 
-        File f = new File("C:\\Users\\David\\OneDrive\\Dokumente\\Beruflich\\Duales Studium\\DH\\Vorlesungen\\2. Semester\\Programmieren\\Programmierprojekt\\Dijstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\resources\\de.svg");
-        List<List<SVGPath>> svgs;
-        try {
-            svgs = SVGParser.parse(f);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        for (SVGPath p : svgs.get(0)) {
-            p.setFill(Paint.valueOf("#bfbfbf"));
-            this.groupBackground.getChildren().add(p);
-        }
+//        File f = new File("C:\\Users\\David\\OneDrive\\Dokumente\\Beruflich\\Duales Studium\\DH\\Vorlesungen\\2. Semester\\Programmieren\\Programmierprojekt\\Dijstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\resources\\de.svg");
+//        List<List<SVGPath>> svgs;
+//        try {
+//            svgs = SVGParser.parse(f);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//        for (SVGPath p : svgs.get(0)) {
+//            p.setFill(Paint.valueOf("#bfbfbf"));
+//            this.groupBackground.getChildren().add(p);
+//        }
 
         setZoomFactor(0.25);
     }
@@ -95,7 +93,7 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onButtonZoomOutClick() {
-        double scale = pane.getScaleX();
+        double scale = scrollpane.getContent().getScaleX();
         scale *= 0.8;
         if (scale < 0.25) return;
         setZoomFactor(scale);
@@ -103,15 +101,15 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onButtonZoomInClick() {
-        double scale = pane.getScaleX();
+        double scale = scrollpane.getContent().getScaleX();
         scale *= 1.25;
         if (scale > 1) return;
         setZoomFactor(scale);
     }
 
     protected void setZoomFactor(double factor) {
-        pane.setScaleX(factor);
-        pane.setScaleY(factor);
-        pane.setScaleY(factor);
+        scrollpane.getContent().setScaleX(factor);
+        scrollpane.getContent().setScaleY(factor);
+        scrollpane.getContent().setScaleY(factor);
     }
 }

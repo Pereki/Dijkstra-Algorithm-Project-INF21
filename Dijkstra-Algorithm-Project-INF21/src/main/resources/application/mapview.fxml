@@ -14,19 +14,9 @@
       <content>
           <StackPane fx:id="pane">
               <children>
+                  <Group fx:id="groupGraphs" pickOnBounds="true">
+                     </Group>
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="344.0" stroke="#0000002b" strokeType="INSIDE" width="438.0" StackPane.alignment="CENTER" />
-               <StackPane>
-                  <children>
-                        <Group fx:id="groupBackground" pickOnBounds="true">
-                     </Group>
-                  </children>
-               </StackPane>
-               <StackPane>
-                  <children>
-                        <Group fx:id="groupGraphs" pickOnBounds="true">
-                     </Group>
-                  </children>
-               </StackPane>
               </children>
           </StackPane>
       </content>

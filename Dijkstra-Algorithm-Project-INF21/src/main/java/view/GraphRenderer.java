@@ -3,6 +3,8 @@ package view;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -16,6 +18,7 @@ import model.Vertex;
 import service.MercatorProjector;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class GraphRenderer {
 
@@ -117,11 +120,6 @@ public class GraphRenderer {
 
     // all display elements
     private final Group group;
-    private final ObservableList<Node> elements;
-
-    // display layers
-    private final Group layersContainerGroup;
-    private final ObservableList<Node> layerList;
 
     // display properties
     // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
@@ -148,10 +146,6 @@ public class GraphRenderer {
         this.height = pane.getHeight();
         this.width = pane.getWidth();
         this.group = group;
-        this.elements = group.getChildren();
-        this.layersContainerGroup = new Group();
-        this.elements.add(this.layersContainerGroup);
-        this.layerList = this.layersContainerGroup.getChildren();
         
         this.setViewBounds(5.866342, 15.041892, 55.058307, 47.270112);
 
@@ -176,8 +170,9 @@ public class GraphRenderer {
         if (this.graphs.containsKey(key))
             return false;
         this.graphs.put(key, graph);
-        Group g = new Group();
-        g.setId(key);
+        Canvas c = new Canvas(this.width, this.height);
+        GraphicsContext gc = c.getGraphicsContext2D();
+        c.setId(key);
 
         double centerLat = 0.5 * (geoBounds.getNorth() + geoBounds.getSouth());
         double centerLon = 0.5 * (geoBounds.getWest() + geoBounds.getEast());
@@ -192,10 +187,9 @@ public class GraphRenderer {
             double xEnd = this.getX(end.getLon());
             double yEnd = this.getY(end.getLat());
 
-            Line l = new Line(xStart, yStart, xEnd, yEnd);
-            l.setStrokeWidth(style.lineWidth);
-            l.setStroke(color);
-            g.getChildren().add(l);
+            gc.setStroke(color);
+            gc.setLineWidth(style.lineWidth);
+            gc.strokeLine(xStart, yStart, xEnd, yEnd);
         }
 
         for (Vertex v : graph.getVertexList()) {
@@ -203,23 +197,20 @@ public class GraphRenderer {
             double y = this.getY(v.getLat());
 
             if (v.getJunction() || v.getIdentifier() != null) {
-                Circle c = new Circle(x, y, style.dotRadius);
-                c.setFill(color);
-                g.getChildren().add(c);
+                gc.setFill(color);
+                gc.fillOval(x, y, style.dotRadius, style.dotRadius);
             }
 
             if (v.getIdentifier() != null) {
-                Circle csm = new Circle(x, y, 0.5*style.dotRadius);
-                csm.setFill(Color.BLACK);
-                g.getChildren().add(csm);
+                gc.setFill(Color.BLACK);
+                gc.fillOval(x, y, 0.5*style.dotRadius, 0.5*style.dotRadius);
 
-                Text t = new Text(x + 1.5*style.dotRadius, y, v.getIdentifier());
-                t.setFont(style.font);
-                t.setStroke(Color.BLACK);
-                g.getChildren().add(t);
+                gc.setFont(style.font);
+                gc.setStroke(Color.BLACK);
+                gc.fillText(v.getIdentifier(), x + 1.5*style.dotRadius, y);
             }
         }
-        this.layerList.add(g);
+        this.group.getChildren().add(c);
         return true;
     }
 
@@ -249,9 +240,10 @@ public class GraphRenderer {
     public Graph removeGraphLayer(String key) {
         if (!this.graphs.containsKey(key))
             return null;
-        for (Node n : this.layerList) {
+        List<Node> nodes = this.group.getChildren();
+        for (Node n : nodes) {
             if (n.getId().equals(key)) {
-                this.layerList.remove(n);
+                nodes.remove(n);
                 return this.graphs.remove(key);
             }
         }
