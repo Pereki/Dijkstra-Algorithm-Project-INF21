@@ -27,6 +27,11 @@ import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
+    private static final double MAX_ZOOM_LEVEL = 2.5;
+    private static final double MIN_ZOOM_LEVEL = 0.25;
+    private static final double ZOOM_IN_MULTIPLIER = 1.25;
+    private static final double ZOOM_OUT_MULTIPLIER = 0.8;
+
     @FXML
     private ScrollPane scrollpane;
     @FXML
@@ -53,7 +58,7 @@ public class Controller implements Initializable {
 //            this.groupBackground.getChildren().add(p);
 //        }
 
-        setZoomFactor(0.25);
+        //setZoomFactor(0.25);
     }
 
     @FXML
@@ -78,9 +83,11 @@ public class Controller implements Initializable {
         Vertex nuremberg = new Vertex(3, 49.424261, 11.124826, null, "Nürnberg", true);
         Vertex hamburg = new Vertex(4, 53.484564, 10.249799, null, "Hamburg", true);
 
+        g2.addVertex(frankfurt);
         g2.addVertex(nuremberg);
         g2.addVertex(hamburg);
 
+        g2.addEdge(new Edge(frankfurt, nuremberg, 0, 3));
         g2.addEdge(new Edge(nuremberg, hamburg, 0, 3));
 
         Platform.runLater(() -> renderer.addGraphLayer("Pendelroute", g2, Color.CADETBLUE));
@@ -89,16 +96,16 @@ public class Controller implements Initializable {
     @FXML
     protected void onButtonZoomOutClick() {
         double scale = scrollpane.getContent().getScaleX();
-        scale *= 0.8;
-        if (scale < 0.25) return;
+        scale *= ZOOM_OUT_MULTIPLIER;
+        if (scale < MIN_ZOOM_LEVEL) return;
         setZoomFactor(scale);
     }
 
     @FXML
     protected void onButtonZoomInClick() {
         double scale = scrollpane.getContent().getScaleX();
-        scale *= 1.25;
-        if (scale > 1) return;
+        scale *= ZOOM_IN_MULTIPLIER;
+        if (scale > MAX_ZOOM_LEVEL) return;
         setZoomFactor(scale);
     }
 
