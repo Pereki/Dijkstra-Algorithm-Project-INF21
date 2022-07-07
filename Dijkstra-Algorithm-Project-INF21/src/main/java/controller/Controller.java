@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -70,7 +71,7 @@ public class Controller implements Initializable {
         g.addEdge(new Edge(stuttgart, frankfurt, 0, 1));
         g.addEdge(new Edge(frankfurt, berlin, 1, 2));
 
-        renderer.addGraphLayer("Urlaubsroute", g, Color.RED);
+        Platform.runLater(() -> renderer.addGraphLayer("Urlaubsroute", g, Color.RED));
 
         Graph g2 = new Graph();
 
@@ -82,7 +83,7 @@ public class Controller implements Initializable {
 
         g2.addEdge(new Edge(nuremberg, hamburg, 0, 3));
 
-        renderer.addGraphLayer("Pendelroute", g2, Color.YELLOW);
+        Platform.runLater(() -> renderer.addGraphLayer("Pendelroute", g2, Color.CADETBLUE));
     }
 
     @FXML

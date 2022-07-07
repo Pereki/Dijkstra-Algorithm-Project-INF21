@@ -100,7 +100,7 @@ public class GraphRenderer {
      * @param color The color in which it should be displayed.
      * @return {@code true} if successful, {@code false} if the given key already exists.
      */
-    public boolean addGraphLayer(String key, Graph graph, Color color) {
+    synchronized public boolean addGraphLayer(String key, Graph graph, Color color) {
         if (this.graphs.containsKey(key))
             return false;
         this.graphs.put(key, graph);
