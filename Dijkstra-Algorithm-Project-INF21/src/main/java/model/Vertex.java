@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Vertex implements Serializable {
-    private int id;
+    private long id;
     private int costs = 0;
     private Vertex predecessor;
     private double lat;//Breitengrad
@@ -12,7 +12,7 @@ public class Vertex implements Serializable {
     private String identifier;//Bezeichner
     private boolean junction;//anschlussstelle
 
-    public Vertex(int id, double lat, double lon, Vertex predecessor, String identifier, boolean junction){
+    public Vertex(long id, double lat, double lon, Vertex predecessor, String identifier, boolean junction){
         this.id = id;
         this.lat = lat;
         this.lon = lon;
@@ -21,7 +21,7 @@ public class Vertex implements Serializable {
         this.junction = junction;
     }
 
-    public Vertex(int id, double lat, double lon, String identifier, boolean junction){
+    public Vertex(long id, double lat, double lon, String identifier, boolean junction){
         this.id = id;
         this.lat = lat;
         this.lon = lon;
@@ -31,7 +31,7 @@ public class Vertex implements Serializable {
         this.junction = junction;
     }
 
-    public Vertex(int id, double lat, double lon){
+    public Vertex(long id, double lat, double lon){
         this.id = id;
         this.lat = lat;
         this.lon = lon;
@@ -40,7 +40,7 @@ public class Vertex implements Serializable {
         this.junction = false;
     }
 
-    public int getId(){
+    public long getId(){
         return id;
     }
 
