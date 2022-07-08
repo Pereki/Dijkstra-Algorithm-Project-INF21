@@ -25,7 +25,7 @@ public class XmlParser {
         parseXmlToGraph();
     }
 
-    public void parseXmlToGraph() {
+    private void parseXmlToGraph() {
 
         //get all nodes and save them in listOfNodes
         try {
@@ -204,5 +204,4 @@ public class XmlParser {
     public Graph getGraph(){
         return graph;
     }
-    
 }
