@@ -1,77 +1,18 @@
 package view;
 
-import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.layout.StackPane;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import model.CoordinatePair;
-import model.Edge;
-import model.Graph;
-import model.Vertex;
+import model.*;
 import service.MercatorProjector;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class GraphRenderer {
-
-    public class GraphRendererBounds {
-        double north;
-        double east;
-        double south;
-        double west;
-
-        GraphRendererBounds(double westLon, double eastLon, double northLat, double southLat) {
-            this.north = northLat;
-            this.east = eastLon;
-            this.south = southLat;
-            this.west = westLon;
-        }
-
-        public double getWidth() {
-            return Math.abs(this.west - this.east);
-        }
-
-        public double getHeight() {
-            return Math.abs(this.north - this.south);
-        }
-
-        public double getNorth() {
-            return north;
-        }
-
-        public void setNorth(double north) {
-            this.north = north;
-        }
-
-        public double getEast() {
-            return east;
-        }
-
-        public void setEast(double east) {
-            this.east = east;
-        }
-
-        public double getSouth() {
-            return south;
-        }
-
-        public void setSouth(double south) {
-            this.south = south;
-        }
-
-        public double getWest() {
-            return west;
-        }
-
-        public void setWest(double west) {
-            this.west = west;
-        }
-    }
 
     public class GraphRendererStyle {
         // styling
@@ -111,28 +52,21 @@ public class GraphRenderer {
     }
 
     // background & size
-    private final StackPane pane;
-    private final double height;
-    private final double width;
+    private double height;
+    private double width;
 
     // all display elements
     private final Group group;
-    private final ObservableList<Node> elements;
-
-    // display layers
-    private final Group layersContainerGroup;
-    private final ObservableList<Node> layerList;
 
     // display properties
-    // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
-    private GraphRendererBounds geoBounds;
+    private GeoBounds geoBounds;
 
     // graphs
     private final HashMap<String, Graph> graphs = new HashMap<>();
 
     // styling
     private GraphRendererStyle style = new GraphRendererStyle(
-            4, 8, new Font(24)
+            2, 8, new Font(12)
     );
     
     //projection
@@ -141,24 +75,12 @@ public class GraphRenderer {
     /**
      * Initializes a new {@code GraphRenderer}
      * @param group A JavaFX {@code Group} where the layers can be placed in
-     * @param pane A JavaFX {@code StackPane} on which the layers will be stacked
      */
-    public GraphRenderer(Group group, StackPane pane) {
-        this.pane = pane;
-        this.height = pane.getHeight();
-        this.width = pane.getWidth();
+    public GraphRenderer(Group group, GeoBounds geoBounds) {
         this.group = group;
-        this.elements = group.getChildren();
-        this.layersContainerGroup = new Group();
-        this.elements.add(this.layersContainerGroup);
-        this.layerList = this.layersContainerGroup.getChildren();
-        
-        this.setViewBounds(5.866342, 15.041892, 55.058307, 47.270112);
+        this.geoBounds = geoBounds;
+        calculateDimensions();
 
-//        this.projector = new MercatorProjector(
-//                0.5 * (geoBounds.getNorth() + geoBounds.getSouth()),
-//                0.5 * (geoBounds.getWest() + geoBounds.getEast())
-//        );
         this.projector = new MercatorProjector(
                 geoBounds.getSouth(),
                 geoBounds.getWest()
@@ -172,17 +94,20 @@ public class GraphRenderer {
      * @param color The color in which it should be displayed.
      * @return {@code true} if successful, {@code false} if the given key already exists.
      */
-    public boolean addGraphLayer(String key, Graph graph, Color color) {
+    synchronized public boolean addGraphLayer(String key, Graph graph, Color color) {
         if (this.graphs.containsKey(key))
             return false;
         this.graphs.put(key, graph);
-        Group g = new Group();
-        g.setId(key);
+        Canvas c = new Canvas(this.width, this.height);
+        //Canvas c = this.canvas;
+        GraphicsContext gc = c.getGraphicsContext2D();
+        c.setId(key);
 
         double centerLat = 0.5 * (geoBounds.getNorth() + geoBounds.getSouth());
         double centerLon = 0.5 * (geoBounds.getWest() + geoBounds.getEast());
         MercatorProjector projector = new MercatorProjector(centerLat, centerLon);
 
+        // draw edges
         for (Edge e : graph.getEdgeList()) {
             Vertex start = e.getStartingVertex();
             double xStart = this.getX(start.getLon());
@@ -192,39 +117,48 @@ public class GraphRenderer {
             double xEnd = this.getX(end.getLon());
             double yEnd = this.getY(end.getLat());
 
-            Line l = new Line(xStart, yStart, xEnd, yEnd);
-            l.setStrokeWidth(style.lineWidth);
-            l.setStroke(color);
-            g.getChildren().add(l);
+            gc.setStroke(color);
+            gc.setLineWidth(style.lineWidth);
+            gc.strokeLine(xStart, yStart, xEnd, yEnd);
         }
 
+        // draw vertices
         for (Vertex v : graph.getVertexList()) {
             double x = this.getX(v.getLon());
             double y = this.getY(v.getLat());
 
+            // draw dot on junctions and cities
             if (v.getJunction() || v.getIdentifier() != null) {
-                Circle c = new Circle(x, y, style.dotRadius);
-                c.setFill(color);
-                g.getChildren().add(c);
+                gc.setFill(color);
+                gc.fillOval(
+                        x - 0.5*style.getDotRadius(),
+                        y - 0.5*style.getDotRadius(),
+                        style.dotRadius,
+                        style.dotRadius
+                );
             }
 
+            // draw labels
             if (v.getIdentifier() != null) {
-                Circle csm = new Circle(x, y, 0.5*style.dotRadius);
-                csm.setFill(Color.BLACK);
-                g.getChildren().add(csm);
+                gc.setFill(Color.BLACK);
+                gc.fillOval(
+                        x - 0.25*style.getDotRadius(),
+                        y - 0.25*style.getDotRadius(),
+                        0.5*style.dotRadius,
+                        0.5*style.dotRadius
+                );
 
-                Text t = new Text(x + 1.5*style.dotRadius, y, v.getIdentifier());
-                t.setFont(style.font);
-                t.setStroke(Color.BLACK);
-                g.getChildren().add(t);
+                gc.setFont(style.font);
+                gc.setStroke(Color.BLACK);
+                gc.fillText(v.getIdentifier(), x + 1.5*style.dotRadius, y);
             }
         }
-        this.layerList.add(g);
+        this.group.getChildren().add(c);
         return true;
     }
 
     private double getX(double longitude) {
-        return projector.getX(longitude) / projector.getX(geoBounds.getEast()) * pane.getWidth();
+        return projector.getX(longitude) / projector.getX(geoBounds.getEast()) * width;
     }
 
 //    private double getY(double latitude) {
@@ -235,10 +169,10 @@ public class GraphRenderer {
 //    private double getX(double longitude) {
 //        return Math.abs(longitude - geoBounds.getWest()) / geoBounds.getWidth() * pane.getWidth();
 //    }
-//
+
     private double getY(double latitude) {
         //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
-        return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * pane.getHeight();
+        return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * height;
     }
 
     /**
@@ -249,13 +183,18 @@ public class GraphRenderer {
     public Graph removeGraphLayer(String key) {
         if (!this.graphs.containsKey(key))
             return null;
-        for (Node n : this.layerList) {
+        List<Node> nodes = this.group.getChildren();
+        for (Node n : nodes) {
             if (n.getId().equals(key)) {
-                this.layerList.remove(n);
+                nodes.remove(n);
                 return this.graphs.remove(key);
             }
         }
         return null;
+    }
+
+    public Graph getGraphLayer(String key) {
+        return this.graphs.get(key);
     }
 
     public HashMap<String, Graph> getGraphLayers() {
@@ -268,11 +207,17 @@ public class GraphRenderer {
 
     // TODO: Add methods to control the layers' order
 
-    public void setViewBounds(double westLon, double eastLon, double northLat, double southLat) {
-        this.geoBounds = new GraphRendererBounds(westLon, eastLon, northLat, southLat);
+    public void setGeoBounds(GeoBounds geoBounds) {
+        this.geoBounds = geoBounds;
+        calculateDimensions();
     }
 
-    public GraphRendererBounds getGeoBounds() {
+    private void calculateDimensions() {
+        this.height = geoBounds.getWidth() * 100;
+        this.width = geoBounds.getHeight() * 100;
+    }
+
+    public GeoBounds getGeoBounds() {
         return this.geoBounds;
     }
 

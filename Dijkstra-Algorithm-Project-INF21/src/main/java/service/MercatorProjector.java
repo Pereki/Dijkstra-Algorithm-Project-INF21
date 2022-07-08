@@ -6,7 +6,7 @@ public class MercatorProjector {
     private CoordinatePair center;
 
     /**
-     * Creates a MercatorProjector with the given geo coordinates as center.
+     * Creates a MercatorProjector with the given geo coordinates as {@code (0,0)}.
      * @param latitude The latitude in degrees
      * @param longitude The longitude in degrees
      */
