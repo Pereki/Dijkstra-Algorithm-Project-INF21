@@ -3,8 +3,8 @@ package service;
 
 import model.Edge;
 import model.Graph;
+import model.GraphWay;
 import model.Vertex;
-import model.Way;
 
 import java.util.ArrayList;
 
@@ -23,24 +23,24 @@ public class Dijkstra {
  * @return the Graph with the shortest way.
  */
 public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target) throws Exception {
-    ArrayList<Way> possibleWays = new ArrayList<>();
+    ArrayList<GraphWay> possibleGraphWays = new ArrayList<>();
     Vertex actualVertex = start;
-    Way shortestWay = new Way(actualVertex);
-    possibleWays.add(shortestWay);
+    GraphWay shortestGraphWay = new GraphWay(actualVertex);
+    possibleGraphWays.add(shortestGraphWay);
     while (!actualVertex.equals(target)){
         for(Edge edge:rawGraph.getEdges(actualVertex)){ //generate new possible ways from the actual vertex
-            possibleWays.add(new Way(shortestWay,edge));
+            possibleGraphWays.add(new GraphWay(shortestGraphWay,edge));
         }
-        possibleWays.remove(shortestWay); //remove the way to the actual vertex
-        shortestWay = possibleWays.get(0);
-        for(Way way:possibleWays){ //get the new shortest way
-            if(way.getLength()<shortestWay.getLength()){
-                shortestWay=way;
+        possibleGraphWays.remove(shortestGraphWay); //remove the way to the actual vertex
+        shortestGraphWay = possibleGraphWays.get(0);
+        for(GraphWay graphWay : possibleGraphWays){ //get the new shortest way
+            if(graphWay.getLength()< shortestGraphWay.getLength()){
+                shortestGraphWay = graphWay;
             }
         }
-        actualVertex = shortestWay.getEndVertex(); //set the end vertex of the shortest way as the actual vertex
+        actualVertex = shortestGraphWay.getEndVertex(); //set the end vertex of the shortest way as the actual vertex
         }
-    return shortestWay.getGraph(); // return the shortest way as a Graph
+    return shortestGraphWay.getGraph(); // return the shortest way as a Graph
 }
 
     /**

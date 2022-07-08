@@ -103,7 +103,7 @@ public class Graph implements Serializable {
     public ArrayList<Edge> getEdges(Vertex vertex){
         ArrayList<Edge> edgesOfVertex = new ArrayList<>();
         for (Edge edge: edgeList) {
-            if(edge.getStartingVertex()==vertex||edge.getEndingVertex()==vertex){
+            if(edge.getStartingVertex().equals(vertex)||edge.getEndingVertex().equals(vertex)){
                 edgesOfVertex.add(edge);
             }
         }
@@ -209,7 +209,80 @@ public class Graph implements Serializable {
             //x-Achsenabschnitt von c berechnen
             cXAchsenKomponente = cSteigung*c1.getLon()+c1.getLat();
 
-            double lon = 
+            double lon = (eXAchsenKomponente*1-cXAchsenKomponente*cSteigung)/(eSteigung*1-1*cSteigung);//Schnittpunkt berechnen
+            double lat = (cXAchsenKomponente*eSteigung-eXAchsenKomponente*cSteigung)/(1*eSteigung-cSteigung*1);
+
+            double maxLon = e1.getLon();//Max- und Minwerte berechnen, um herauszufinden, ob der Schnittpunkt im erforderlichen Bereich liegt
+
+            if(maxLon<e2.getLon()){
+                maxLon = e2.getLon();
+            }
+            if(maxLon<c1.getLon()){
+                maxLon = c1.getLon();
+            }
+            if(maxLon<c2.getLon()){
+                maxLon = c2.getLon();
+            }
+
+
+            double maxLat = e1.getLat();
+
+            if(maxLat<e2.getLat()){
+                maxLat = e2.getLat();
+            }
+            if(maxLat<c1.getLat()){
+                maxLat = c1.getLat();
+            }
+            if(maxLat<c2.getLat()){
+                maxLat = c2.getLat();
+            }
+
+
+            double minLon = e1.getLon();
+
+            if(minLon>e2.getLon()){
+                minLon = e2.getLon();
+            }
+            if(minLon>c1.getLon()){
+                minLon = c1.getLon();
+            }
+            if(minLon>c2.getLon()){
+                minLon = c2.getLon();
+            }
+
+
+            double minLat = e1.getLat();
+
+            if(minLat>e2.getLat()){
+                minLat = e2.getLat();
+            }
+            if(minLat>c1.getLat()){
+                minLat = c1.getLat();
+            }
+            if(minLat>c2.getLat()){
+                minLat = c2.getLat();
+            }
+
+
+            if(lon>minLon && lon<maxLon && lat>minLat && lat<maxLat){//alte Edges löschen, vier neue + crossing Vertex hinzufügen
+                edgeList.remove(e);
+                edgeList.remove(compare);
+
+                Vertex v = new Vertex(0,lat,lon);// Id placeholder!!!!
+                vertexList.add(v);
+
+                Edge enew1 = new Edge(e1,v);
+                Edge enew2 = new Edge(e2,v);
+                Edge enew3 = new Edge(c1,v);
+                Edge enew4 = new Edge(c2,v);
+
+                edgeList.add(enew1);
+                edgeList.add(enew2);
+                edgeList.add(enew3);
+                edgeList.add(enew4);
+
+                break;
+            }
         }
     }
 

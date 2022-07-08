@@ -1,13 +1,13 @@
 package service.XmlElements;
 
 public class Node {
-    private int id;
+    private long id;
     private double lat;
     private double lon;
     private boolean isJunction = false;
     private String identifier = "";
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -27,7 +27,7 @@ public class Node {
         this.identifier = identifier;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

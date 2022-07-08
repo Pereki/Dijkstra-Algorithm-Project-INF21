@@ -3,7 +3,7 @@ package service.XmlElements;
 import java.util.ArrayList;
 
 public class Way {
-    private ArrayList<Node> nodes;
+    private ArrayList<Node> nodes = new ArrayList<Node>();
 
     public Node getNode(int index){
             return nodes.get(index);
