@@ -27,6 +27,10 @@ public class Controller implements Initializable {
     private static final double MIN_ZOOM_LEVEL = 0.25;
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
+    private static final String ROUTES_KEY = "ROUTES";
+    private static final Color ROUTES_COLOR = Color.valueOf("#154889");
+    private static final String BORDERS_KEY = "BORDERS";
+    private static final Color BORDERS_COLOR = Color.valueOf("#bfbfbf");
 
     @FXML
     private ScrollPane scrollpane;
@@ -177,23 +181,23 @@ public class Controller implements Initializable {
 
     protected void setBordersGraph(Graph graph) {
         Platform.runLater(() -> {
-            renderer.removeGraphLayer("BORDERS");
-            renderer.addGraphLayer("BORDERS", graph, Color.GRAY);
+            renderer.removeGraphLayer(BORDERS_KEY);
+            renderer.addGraphLayer(BORDERS_KEY, graph, BORDERS_COLOR);
         });
     }
 
     protected Graph getBordersGraph() {
-        return renderer.getGraphLayer("BORDERS");
+        return renderer.getGraphLayer(BORDERS_KEY);
     }
 
     protected void setRoadsGraph(Graph graph) {
         Platform.runLater(() -> {
-            renderer.removeGraphLayer("ROADS");
-            renderer.addGraphLayer("ROADS", graph, Color.valueOf("#154889"));
+            renderer.removeGraphLayer(ROUTES_KEY);
+            renderer.addGraphLayer(ROUTES_KEY, graph, ROUTES_COLOR);
         });
     }
 
     protected Graph getRoadsGraph() {
-        return renderer.getGraphLayer("ROADS");
+        return renderer.getGraphLayer(ROUTES_KEY);
     }
 }
