@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -121,38 +122,31 @@ public class Graph implements Serializable {
     }
 
     public Vertex getNearestVertex(Vertex vertexInput){
-        Vertex found = vertexList.get(0);
+        Vertex selectedVertex = null;
         for (Vertex vertex:vertexList) {
-            double diffLon;
-            double diffLat;
+            double differenceLon;
+            double differenceLat;
+            double shortesdifference = 2000000;
+
             if(vertexInput.getLon() > vertex.getLon()) {
-                diffLon = vertexInput.getLon() - vertex.getLon();
+                differenceLon = vertexInput.getLon() - vertex.getLon();
             }else {
-                 diffLon = vertex.getLon() - vertexInput.getLon();
-            }
-            if(vertexInput.getLat() > vertex.getLat()) {
-                diffLat = vertexInput.getLat() - vertex.getLat();
-            } else {
-                diffLat = vertex.getLat() - vertexInput.getLat();
-            }
-            double diffLonFound;
-            double diffLatFound;
-            if(vertexInput.getLon() > found.getLon()) {
-                diffLonFound = vertexInput.getLon() - found.getLon();
-            }else {
-                diffLonFound = found.getLon() - vertexInput.getLon();
-            }
-            if(vertexInput.getLat() > found.getLat()) {
-                diffLatFound = vertexInput.getLat() - found.getLat();
-            } else {
-                diffLatFound = found.getLat() - vertexInput.getLat();
+                differenceLon = vertex.getLon() - vertexInput.getLon();
             }
 
-            if((diffLat+diffLon)<(diffLatFound+diffLonFound)){
-                found = vertex;
+            if(vertexInput.getLat() > vertex.getLat()) {
+                differenceLat = vertexInput.getLat() - vertex.getLat();
+            } else {
+                differenceLat = vertex.getLat() - vertexInput.getLat();
+            }
+
+            double currentdifference = Math.sqrt((differenceLat*differenceLat)+(differenceLon*differenceLon));
+            if(selectedVertex == null || shortesdifference > currentdifference){
+                selectedVertex = vertex;
+                shortesdifference = currentdifference;
             }
         }
-        return found;
+        return selectedVertex;
     }
 
     public void createCrossingIfNeeded(Edge e){
