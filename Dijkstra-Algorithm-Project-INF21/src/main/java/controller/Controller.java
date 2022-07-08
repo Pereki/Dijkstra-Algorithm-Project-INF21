@@ -18,10 +18,8 @@ import view.GraphRenderer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.security.Timestamp;
+import java.util.*;
 
 public class Controller implements Initializable {
 
@@ -55,66 +53,37 @@ public class Controller implements Initializable {
         this.renderer = new GraphRenderer(groupGraphs, new GeoBounds(
                 5.866342, 15.041892, 55.058307, 47.270112
         ));
-
-//        File f = new File("C:\\Users\\David\\OneDrive\\Dokumente\\Beruflich\\Duales Studium\\DH\\Vorlesungen\\2. Semester\\Programmieren\\Programmierprojekt\\Dijstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\resources\\de.svg");
-//        List<List<SVGPath>> svgs;
-//        try {
-//            svgs = SVGParser.parse(f);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        for (SVGPath p : svgs.get(0)) {
-//            p.setFill(Paint.valueOf("#bfbfbf"));
-//            this.groupBackground.getChildren().add(p);
-//        }
-
-        //setZoomFactor(0.25);
     }
 
     @FXML
     protected void onDrawButtonClick() {
+        if (junctions == null) {
+            showError("Es muss zuerst ein Straßennetz geladen werden.");
+            return;
+        }
 
         Vertex start = junctions.get(inputStart.getValue());
         Vertex dest = junctions.get(inputDestination.getValue());
-        Graph route;
-        try {
-            route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
-        } catch (Exception e) {
-            showError("Es konnte keine Route berechnet werden.");
+
+        if (start == null) {
+            showError("Der angegebene Startort existiert im geladenen Straßennetz nicht.");
             return;
         }
-        setRouteGraph(route);
+        if (dest == null) {
+            showError("Der angegebene Zielort existiert im geladenen Straßennetz nicht.");
+            return;
+        }
 
-
-//        Graph g = new Graph();
-//
-//        Vertex stuttgart = new Vertex(0, 48.800676, 9.143225, null, "Stuttgart", true);
-//        Vertex frankfurt = new Vertex(1, 50.102346, 8.703868, null, "Frankfurt", true);
-//        Vertex berlin = new Vertex(2, 52.503680, 13.480916, null, "Berlin", false);
-//
-//        g.addVertex(stuttgart);
-//        g.addVertex(frankfurt);
-//        g.addVertex(berlin);
-//
-//        g.addEdge(new Edge(stuttgart, frankfurt, 1));
-//        g.addEdge(new Edge(frankfurt, berlin,  2));
-//
-//        Platform.runLater(() -> renderer.addGraphLayer("Urlaubsroute", g, Color.RED));
-//
-//        Graph g2 = new Graph();
-//
-//        Vertex nuremberg = new Vertex(3, 49.424261, 11.124826, null, "Nürnberg", true);
-//        Vertex hamburg = new Vertex(4, 53.484564, 10.249799, null, "Hamburg", true);
-//
-//        g2.addVertex(frankfurt);
-//        g2.addVertex(nuremberg);
-//        g2.addVertex(hamburg);
-//
-//        g2.addEdge(new Edge(frankfurt, nuremberg, 3));
-//        g2.addEdge(new Edge(nuremberg, hamburg, 3));
-//
-//        Platform.runLater(() -> renderer.addGraphLayer("Pendelroute", g2, Color.CADETBLUE));
-
+        Platform.runLater(() -> {
+            Graph route;
+            try {
+                route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
+            } catch (Exception e) {
+                showError(String.format("Es konnte keine Route von %s nach %s berechnet werden.", start.getIdentifier(), dest.getIdentifier()));
+                return;
+            }
+            setRouteGraph(route);
+        });
     }
 
 
