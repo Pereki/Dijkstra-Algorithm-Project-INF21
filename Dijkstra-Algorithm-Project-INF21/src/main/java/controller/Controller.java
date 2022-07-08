@@ -14,6 +14,7 @@ import model.*;
 import service.Dijkstra;
 import service.XmlParser;
 import view.GraphRenderer;
+import view.GraphRendererOptions;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,11 +29,20 @@ public class Controller implements Initializable {
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
     private static final String ROADS_KEY = "ROADS";
-    private static final Color ROADS_COLOR = Color.valueOf("#154889");
+    private static final GraphRendererOptions ROADS_OPTIONS = new GraphRendererOptions()
+            .routeColor(Color.valueOf("#154889"))
+            .dotJunctions(false)
+            .showLabels(false);
     private static final String BORDERS_KEY = "BORDERS";
-    private static final Color BORDERS_COLOR = Color.valueOf("#bfbfbf");
+    private static final GraphRendererOptions BORDERS_OPTIONS = new GraphRendererOptions()
+            .routeColor(Color.valueOf("#bfbfbf"))
+            .dotJunctions(false)
+            .showLabels(false);
     private static final String ROUTE_KEY = "ROUTE";
-    private static final Color ROUTE_COLOR = Color.RED;
+    private static final GraphRendererOptions ROUTE_OPTIONS = new GraphRendererOptions()
+            .routeColor(Color.RED)
+            .dotJunctions(false)
+            .showLabels(true);
 
     @FXML
     private ScrollPane scrollpane;
@@ -228,7 +238,7 @@ public class Controller implements Initializable {
     protected void setBordersGraph(Graph graph) {
         Platform.runLater(() -> {
             renderer.removeGraphLayer(BORDERS_KEY);
-            renderer.addGraphLayer(BORDERS_KEY, graph, BORDERS_COLOR);
+            renderer.addGraphLayer(BORDERS_KEY, graph, BORDERS_OPTIONS);
         });
     }
 
@@ -240,7 +250,7 @@ public class Controller implements Initializable {
         Platform.runLater(() -> {
             setJunctions(graph.getVertexList());
             renderer.removeGraphLayer(ROADS_KEY);
-            renderer.addGraphLayer(ROADS_KEY, graph, ROADS_COLOR);
+            renderer.addGraphLayer(ROADS_KEY, graph, ROADS_OPTIONS);
         });
     }
 
@@ -270,7 +280,7 @@ public class Controller implements Initializable {
     protected void setRouteGraph(Graph graph) {
         Platform.runLater(() -> {
             renderer.removeGraphLayer(ROUTE_KEY);
-            renderer.addGraphLayer(ROUTE_KEY, graph, ROUTE_COLOR);
+            renderer.addGraphLayer(ROUTE_KEY, graph, ROUTE_OPTIONS);
         });
     }
 
