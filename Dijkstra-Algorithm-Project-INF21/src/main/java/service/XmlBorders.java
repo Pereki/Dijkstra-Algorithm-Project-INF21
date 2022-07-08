@@ -11,10 +11,11 @@ import java.io.FileReader;
 public class XmlBorders {
     private String path;
     private Graph g;
+    private int resolution;
 
-    public XmlBorders(String pathToFile) {
+    public XmlBorders(String pathToFile, int resolution) {
         this.path = pathToFile;
-
+        this.resolution = resolution;
         parseXml();
     }
 
@@ -55,17 +56,19 @@ public class XmlBorders {
                 entries = line.split(" ");
                 for(int i=0;i<entries.length;i++){
                     if(entries[i].contains("<nd")){
-                        entries[i+1] = entries[i+1].replace("lat=","");
-                        entries[i+1] = entries[i+1].replace("\"","");
+                        if(i%resolution==0){
+                            entries[i+1] = entries[i+1].replace("lat=","");
+                            entries[i+1] = entries[i+1].replace("\"","");
 
-                        entries[i+2] = entries[i+2].replace("lon=","");
-                        entries[i+2] = entries[i+2].replace("\"","");
-                        entries[i+2] = entries[i+2].replace("/>","");
+                            entries[i+2] = entries[i+2].replace("lon=","");
+                            entries[i+2] = entries[i+2].replace("\"","");
+                            entries[i+2] = entries[i+2].replace("/>","");
 
-                        v1 = new Vertex(0,Long.parseLong(entries[i+1]), Long.parseLong(entries[i+2]));
-                        Edge e = new Edge(v1, v2);
-                        g.addEdge(e);
-                        v2 = v1;
+                            v1 = new Vertex(0,Long.parseLong(entries[i+1]), Long.parseLong(entries[i+2]));
+                            Edge e = new Edge(v1, v2);
+                            g.addEdge(e);
+                            v2 = v1;
+                        }
                     }
                 }
 
