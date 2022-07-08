@@ -1,17 +1,17 @@
 package controller;
 
+import com.almasb.fxgl.core.collection.PropertyChangeListener;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import model.*;
+import service.Dijkstra;
 import service.XmlParser;
 import view.GraphRenderer;
 
@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -28,19 +29,23 @@ public class Controller implements Initializable {
     private static final double MIN_ZOOM_LEVEL = 0.25;
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
-    private static final String ROUTES_KEY = "ROUTES";
-    private static final Color ROUTES_COLOR = Color.valueOf("#154889");
+    private static final String ROADS_KEY = "ROADS";
+    private static final Color ROADS_COLOR = Color.valueOf("#154889");
     private static final String BORDERS_KEY = "BORDERS";
     private static final Color BORDERS_COLOR = Color.valueOf("#bfbfbf");
+    private static final String ROUTE_KEY = "ROUTE";
+    private static final Color ROUTE_COLOR = Color.RED;
 
     @FXML
     private ScrollPane scrollpane;
     @FXML
     private Group groupGraphs;
     @FXML
-    private ComboBox inputStart;
+    private ComboBox<String> inputStart;
     @FXML
-    private ComboBox inputDestination;
+    private ComboBox<String> inputDestination;
+
+    private HashMap<String, Vertex> junctions;
 
     private GraphRenderer renderer;
 
@@ -68,34 +73,47 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onDrawButtonClick() {
-        Graph g = new Graph();
 
-        Vertex stuttgart = new Vertex(0, 48.800676, 9.143225, null, "Stuttgart", true);
-        Vertex frankfurt = new Vertex(1, 50.102346, 8.703868, null, "Frankfurt", true);
-        Vertex berlin = new Vertex(2, 52.503680, 13.480916, null, "Berlin", false);
+        Vertex start = junctions.get(inputStart.getValue());
+        Vertex dest = junctions.get(inputDestination.getValue());
+        Graph route;
+        try {
+            route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
+        } catch (Exception e) {
+            showError("Es konnte keine Route berechnet werden.");
+            return;
+        }
+        setRouteGraph(route);
 
-        g.addVertex(stuttgart);
-        g.addVertex(frankfurt);
-        g.addVertex(berlin);
 
-        g.addEdge(new Edge(stuttgart, frankfurt, 1));
-        g.addEdge(new Edge(frankfurt, berlin,  2));
-
-        Platform.runLater(() -> renderer.addGraphLayer("Urlaubsroute", g, Color.RED));
-
-        Graph g2 = new Graph();
-
-        Vertex nuremberg = new Vertex(3, 49.424261, 11.124826, null, "Nürnberg", true);
-        Vertex hamburg = new Vertex(4, 53.484564, 10.249799, null, "Hamburg", true);
-
-        g2.addVertex(frankfurt);
-        g2.addVertex(nuremberg);
-        g2.addVertex(hamburg);
-
-        g2.addEdge(new Edge(frankfurt, nuremberg, 3));
-        g2.addEdge(new Edge(nuremberg, hamburg, 3));
-
-        Platform.runLater(() -> renderer.addGraphLayer("Pendelroute", g2, Color.CADETBLUE));
+//        Graph g = new Graph();
+//
+//        Vertex stuttgart = new Vertex(0, 48.800676, 9.143225, null, "Stuttgart", true);
+//        Vertex frankfurt = new Vertex(1, 50.102346, 8.703868, null, "Frankfurt", true);
+//        Vertex berlin = new Vertex(2, 52.503680, 13.480916, null, "Berlin", false);
+//
+//        g.addVertex(stuttgart);
+//        g.addVertex(frankfurt);
+//        g.addVertex(berlin);
+//
+//        g.addEdge(new Edge(stuttgart, frankfurt, 1));
+//        g.addEdge(new Edge(frankfurt, berlin,  2));
+//
+//        Platform.runLater(() -> renderer.addGraphLayer("Urlaubsroute", g, Color.RED));
+//
+//        Graph g2 = new Graph();
+//
+//        Vertex nuremberg = new Vertex(3, 49.424261, 11.124826, null, "Nürnberg", true);
+//        Vertex hamburg = new Vertex(4, 53.484564, 10.249799, null, "Hamburg", true);
+//
+//        g2.addVertex(frankfurt);
+//        g2.addVertex(nuremberg);
+//        g2.addVertex(hamburg);
+//
+//        g2.addEdge(new Edge(frankfurt, nuremberg, 3));
+//        g2.addEdge(new Edge(nuremberg, hamburg, 3));
+//
+//        Platform.runLater(() -> renderer.addGraphLayer("Pendelroute", g2, Color.CADETBLUE));
 
     }
 
@@ -204,7 +222,7 @@ public class Controller implements Initializable {
         Platform.runLater(() -> {
             try {
                 Graph graph = SerializeService.loadGraph(file.getAbsolutePath());
-                setBordersGraph(graph);
+                setRoadsGraph(graph);
             } catch (IOException | ClassNotFoundException e) {
                 showError("Die angegebene Datei konnte nicht als Straßennetz geladen werden.");
                 e.printStackTrace();
@@ -251,19 +269,44 @@ public class Controller implements Initializable {
 
     protected void setRoadsGraph(Graph graph) {
         Platform.runLater(() -> {
-            renderer.removeGraphLayer(ROUTES_KEY);
-            renderer.addGraphLayer(ROUTES_KEY, graph, ROUTES_COLOR);
-            for(Vertex vert : graph.getVertexList()){
-             if(vert.getIdentifier() == ""){
-                 inputStart.getItems().add(vert.getIdentifier());
-                 inputDestination.getItems().add(vert.getIdentifier());
-             }
-            }
+            setJunctions(graph.getVertexList());
+            renderer.removeGraphLayer(ROADS_KEY);
+            renderer.addGraphLayer(ROADS_KEY, graph, ROADS_COLOR);
         });
     }
 
+    private void setJunctions(List<Vertex> vertices) {
+        this.junctions = new HashMap<>();
+        GeoBounds b = new GeoBounds(Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MAX_VALUE);
+        for (Vertex v : vertices) {
+
+            // expand viewport if necessary
+//            if (v.getLat() < b.getNorth()) b.setNorth(v.getLat());
+//            if (v.getLat() > b.getSouth()) b.setSouth(v.getLat());
+//            if (v.getLon() < b.getWest()) b.setWest(v.getLon());
+//            if (v.getLon() > b.getEast()) b.setEast(v.getLon());
+
+            if (v.getJunction()) {
+                junctions.put(v.getIdentifier(), v);
+                inputStart.getItems().add(v.getIdentifier());
+                inputDestination.getItems().add(v.getIdentifier());
+            }
+        }
+    }
+
     protected Graph getRoadsGraph() {
-        return renderer.getGraphLayer(ROUTES_KEY);
+        return renderer.getGraphLayer(ROADS_KEY);
+    }
+
+    protected void setRouteGraph(Graph graph) {
+        Platform.runLater(() -> {
+            renderer.removeGraphLayer(ROUTE_KEY);
+            renderer.addGraphLayer(ROUTE_KEY, graph, ROUTE_COLOR);
+        });
+    }
+
+    protected Graph getRouteGraph() {
+        return renderer.getGraphLayer(ROUTE_KEY);
     }
 
     private void showError(String text) {

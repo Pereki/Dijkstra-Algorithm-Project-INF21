@@ -52,8 +52,8 @@ public class GraphRenderer {
     }
 
     // background & size
-    private final double height;
-    private final double width;
+    private double height;
+    private double width;
 
     // all display elements
     private final Group group;
@@ -77,10 +77,9 @@ public class GraphRenderer {
      * @param group A JavaFX {@code Group} where the layers can be placed in
      */
     public GraphRenderer(Group group, GeoBounds geoBounds) {
-        this.height = geoBounds.getWidth() * 100;
-        this.width = geoBounds.getHeight() * 100;
         this.group = group;
         this.geoBounds = geoBounds;
+        calculateDimensions();
 
         this.projector = new MercatorProjector(
                 geoBounds.getSouth(),
@@ -210,6 +209,12 @@ public class GraphRenderer {
 
     public void setGeoBounds(GeoBounds geoBounds) {
         this.geoBounds = geoBounds;
+        calculateDimensions();
+    }
+
+    private void calculateDimensions() {
+        this.height = geoBounds.getWidth() * 100;
+        this.width = geoBounds.getHeight() * 100;
     }
 
     public GeoBounds getGeoBounds() {
