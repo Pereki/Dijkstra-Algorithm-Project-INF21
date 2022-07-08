@@ -10,14 +10,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.SVGPath;
-import model.Edge;
-import model.GeoBounds;
-import model.Graph;
-import model.Vertex;
+import javafx.stage.FileChooser;
+import model.*;
 import service.SVGParser;
 import view.GraphRenderer;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -84,8 +83,8 @@ public class Controller implements Initializable {
         g2.addVertex(nuremberg);
         g2.addVertex(hamburg);
 
-        g2.addEdge(new Edge(frankfurt, nuremberg, 0, 3));
-        g2.addEdge(new Edge(nuremberg, hamburg, 0, 3));
+        g2.addEdge(new Edge(frankfurt, nuremberg, 3));
+        g2.addEdge(new Edge(nuremberg, hamburg, 3));
 
         Platform.runLater(() -> renderer.addGraphLayer("Pendelroute", g2, Color.CADETBLUE));
     }
@@ -121,7 +120,80 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    protected void onMenuButtonMapImportClick() {
+    protected void onMenuButtonMapExportClick() {
+        Graph graph = getBordersGraph();
+        if (graph == null) {
+            String text = "Es ist keine Karte geladen.";
+            Alert alert = new Alert(Alert.AlertType.ERROR, text, ButtonType.CLOSE);
+            alert.setTitle("Fehler");
+            alert.showAndWait();
+            return;
+        }
 
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Karte speichern unter");
+        File file = fileChooser.showSaveDialog(scrollpane.getScene().getWindow());
+
+        Platform.runLater(() -> {
+            try {
+                SerializeService.saveGraph(graph, file.getAbsolutePath());
+                setBordersGraph(graph);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @FXML
+    protected void onMenuButtonMapImportClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Karte öffnen");
+        File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
+
+        Platform.runLater(() -> {
+            try {
+                Graph graph = SerializeService.loadGraph(file.getAbsolutePath());
+                setBordersGraph(graph);
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @FXML
+    protected void onMenuButtonRouteExportClick() {
+
+    }
+
+    @FXML
+    protected void onMenuButtonRouteImportClick() {
+
+    }
+
+    @FXML
+    protected void onMenuButtonOsmImportClick() {
+
+    }
+
+    protected void setBordersGraph(Graph graph) {
+        Platform.runLater(() -> {
+            renderer.removeGraphLayer("BORDERS");
+            renderer.addGraphLayer("BORDERS", graph, Color.GRAY);
+        });
+    }
+
+    protected Graph getBordersGraph() {
+        return renderer.getGraphLayer("BORDERS");
+    }
+
+    protected void setRoadsGraph(Graph graph) {
+        Platform.runLater(() -> {
+            renderer.removeGraphLayer("ROADS");
+            renderer.addGraphLayer("ROADS", graph, Color.valueOf("#154889"));
+        });
+    }
+
+    protected Graph getRoadsGraph() {
+        return renderer.getGraphLayer("ROADS");
     }
 }

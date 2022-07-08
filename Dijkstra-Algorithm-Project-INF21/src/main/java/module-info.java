@@ -7,7 +7,6 @@ module view {
     requires validatorfx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
-    requires junit;
 
     opens view to javafx.fxml;
     exports view;

@@ -194,6 +194,10 @@ public class GraphRenderer {
         return null;
     }
 
+    public Graph getGraphLayer(String key) {
+        return this.graphs.get(key);
+    }
+
     public HashMap<String, Graph> getGraphLayers() {
         return this.graphs;
     }

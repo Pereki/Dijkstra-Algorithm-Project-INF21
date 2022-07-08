@@ -11,12 +11,12 @@
        <Menu mnemonicParsing="false" text="Datei">
          <items>
            <MenuItem fx:id="menuButtonMapImport" mnemonicParsing="false" onAction="#onMenuButtonMapImportClick" text="Karte öffnen" />
-               <MenuItem fx:id="menuButtonMapExport" mnemonicParsing="false" text="Karte speichern" />
+               <MenuItem fx:id="menuButtonMapExport" mnemonicParsing="false" onAction="#onMenuButtonMapExportClick" text="Karte speichern" />
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem fx:id="menuButtonRouteImport" mnemonicParsing="false" text="Route öffnen" />
-               <MenuItem fx:id="menuButtonRouteExport" mnemonicParsing="false" text="Route speichern" />
+               <MenuItem fx:id="menuButtonRouteImport" mnemonicParsing="false" onAction="#onMenuButtonRouteImportClick" text="Route öffnen" />
+               <MenuItem fx:id="menuButtonRouteExport" mnemonicParsing="false" onAction="#onMenuButtonRouteExportClick" text="Route speichern" />
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem fx:id="menuButtonOsmImport" mnemonicParsing="false" text="OSM importieren" />
+               <MenuItem fx:id="menuButtonOsmImport" mnemonicParsing="false" onAction="#onMenuButtonOsmImportClick" text="OSM importieren" />
          </items>
        </Menu>
          <Menu mnemonicParsing="false" text="Info">
