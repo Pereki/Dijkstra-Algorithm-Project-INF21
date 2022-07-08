@@ -18,6 +18,7 @@ import view.GraphRenderer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -36,6 +37,10 @@ public class Controller implements Initializable {
     private ScrollPane scrollpane;
     @FXML
     private Group groupGraphs;
+    @FXML
+    private ComboBox inputStart;
+    @FXML
+    private ComboBox inputDestination;
 
     private GraphRenderer renderer;
 
@@ -89,9 +94,10 @@ public class Controller implements Initializable {
 
         g2.addEdge(new Edge(frankfurt, nuremberg, 3));
         g2.addEdge(new Edge(nuremberg, hamburg, 3));
-
         Platform.runLater(() -> renderer.addGraphLayer("Pendelroute", g2, Color.CADETBLUE));
+
     }
+
 
     @FXML
     protected void onButtonZoomOutClick() {
@@ -194,6 +200,12 @@ public class Controller implements Initializable {
         Platform.runLater(() -> {
             renderer.removeGraphLayer(ROUTES_KEY);
             renderer.addGraphLayer(ROUTES_KEY, graph, ROUTES_COLOR);
+            for(Vertex vert : graph.getVertexList()){
+             if(vert.getIdentifier() == ""){
+                 inputStart.getItems().add(vert.getIdentifier());
+                 inputDestination.getItems().add(vert.getIdentifier());
+             }
+            }
         });
     }
 
