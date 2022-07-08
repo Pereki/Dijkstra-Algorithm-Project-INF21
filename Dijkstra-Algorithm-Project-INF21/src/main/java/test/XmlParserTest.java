@@ -34,8 +34,7 @@ public class XmlParserTest {
 
         Graph g = x.getGraph();
 
-        System.out.println(g.getVertexList().size());
-        System.out.println(g.getEdgeList().size());
+
 
         try{
             SerializeService.saveGraph(g, "graph.txt");
