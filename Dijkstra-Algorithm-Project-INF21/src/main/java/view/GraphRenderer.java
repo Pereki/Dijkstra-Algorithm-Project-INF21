@@ -5,10 +5,15 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import model.CoordinatePair;
 import model.Edge;
 import model.Graph;
 import model.Vertex;
+import service.MercatorProjector;
 
 import java.util.HashMap;
 
@@ -68,6 +73,43 @@ public class GraphRenderer {
         }
     }
 
+    public class GraphRendererStyle {
+        // styling
+        private double lineWidth;
+        private double dotRadius;
+        private Font font;
+
+        public GraphRendererStyle(double lineWidth, double dotRadius, Font font) {
+            this.lineWidth = lineWidth;
+            this.dotRadius = dotRadius;
+            this.font = font;
+        }
+
+        public double getLineWidth() {
+            return lineWidth;
+        }
+
+        public void setLineWidth(double lineWidth) {
+            this.lineWidth = lineWidth;
+        }
+
+        public double getDotRadius() {
+            return dotRadius;
+        }
+
+        public void setDotRadius(double dotRadius) {
+            this.dotRadius = dotRadius;
+        }
+
+        public Font getFontSize() {
+            return font;
+        }
+
+        public void setFontSize(Font font) {
+            this.font = font;
+        }
+    }
+
     // background & size
     private final StackPane pane;
     private final double height;
@@ -82,11 +124,19 @@ public class GraphRenderer {
     private final ObservableList<Node> layerList;
 
     // display properties
-    // for Germany: W: 5.590663; E: 15.587623; N: 55.157607; S: 47.242657;
+    // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
     private GraphRendererBounds geoBounds;
 
     // graphs
     private final HashMap<String, Graph> graphs = new HashMap<>();
+
+    // styling
+    private GraphRendererStyle style = new GraphRendererStyle(
+            4, 8, new Font(24)
+    );
+    
+    //projection
+    private MercatorProjector projector;
 
     /**
      * Initializes a new {@code GraphRenderer}
@@ -102,7 +152,17 @@ public class GraphRenderer {
         this.layersContainerGroup = new Group();
         this.elements.add(this.layersContainerGroup);
         this.layerList = this.layersContainerGroup.getChildren();
-        this.setViewBounds(5.590663, 15.587623, 55.157607, 47.242657);
+        
+        this.setViewBounds(5.866342, 15.041892, 55.058307, 47.270112);
+
+//        this.projector = new MercatorProjector(
+//                0.5 * (geoBounds.getNorth() + geoBounds.getSouth()),
+//                0.5 * (geoBounds.getWest() + geoBounds.getEast())
+//        );
+        this.projector = new MercatorProjector(
+                geoBounds.getSouth(),
+                geoBounds.getWest()
+        );
     }
 
     /**
@@ -119,31 +179,66 @@ public class GraphRenderer {
         Group g = new Group();
         g.setId(key);
 
-        double viewHeight = this.pane.getHeight();
-        double viewWidth = this.pane.getWidth();
-
-        double geoNorth = geoBounds.getNorth();
-        double geoWest = geoBounds.getWest();
-        double geoHeight = geoBounds.getHeight();
-        double geoWidth = geoBounds.getWidth();
+        double centerLat = 0.5 * (geoBounds.getNorth() + geoBounds.getSouth());
+        double centerLon = 0.5 * (geoBounds.getWest() + geoBounds.getEast());
+        MercatorProjector projector = new MercatorProjector(centerLat, centerLon);
 
         for (Edge e : graph.getEdgeList()) {
-
             Vertex start = e.getStartingVertex();
-            double xStart = Math.abs(start.getLon() - geoWest) / geoWidth * viewWidth;
-            double yStart = Math.abs(start.getLat() - geoNorth) / geoHeight * viewHeight;
+            double xStart = this.getX(start.getLon());
+            double yStart = this.getY(start.getLat());
 
             Vertex end = e.getEndingVertex();
-            double xEnd = Math.abs(end.getLon() - geoWest) / geoWidth * viewWidth;
-            double yEnd = Math.abs(end.getLat() - geoNorth) / geoHeight * viewHeight;
+            double xEnd = this.getX(end.getLon());
+            double yEnd = this.getY(end.getLat());
 
             Line l = new Line(xStart, yStart, xEnd, yEnd);
+            l.setStrokeWidth(style.lineWidth);
             l.setStroke(color);
             g.getChildren().add(l);
         }
 
+        for (Vertex v : graph.getVertexList()) {
+            double x = this.getX(v.getLon());
+            double y = this.getY(v.getLat());
+
+            if (v.getJunction() || v.getIdentifier() != null) {
+                Circle c = new Circle(x, y, style.dotRadius);
+                c.setFill(color);
+                g.getChildren().add(c);
+            }
+
+            if (v.getIdentifier() != null) {
+                Circle csm = new Circle(x, y, 0.5*style.dotRadius);
+                csm.setFill(Color.BLACK);
+                g.getChildren().add(csm);
+
+                Text t = new Text(x + 1.5*style.dotRadius, y, v.getIdentifier());
+                t.setFont(style.font);
+                t.setStroke(Color.BLACK);
+                g.getChildren().add(t);
+            }
+        }
         this.layerList.add(g);
         return true;
+    }
+
+    private double getX(double longitude) {
+        return projector.getX(longitude) / projector.getX(geoBounds.getEast()) * pane.getWidth();
+    }
+
+//    private double getY(double latitude) {
+//        //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
+//        return pane.getHeight() - ( projector.getY(latitude) / projector.getY(geoBounds.getNorth()) * pane.getHeight() );
+//    }
+
+//    private double getX(double longitude) {
+//        return Math.abs(longitude - geoBounds.getWest()) / geoBounds.getWidth() * pane.getWidth();
+//    }
+//
+    private double getY(double latitude) {
+        //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
+        return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * pane.getHeight();
     }
 
     /**
@@ -181,4 +276,7 @@ public class GraphRenderer {
         return this.geoBounds;
     }
 
+    public GraphRendererStyle getStyle() {
+        return this.style;
+    }
 }
