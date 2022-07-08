@@ -4,8 +4,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.FileChooser;
 import model.*;
 import service.XmlParser;
@@ -14,6 +18,8 @@ import view.GraphRenderer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -90,7 +96,9 @@ public class Controller implements Initializable {
         g2.addEdge(new Edge(nuremberg, hamburg, 3));
 
         Platform.runLater(() -> renderer.addGraphLayer("Pendelroute", g2, Color.CADETBLUE));
+
     }
+
 
     @FXML
     protected void onButtonZoomOutClick() {
@@ -245,6 +253,12 @@ public class Controller implements Initializable {
         Platform.runLater(() -> {
             renderer.removeGraphLayer(ROUTES_KEY);
             renderer.addGraphLayer(ROUTES_KEY, graph, ROUTES_COLOR);
+            for(Vertex vert : graph.getVertexList()){
+             if(vert.getIdentifier() == ""){
+                 inputStart.getItems().add(vert.getIdentifier());
+                 inputDestination.getItems().add(vert.getIdentifier());
+             }
+            }
         });
     }
 
