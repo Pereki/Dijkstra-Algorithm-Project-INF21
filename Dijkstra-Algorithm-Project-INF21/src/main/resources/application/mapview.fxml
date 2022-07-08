@@ -4,62 +4,64 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
 
-<VBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="473.0" prefWidth="477.0" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-   <ScrollPane fx:id="scrollpane" cacheShape="false" hmax="2.0" hvalue="1.0" pannable="true" vmax="2.0" vvalue="1.0" VBox.vgrow="NEVER">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="451.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
+   <MenuBar fx:id="menuBar">
+     <menus>
+       <Menu mnemonicParsing="false" text="Datei">
+         <items>
+           <MenuItem fx:id="menuButtonMapImport" mnemonicParsing="false" onAction="#onMenuButtonMapImportClick" text="Karte öffnen" />
+               <MenuItem fx:id="menuButtonMapExport" mnemonicParsing="false" onAction="#onMenuButtonMapExportClick" text="Karte speichern" />
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem fx:id="menuButtonRouteImport" mnemonicParsing="false" onAction="#onMenuButtonRouteImportClick" text="Route öffnen" />
+               <MenuItem fx:id="menuButtonRouteExport" mnemonicParsing="false" onAction="#onMenuButtonRouteExportClick" text="Route speichern" />
+               <SeparatorMenuItem mnemonicParsing="false" />
+               <MenuItem fx:id="menuButtonOsmImport" mnemonicParsing="false" onAction="#onMenuButtonOsmImportClick" text="OSM importieren" />
+         </items>
+       </Menu>
+         <Menu mnemonicParsing="false" text="Info">
+            <items>
+               <MenuItem fx:id="menuButtonContributors" mnemonicParsing="false" onAction="#onMenuButtonContributorsClick" text="Mitwirkende" />
+            </items>
+         </Menu>
+     </menus>
+   </MenuBar>
+   <ScrollPane fx:id="scrollpane" cacheShape="false" hvalue="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true" vvalue="0.5" VBox.vgrow="ALWAYS">
       <content>
-          <StackPane fx:id="pane">
-              <children>
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="344.0" stroke="#0000002b" strokeType="INSIDE" width="438.0" StackPane.alignment="CENTER" />
-               <StackPane>
-                  <children>
-                        <Group fx:id="groupBackground" pickOnBounds="true">
-                     </Group>
-                  </children>
-               </StackPane>
-               <StackPane>
-                  <children>
-                        <Group fx:id="groupGraphs" pickOnBounds="true">
-                     </Group>
-                  </children>
-               </StackPane>
-              </children>
-          </StackPane>
+         <StackPane>
+            <children>
+               <Group fx:id="groupGraphs" />
+            </children>
+         </StackPane>
       </content>
    </ScrollPane>
-    <GridPane prefHeight="68.0" prefWidth="547.0">
+    <GridPane hgap="5.0" prefHeight="68.0" vgap="5.0" VBox.vgrow="NEVER">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" percentWidth="42.0" />
             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="299.0" prefWidth="100.0" />
-         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="19.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="ALWAYS" percentWidth="96.0" />
-            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="34.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="NEVER" percentWidth="177.0" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onDrawButtonClick" prefHeight="25.0" prefWidth="124.0" text="Route berechnen" GridPane.columnIndex="5" GridPane.hgrow="ALWAYS">
+        <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onDrawButtonClick" prefHeight="25.0" prefWidth="239.0" text="Route berechnen" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>
         </Button>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="1">
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <children>
               <Button fx:id="buttonZoomIn" mnemonicParsing="false" onAction="#onButtonZoomInClick" prefHeight="25.0" prefWidth="63.0" text="+" />
-            <Button fx:id="buttonZoomOut" mnemonicParsing="false" onAction="#onButtonZoomOutClick" prefHeight="25.0" prefWidth="59.0" text="-" />
+            <Button fx:id="buttonZoomOut" mnemonicParsing="false" onAction="#onButtonZoomOutClick" prefHeight="25.0" prefWidth="69.0" text="-" />
          </children>
       </HBox>
       <Label prefHeight="17.0" prefWidth="34.0" text="Start" />
       <Label prefHeight="17.0" prefWidth="29.0" text="Ziel" GridPane.rowIndex="1" />
-      <TextField editable="false" GridPane.columnIndex="1" />
-      <TextField editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Button mnemonicParsing="false" text="Ändern" GridPane.columnIndex="3" />
-      <Button mnemonicParsing="false" text="Ändern" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <ComboBox fx:id="inputStart" editable="true" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" />
+      <ComboBox fx:id="inputDestination" editable="true" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <padding>
+         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+      </padding>
     </GridPane>
 </VBox>

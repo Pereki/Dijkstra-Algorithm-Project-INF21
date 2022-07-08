@@ -2,9 +2,11 @@ package test;
 
 import model.Edge;
 import model.Graph;
+import model.SerializeService;
 import model.Vertex;
 import service.Dijkstra;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -38,8 +40,9 @@ public class DijkstraTest {
         Edge e13 = new Edge(D,L);
         ArrayList edges = new ArrayList(Arrays.asList(new Edge[]{e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13}));
 
-        Graph raw = new Graph(edges,vertexes);
-
+        //Graph raw = new Graph(edges,vertexes);
+        //SerializeService.saveGraph(raw,"graph.graph");
+        Graph raw = SerializeService.loadGraph("graph.graph");
         Graph g = Dijkstra.getShortWay(raw,B,F);
 
         for(Vertex v:g.getVertexList()){
@@ -54,6 +57,17 @@ public class DijkstraTest {
 
         System.out.println("finish");
 
+
+        XmlParserTest parser = new XmlParserTest();
+
+        if(parser.crossingTest()){
+            System.out.println("Parser läuft");
+        }
+
+        parser.graphTest();
+
     }
+
+
 
 }

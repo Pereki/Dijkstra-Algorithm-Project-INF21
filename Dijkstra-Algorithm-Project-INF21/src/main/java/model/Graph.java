@@ -103,7 +103,7 @@ public class Graph implements Serializable {
     public ArrayList<Edge> getEdges(Vertex vertex){
         ArrayList<Edge> edgesOfVertex = new ArrayList<>();
         for (Edge edge: edgeList) {
-            if(edge.getStartingVertex()==vertex||edge.getEndingVertex()==vertex){
+            if(edge.getStartingVertex().equals(vertex)||edge.getEndingVertex().equals(vertex)){
                 edgesOfVertex.add(edge);
             }
         }
@@ -280,6 +280,8 @@ public class Graph implements Serializable {
                 edgeList.add(enew2);
                 edgeList.add(enew3);
                 edgeList.add(enew4);
+
+                break;
             }
         }
     }
