@@ -1,5 +1,6 @@
 package view;
 
+import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -14,43 +15,6 @@ import java.util.List;
 
 public class GraphRenderer {
 
-    public class GraphRendererStyle {
-        // styling
-        private double lineWidth;
-        private double dotRadius;
-        private Font font;
-
-        public GraphRendererStyle(double lineWidth, double dotRadius, Font font) {
-            this.lineWidth = lineWidth;
-            this.dotRadius = dotRadius;
-            this.font = font;
-        }
-
-        public double getLineWidth() {
-            return lineWidth;
-        }
-
-        public void setLineWidth(double lineWidth) {
-            this.lineWidth = lineWidth;
-        }
-
-        public double getDotRadius() {
-            return dotRadius;
-        }
-
-        public void setDotRadius(double dotRadius) {
-            this.dotRadius = dotRadius;
-        }
-
-        public Font getFontSize() {
-            return font;
-        }
-
-        public void setFontSize(Font font) {
-            this.font = font;
-        }
-    }
-
     // background & size
     private double height;
     private double width;
@@ -63,11 +27,6 @@ public class GraphRenderer {
 
     // graphs
     private final HashMap<String, Graph> graphs = new HashMap<>();
-
-    // styling
-    private GraphRendererStyle style = new GraphRendererStyle(
-            2, 8, new Font(12)
-    );
     
     //projection
     private MercatorProjector projector;
@@ -91,10 +50,10 @@ public class GraphRenderer {
      * Displays the given {@code Graph} by adding it as a new layer on top of the existing ones.
      * @param key A unique identifying key for the layer.
      * @param graph The {@code Graph} object.
-     * @param color The color in which it should be displayed.
+     * @param options An {@code Options} object specifying how the graph should be displayed.
      * @return {@code true} if successful, {@code false} if the given key already exists.
      */
-    synchronized public boolean addGraphLayer(String key, Graph graph, Color color) {
+    synchronized public boolean addGraphLayer(String key, Graph graph, GraphRendererOptions options) {
         if (this.graphs.containsKey(key))
             return false;
         this.graphs.put(key, graph);
@@ -102,10 +61,6 @@ public class GraphRenderer {
         //Canvas c = this.canvas;
         GraphicsContext gc = c.getGraphicsContext2D();
         c.setId(key);
-
-        double centerLat = 0.5 * (geoBounds.getNorth() + geoBounds.getSouth());
-        double centerLon = 0.5 * (geoBounds.getWest() + geoBounds.getEast());
-        MercatorProjector projector = new MercatorProjector(centerLat, centerLon);
 
         // draw edges
         for (Edge e : graph.getEdgeList()) {
@@ -117,8 +72,8 @@ public class GraphRenderer {
             double xEnd = this.getX(end.getLon());
             double yEnd = this.getY(end.getLat());
 
-            gc.setStroke(color);
-            gc.setLineWidth(style.lineWidth);
+            gc.setStroke(options.getRouteColor());
+            gc.setLineWidth(options.getLineWidth());
             gc.strokeLine(xStart, yStart, xEnd, yEnd);
         }
 
@@ -129,28 +84,28 @@ public class GraphRenderer {
 
             // draw dot on junctions and cities
             if (v.getJunction() || v.getIdentifier() != null) {
-                gc.setFill(color);
+                gc.setFill(options.getRouteColor());
                 gc.fillOval(
-                        x - 0.5*style.getDotRadius(),
-                        y - 0.5*style.getDotRadius(),
-                        style.dotRadius,
-                        style.dotRadius
+                        x - 0.5 * options.getDotRadius(),
+                        y - 0.5 * options.getDotRadius(),
+                        options.getDotRadius(),
+                        options.getDotRadius()
                 );
             }
 
             // draw labels
             if (v.getIdentifier() != null) {
-                gc.setFill(Color.BLACK);
+                gc.setFill(options.getLabelColor());
                 gc.fillOval(
-                        x - 0.25*style.getDotRadius(),
-                        y - 0.25*style.getDotRadius(),
-                        0.5*style.dotRadius,
-                        0.5*style.dotRadius
+                        x - 0.25 * options.getDotRadius(),
+                        y - 0.25 * options.getDotRadius(),
+                        0.5 * options.getDotRadius(),
+                        0.5 * options.getDotRadius()
                 );
 
-                gc.setFont(style.font);
-                gc.setStroke(Color.BLACK);
-                gc.fillText(v.getIdentifier(), x + 1.5*style.dotRadius, y);
+                gc.setFont(options.getFont());
+                gc.setStroke(options.getLabelColor());
+                gc.fillText(v.getIdentifier(), x + 1.5 * options.getDotRadius(), y);
             }
         }
         this.group.getChildren().add(c);
@@ -219,9 +174,5 @@ public class GraphRenderer {
 
     public GeoBounds getGeoBounds() {
         return this.geoBounds;
-    }
-
-    public GraphRendererStyle getStyle() {
-        return this.style;
     }
 }
