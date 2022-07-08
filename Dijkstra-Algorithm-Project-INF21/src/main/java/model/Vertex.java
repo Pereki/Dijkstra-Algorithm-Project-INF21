@@ -4,38 +4,49 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Vertex implements Serializable {
-    private int id;
+    private long id;
     private int costs = 0;
-    private Vertex precessor;
+    private Vertex predecessor;
     private double lat;//Breitengrad
     private double lon;//Längengrad
     private String identifier;//Bezeichner
     private boolean junction;//anschlussstelle
 
-    public Vertex(int id, double lat, double lon, Vertex precessor, String identifier, boolean junction){
+    public Vertex(long id, double lat, double lon, Vertex predecessor, String identifier, boolean junction){
         this.id = id;
         this.lat = lat;
         this.lon = lon;
-        this.precessor =  precessor;
+        this.predecessor =  predecessor;
         this.identifier = identifier;
         this.junction = junction;
     }
-    public Vertex(int id, double lat, double lon){
+
+    public Vertex(long id, double lat, double lon, String identifier, boolean junction){
         this.id = id;
         this.lat = lat;
         this.lon = lon;
-        this.precessor = null;
+        this.identifier = identifier;
+        this.predecessor =  null;
+
+        this.junction = junction;
+    }
+
+    public Vertex(long id, double lat, double lon){
+        this.id = id;
+        this.lat = lat;
+        this.lon = lon;
+        this.predecessor = null;
         this.identifier = null;
         this.junction = false;
     }
 
-    public int getId(){
+    public long getId(){
         return id;
     }
 
     public int getCosts(){return costs;}
 
-    public Vertex getPrecessor(){return precessor;}
+    public Vertex getPredecessor(){return predecessor;}
 
     public double getLat(){return lat;}
 
@@ -45,6 +56,14 @@ public class Vertex implements Serializable {
 
     public boolean getJunction(){return junction;}
 
+    public void setIdentifier(String identifier){
+        this.identifier = identifier;
+    }
+
+    public void setJunction(Boolean b){
+        this.junction = b;
+    }
+
 
 
     @Override
@@ -52,7 +71,7 @@ public class Vertex implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Vertex)) return false;
         Vertex vertex = (Vertex) o;
-        return getId() == vertex.getId() && getCosts() == vertex.getCosts() && Double.compare(vertex.getLat(), getLat()) == 0 && Double.compare(vertex.getLon(), getLon()) == 0 && getJunction() == vertex.getJunction() && Objects.equals(getIdentifier(), vertex.getIdentifier());
+        return Double.compare(vertex.getLat(), getLat()) == 0 && Double.compare(vertex.getLon(), getLon()) == 0 ;
     }
 
     @Override

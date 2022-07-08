@@ -3,16 +3,21 @@ package service.XmlElements;
 import java.util.ArrayList;
 
 public class Way {
-    private ArrayList<Node> nodes;
+    private ArrayList<Node> nodes = new ArrayList<Node>();
 
-    public Node getAndDeleteFirstNode(){
-        Node n = nodes.get(0);
-        nodes.remove(0);
-
-        return n;
+    public Node getNode(int index){
+            return nodes.get(index);
     }
 
-    public void addLastNode(Node n){
+    public void removeNode(int index){
+            nodes.remove(index);
+    }
+
+    public int size(){
+        return nodes.size();
+    }
+
+    public void addNode(Node n){
         nodes.add(n);
     }
 }

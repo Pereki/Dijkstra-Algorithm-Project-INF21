@@ -70,8 +70,8 @@ public class Controller implements Initializable {
         g.addVertex(frankfurt);
         g.addVertex(berlin);
 
-        g.addEdge(new Edge(stuttgart, frankfurt, 0, 1));
-        g.addEdge(new Edge(frankfurt, berlin, 1, 2));
+        g.addEdge(new Edge(stuttgart, frankfurt, 1));
+        g.addEdge(new Edge(frankfurt, berlin,  2));
 
         Platform.runLater(() -> renderer.addGraphLayer("Urlaubsroute", g, Color.RED));
 

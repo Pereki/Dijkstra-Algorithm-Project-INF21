@@ -62,7 +62,7 @@ public class GraphRenderer {
     private GeoBounds geoBounds;
 
     // graphs
-    private HashMap<String, Graph> graphs = new HashMap<>();
+    private final HashMap<String, Graph> graphs = new HashMap<>();
 
     // styling
     private GraphRendererStyle style = new GraphRendererStyle(
