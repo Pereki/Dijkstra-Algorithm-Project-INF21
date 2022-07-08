@@ -171,9 +171,6 @@ public class XmlParser {
                     graph.createCrossingIfNeeded(e);
                 }
             }
-
-            System.out.println(graph.getVertexList().size());
-            System.out.println(graph.getEdgeList().size());
         }
 
         //Auffahrten aus Nodes hinzufügen
@@ -186,9 +183,6 @@ public class XmlParser {
                 near.setJunction(true);//sollte hoffentlich auch die Werte im graph ändern
             }
         }
-
-        System.out.println(graph.getVertexList().size());
-        System.out.println(graph.getEdgeList().size());
     }
 
     private int getIndexOfNodeById(long id){

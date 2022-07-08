@@ -1,9 +1,6 @@
 package test;
 
-import model.Controller;
-import model.Edge;
-import model.Graph;
-import model.Vertex;
+import model.*;
 import service.Dijkstra;
 import service.XmlParser;
 
@@ -37,11 +34,10 @@ public class XmlParserTest {
 
         Graph g = x.getGraph();
 
-        System.out.println(g.getVertexList().size());
-        System.out.println(g.getEdgeList().size());
+
 
         try{
-            Controller.saveGraph(g, "graph.txt");
+            SerializeService.saveGraph(g, "graph.txt");
         }catch(Exception e){
             System.out.println(e.toString());
         }
