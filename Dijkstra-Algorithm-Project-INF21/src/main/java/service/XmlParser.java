@@ -138,10 +138,14 @@ public class XmlParser {
 
                 if(!graph.hasVertex(v1)){
                     graph.addVertex(v1);
+                }else{
+                    System.out.println("Vertex existiert");
                 }
 
                 if(!graph.hasVertex(v2)){
                     graph.addVertex(v2);
+                }else{
+                    System.out.println("Vertex existiert");
                 }
 
                 Edge e = new Edge(v1,v2);
@@ -153,8 +157,8 @@ public class XmlParser {
                 }
             }
 
-            System.out.println(graph.getVertexList().size());
-            System.out.println(graph.getEdgeList().size());
+            //System.out.println(graph.getVertexList().size());
+            //System.out.println(graph.getEdgeList().size());
         }
 
         //Auffahrten aus Nodes hinzufügen
@@ -164,7 +168,7 @@ public class XmlParser {
             if(speicher.isJunction()){
                 Vertex near = graph.getNearestVertex(new Vertex(speicher.getId(),speicher.getLat(),speicher.getLon()));
                 near.setIdentifier(speicher.getIdentifier());
-                near.setJunction(true);//sollte hoffentlich auch die Werte im graph ändern
+                near.setJunction(true);
             }
         }
 

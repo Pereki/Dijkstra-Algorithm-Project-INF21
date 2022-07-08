@@ -1,9 +1,6 @@
 package test;
 
-import model.Controller;
-import model.Edge;
-import model.Graph;
-import model.Vertex;
+import model.*;
 import service.Dijkstra;
 import service.XmlParser;
 
@@ -33,7 +30,7 @@ public class XmlParserTest {
     }
 
     public void graphTest(){
-        XmlParser x = new XmlParser("C:\\Users\\ykont\\Documents\\GitHub\\Dijstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\java\\service\\test2.osm");
+        XmlParser x = new XmlParser("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\java\\service\\test2.osm");
 
         Graph g = x.getGraph();
 
@@ -41,7 +38,7 @@ public class XmlParserTest {
         System.out.println(g.getEdgeList().size());
 
         try{
-            Controller.saveGraph(g, "graph.txt");
+            SerializeService.saveGraph(g, "graph.txt");
         }catch(Exception e){
             System.out.println(e.toString());
         }

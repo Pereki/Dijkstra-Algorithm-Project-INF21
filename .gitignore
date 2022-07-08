@@ -103,3 +103,6 @@ fabric.properties
 /Dijstra-Algorithm-Project-INF21/.idea/
 Dijstra-Algorithm-Project-INF21.iml
 Dijkstra-Algorithm-Project-INF21/src/main/java/service/test2.osm
+Dijkstra-Algorithm-Project-INF21/graph.txt
+Dijkstra-Algorithm-Project-INF21/graph.txt
+*.txt
