@@ -10,7 +10,7 @@
      <menus>
        <Menu mnemonicParsing="false" text="Datei">
          <items>
-           <MenuItem fx:id="menuButtonMapImport" mnemonicParsing="false" text="Karte öffnen" />
+           <MenuItem fx:id="menuButtonMapImport" mnemonicParsing="false" onAction="#onMenuButtonMapImportClick" text="Karte öffnen" />
                <MenuItem fx:id="menuButtonMapExport" mnemonicParsing="false" text="Karte speichern" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem fx:id="menuButtonRouteImport" mnemonicParsing="false" text="Route öffnen" />

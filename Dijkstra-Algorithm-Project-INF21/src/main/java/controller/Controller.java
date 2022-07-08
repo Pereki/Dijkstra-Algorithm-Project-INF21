@@ -116,6 +116,12 @@ public class Controller implements Initializable {
     protected void onMenuButtonContributorsClick() {
         String text = "Lukas Burkhardt (Algorithmus) # Pascal Fuchs (Datenstruktur) # Ruben Kraft (API) # Paul Lehmann (SVG Parser) # David Maier (GUI)";
         Alert alert = new Alert(Alert.AlertType.NONE, text.replaceAll(" # ", "\n"), ButtonType.CLOSE);
+        alert.setTitle("Mitwirkende");
         alert.showAndWait();
+    }
+
+    @FXML
+    protected void onMenuButtonMapImportClick() {
+
     }
 }
