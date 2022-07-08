@@ -3,7 +3,6 @@ package test;
 import model.Edge;
 import model.Graph;
 import model.Vertex;
-import org.junit.Assert;
 import service.Dijkstra;
 
 import java.io.*;
@@ -44,18 +43,18 @@ public class DijkstraTest {
 
         //Graph raw = new Graph(edges,vertexes);
         //saveGraph(raw,"graph.graph");
-        Graph raw = loadGraph("graph.graph");
-        Graph g = Dijkstra.getShortWay(raw,B,F);
+        //Graph raw = loadGraph("graph.graph");
+        //Graph g = Dijkstra.getShortWay(raw,B,F);
 
-        for(Vertex v:g.getVertexList()){
-            System.out.print(v.getId());
-        }
-        System.out.println();
-        double length =0;
-        for(Edge e: g.getEdgeList()){
-            length+=e.getLength();
-        }
-        System.out.println(length);
+        //for(Vertex v:g.getVertexList()){
+            //System.out.print(v.getId());
+        //}
+        //System.out.println();
+        //double length =0;
+        //for(Edge e: g.getEdgeList()){
+            //length+=e.getLength();
+        //}
+        //System.out.println(length);
 
         System.out.println("finish");
 

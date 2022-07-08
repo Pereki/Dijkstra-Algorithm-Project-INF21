@@ -78,7 +78,20 @@ public class XmlParser {
                 } else if (line.contains("<tag")&&areWeInANode) {
                     String[] entries = line.split(" ");
 
-                    if(entries[1].contains("k=\"highway\"")&&entries[2].contains("v=\"motorway_junction\"")){
+                    for(int i=0; i< entries.length;i++){
+                        if(entries[i].contains("k=\"highway\"")&&entries[i+1].contains("v=\"motorway_junction\"")){
+                            Node speicher = listOfNodes.get(listOfNodes.size()-1);
+                            speicher.setJunction(true);
+                        }else if(entries[i].contains("k=\"name\"")){
+                            Node speicher = listOfNodes.get(listOfNodes.size()-1);
+                            entries[i+1] = entries[i+1].replace("v=\"", "");
+                            entries[i+1] = entries[i+1].replace("\"", "");
+                            entries[i+1] = entries[i+1].replace("/>", "");
+                            speicher.setIdentifier(entries[i+1]);
+                        }
+                    }
+
+                    /*if(entries[1].contains("k=\"highway\"")&&entries[2].contains("v=\"motorway_junction\"")){
                         Node speicher = listOfNodes.get(listOfNodes.size()-1);
                         speicher.setJunction(true);
 
@@ -92,7 +105,7 @@ public class XmlParser {
 
                         //listOfNodes.remove(listOfNodes.size()-1);
                         //listOfNodes.add(listOfNodes.size()-1, speicher);
-                    }
+                    }*/
                 } else if (line.contains("</node>")&&areWeInANode) {
                     areWeInANode = false;
                 } else if (line.contains("<way")) {
