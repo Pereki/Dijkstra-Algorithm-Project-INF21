@@ -10,7 +10,7 @@ import java.io.FileReader;
 
 public class XmlBorders {
     private String path;
-    private Graph g;
+    private Graph g = new Graph();
     private int resolution;
 
     public XmlBorders(String pathToFile, int resolution) {
@@ -25,23 +25,32 @@ public class XmlBorders {
 
         try{
             BufferedReader br = new BufferedReader(new FileReader(path));
-            String line = br.readLine();
+            String line;
+            String entries[];
+            Boolean doWeHaveANewWay = false;
 
-            line = line.toLowerCase();
+            while(true) {
+                line = br.readLine();
 
-            String[] entries = line.split(" ");
+                line = line.toLowerCase();
 
-            for(int i=0;i<entries.length;i++){
-                if(entries[i].contains("<nd")){
-                    entries[i+1] = entries[i+1].replace("lat=","");
-                    entries[i+1] = entries[i+1].replace("\"","");
+                entries = line.split(" ");
 
-                    entries[i+2] = entries[i+2].replace("lon=","");
-                    entries[i+2] = entries[i+2].replace("\"","");
-                    entries[i+2] = entries[i+2].replace("/>","");
+                for (int i = 0; i < entries.length; i++) {
+                    if (entries[i].contains("<nd")) {
+                        entries[i + 1] = entries[i + 1].replace("lat=", "");
+                        entries[i + 1] = entries[i + 1].replace("\"", "");
 
-                    v1 = new Vertex(0,Long.parseLong(entries[i+1]), Long.parseLong(entries[i+2]));
+                        entries[i + 2] = entries[i + 2].replace("lon=", "");
+                        entries[i + 2] = entries[i + 2].replace("\"", "");
+                        entries[i + 2] = entries[i + 2].replace("/>", "");
 
+                        v1 = new Vertex(0, Double.parseDouble(entries[i + 1]), Double.parseDouble(entries[i + 2]));
+                    }
+                }
+
+                if(!(v1==null)){
+                    break;
                 }
             }
             v2 = v1;
@@ -56,19 +65,42 @@ public class XmlBorders {
                 entries = line.split(" ");
                 for(int i=0;i<entries.length;i++){
                     if(entries[i].contains("<nd")){
-                        if(i%resolution==0){
-                            entries[i+1] = entries[i+1].replace("lat=","");
-                            entries[i+1] = entries[i+1].replace("\"","");
+                        if(doWeHaveANewWay){
+                            if(i%resolution==0){
+                                entries[i+1] = entries[i+1].replace("lat=","");
+                                entries[i+1] = entries[i+1].replace("\"","");
 
-                            entries[i+2] = entries[i+2].replace("lon=","");
-                            entries[i+2] = entries[i+2].replace("\"","");
-                            entries[i+2] = entries[i+2].replace("/>","");
+                                entries[i+2] = entries[i+2].replace("lon=","");
+                                entries[i+2] = entries[i+2].replace("\"","");
+                                entries[i+2] = entries[i+2].replace("/>","");
 
-                            v1 = new Vertex(0,Long.parseLong(entries[i+1]), Long.parseLong(entries[i+2]));
-                            Edge e = new Edge(v1, v2);
-                            g.addEdge(e);
-                            v2 = v1;
+                                v1 = new Vertex(0,Double.parseDouble(entries[i+1]), Double.parseDouble(entries[i+2]));
+                                Edge e = new Edge(v1, g.getNearestVertex(v1));
+                                if(e.getLength()<1){
+                                    g.addEdge(e);
+                                }
+
+                                v2 = v1;
+                                doWeHaveANewWay=false;
+                            }
+                        }else{
+                            if(i%resolution==0){
+                                entries[i+1] = entries[i+1].replace("lat=","");
+                                entries[i+1] = entries[i+1].replace("\"","");
+
+                                entries[i+2] = entries[i+2].replace("lon=","");
+                                entries[i+2] = entries[i+2].replace("\"","");
+                                entries[i+2] = entries[i+2].replace("/>","");
+
+                                v1 = new Vertex(0,Double.parseDouble(entries[i+1]), Double.parseDouble(entries[i+2]));
+                                Edge e = new Edge(v1, v2);
+                                g.addEdge(e);
+
+                                v2 = v1;
+                            }
                         }
+                    }else if(entries[i].contains("type=\"way\"")){
+                        doWeHaveANewWay=true;
                     }
                 }
 
@@ -76,8 +108,8 @@ public class XmlBorders {
             }
 
             v1 = g.getVertexList().get(0);
-            Edge e = new Edge(v1, v2);
-            g.addEdge(e);
+            Edge e = new Edge(v1, g.getNearestVertex(v1));
+            //g.addEdge(e);
         }catch(Exception e){
             System.out.println(e.toString());
         }

@@ -60,16 +60,18 @@ public class DijkstraTest {
 //        }
 //        System.out.println(length);
 
-        System.out.println("finish");
+        //System.out.println("finish");
 
 
         XmlParserTest parser = new XmlParserTest();
 
-        if(parser.crossingTest()){
-            System.out.println("Parser läuft");
-        }
+        //if(parser.crossingTest()){
+            //System.out.println("Parser läuft");
+        //}
 
-        parser.graphTest();
+        //parser.graphTest();
+
+        parser.borderTest();
 
     }
 

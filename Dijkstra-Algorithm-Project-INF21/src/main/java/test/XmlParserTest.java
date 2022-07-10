@@ -2,6 +2,7 @@ package test;
 
 import model.*;
 import service.Dijkstra;
+import service.XmlBorders;
 import service.XmlParser;
 
 public class XmlParserTest {
@@ -42,5 +43,20 @@ public class XmlParserTest {
             System.out.println(e.toString());
         }
 
+    }
+
+    public void borderTest(){
+        XmlBorders borders = new XmlBorders("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\java\\service\\border.osm", 1);
+
+        Graph g = borders.getGraph();
+
+        System.out.println(g.getVertexList().size());
+        System.out.println(g.getEdgeList().size());
+
+        try{
+            SerializeService.saveGraph(g, "border.txt");
+        }catch(Exception e){
+            System.out.println(e.toString());
+        }
     }
 }
