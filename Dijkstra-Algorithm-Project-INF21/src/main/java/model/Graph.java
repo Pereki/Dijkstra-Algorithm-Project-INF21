@@ -141,7 +141,7 @@ public class Graph implements Serializable {
             }
 
             double currentdifference = Math.sqrt((differenceLat*differenceLat)+(differenceLon*differenceLon));
-            if(selectedVertex == null || shortesdifference > currentdifference){
+            if((selectedVertex == null || shortesdifference > currentdifference) && currentdifference != 0){
                 selectedVertex = vertex;
                 shortesdifference = currentdifference;
             }
