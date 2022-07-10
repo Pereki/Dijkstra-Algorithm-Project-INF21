@@ -34,6 +34,7 @@ public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target) thro
         possibleGraphWays.remove(shortestGraphWay); //remove the way to the actual vertex
         shortestGraphWay = possibleGraphWays.get(0);
         for(GraphWay graphWay : possibleGraphWays){ //get the new shortest way
+            System.out.println(graphWay.getLength());
             if(graphWay.getLength()< shortestGraphWay.getLength()){
                 shortestGraphWay = graphWay;
             }
