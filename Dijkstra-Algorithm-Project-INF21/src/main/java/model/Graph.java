@@ -206,59 +206,66 @@ public class Graph implements Serializable {
             double lon = (eXAchsenKomponente*1-cXAchsenKomponente*cSteigung)/(eSteigung*1-1*cSteigung);//Schnittpunkt berechnen
             double lat = (cXAchsenKomponente*eSteigung-eXAchsenKomponente*cSteigung)/(1*eSteigung-cSteigung*1);
 
-            double maxLon = e1.getLon();//Max- und Minwerte berechnen, um herauszufinden, ob der Schnittpunkt im erforderlichen Bereich liegt
+            boolean inRange = false;
 
-            if(maxLon<e2.getLon()){
-                maxLon = e2.getLon();
-            }
-            if(maxLon<c1.getLon()){
-                maxLon = c1.getLon();
-            }
-            if(maxLon<c2.getLon()){
-                maxLon = c2.getLon();
-            }
-
-
-            double maxLat = e1.getLat();
-
-            if(maxLat<e2.getLat()){
-                maxLat = e2.getLat();
-            }
-            if(maxLat<c1.getLat()){
-                maxLat = c1.getLat();
-            }
-            if(maxLat<c2.getLat()){
-                maxLat = c2.getLat();
+            if(e1.getLat()<e2.getLat()){
+                if(lat>e1.getLat()&&lat<e2.getLat()){
+                    inRange=true;
+                }else{
+                    inRange=false;
+                }
+            }else{
+                if(lat<e1.getLat()&&lat>e2.getLat()){
+                    inRange=true;
+                }else{
+                    inRange=false;
+                }
             }
 
-
-            double minLon = e1.getLon();
-
-            if(minLon>e2.getLon()){
-                minLon = e2.getLon();
-            }
-            if(minLon>c1.getLon()){
-                minLon = c1.getLon();
-            }
-            if(minLon>c2.getLon()){
-                minLon = c2.getLon();
-            }
-
-
-            double minLat = e1.getLat();
-
-            if(minLat>e2.getLat()){
-                minLat = e2.getLat();
-            }
-            if(minLat>c1.getLat()){
-                minLat = c1.getLat();
-            }
-            if(minLat>c2.getLat()){
-                minLat = c2.getLat();
+            if(e1.getLon()<e2.getLon()&&inRange){
+                if(lon>e1.getLon()&&lon<e2.getLon()&&inRange){
+                    inRange=true;
+                }else{
+                    inRange=false;
+                }
+            }else{
+                if(lon<e1.getLon()&&lon>e2.getLon()&&inRange){
+                    inRange=true;
+                }else{
+                    inRange=false;
+                }
             }
 
+            if(c1.getLat()<c2.getLat()&&inRange){
+                if(lat>c1.getLat()&&lat<c2.getLat()&&inRange){
+                    inRange=true;
+                }else{
+                    inRange=false;
+                }
+            }else{
+                if(lat<c1.getLat()&&lat>c2.getLat()&&inRange){
+                    inRange=true;
+                }else{
+                    inRange=false;
+                }
+            }
 
-            if(lon>minLon && lon<maxLon && lat>minLat && lat<maxLat){//alte Edges löschen, vier neue + crossing Vertex hinzufügen
+            if(c1.getLon()<c2.getLon()&&inRange){
+                if(lon>c1.getLon()&&lon<c2.getLon()&&inRange){
+                    inRange=true;
+                }else{
+                    inRange=false;
+                }
+            }else{
+                if(lon<c1.getLon()&&lon>c2.getLon()&&inRange){
+                    inRange=true;
+                }else{
+                    inRange=false;
+                }
+            }
+
+
+            if(inRange){//alte Edges löschen, vier neue + crossing Vertex hinzufügen
                 edgeList.remove(e);
                 edgeList.remove(compare);
 
@@ -274,6 +281,8 @@ public class Graph implements Serializable {
                 edgeList.add(enew2);
                 edgeList.add(enew3);
                 edgeList.add(enew4);
+
+                System.out.println("Crossing added");
 
                 break;
             }

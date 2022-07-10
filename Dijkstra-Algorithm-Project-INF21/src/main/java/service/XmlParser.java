@@ -51,8 +51,7 @@ public class XmlParser {
                             Node speicher = listOfNodes.get(listOfNodes.size()-1);
 
                             speicher.setId(Long.parseLong(entries[i]));
-                            //listOfNodes.remove(listOfNodes.size()-1);
-                            //listOfNodes.add(listOfNodes.size()-1,speicher);
+                            
                         } else if (entries[i].contains("lat=")) {
                             entries[i]=entries[i].replace("lat=","");
                             entries[i]=entries[i].replace("\"","");
@@ -60,8 +59,7 @@ public class XmlParser {
                             Node speicher = listOfNodes.get(listOfNodes.size()-1);
 
                             speicher.setLat(Double.parseDouble(entries[i]));
-                            //listOfNodes.remove(listOfNodes.size()-1);
-                            //listOfNodes.add(listOfNodes.size()-1,speicher);
+
                         } else if (entries[i].contains("lon=")) {
                             entries[i]=entries[i].replace("lon=","");
                             entries[i]=entries[i].replace("\"","");
@@ -71,8 +69,6 @@ public class XmlParser {
                             Node speicher = listOfNodes.get(listOfNodes.size()-1);
 
                             speicher.setLon(Double.parseDouble(entries[i]));
-                            //listOfNodes.remove(listOfNodes.size()-1);
-                            //listOfNodes.add(listOfNodes.size()-1,speicher);
                         }
                     }
                 } else if (line.contains("<tag")&&areWeInANode) {
@@ -91,21 +87,6 @@ public class XmlParser {
                         }
                     }
 
-                    /*if(entries[1].contains("k=\"highway\"")&&entries[2].contains("v=\"motorway_junction\"")){
-                        Node speicher = listOfNodes.get(listOfNodes.size()-1);
-                        speicher.setJunction(true);
-
-                        //listOfNodes.remove(listOfNodes.size()-1);
-                        //listOfNodes.add(listOfNodes.size()-1,speicher);
-                    } else if(entries[1].contains("k=\"name\"")){
-                        Node speicher = listOfNodes.get(listOfNodes.size()-1);
-                        entries[2] = entries[2].replace("v=\"", "");
-                        entries[2] = entries[2].replace("\"", "");
-                        speicher.setIdentifier(entries[2]);
-
-                        //listOfNodes.remove(listOfNodes.size()-1);
-                        //listOfNodes.add(listOfNodes.size()-1, speicher);
-                    }*/
                 } else if (line.contains("</node>")&&areWeInANode) {
                     areWeInANode = false;
                 } else if (line.contains("<way")) {
@@ -157,10 +138,14 @@ public class XmlParser {
 
                 if(!graph.hasVertex(v1)){
                     graph.addVertex(v1);
+                }else{
+                    System.out.println("Vertex existiert");
                 }
 
                 if(!graph.hasVertex(v2)){
                     graph.addVertex(v2);
+                }else{
+                    System.out.println("Vertex existiert");
                 }
 
                 Edge e = new Edge(v1,v2);
@@ -180,7 +165,7 @@ public class XmlParser {
             if(speicher.isJunction()){
                 Vertex near = graph.getNearestVertex(new Vertex(speicher.getId(),speicher.getLat(),speicher.getLon()));
                 near.setIdentifier(speicher.getIdentifier());
-                near.setJunction(true);//sollte hoffentlich auch die Werte im graph ändern
+                near.setJunction(true);
             }
         }
     }
