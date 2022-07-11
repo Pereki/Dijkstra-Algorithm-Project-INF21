@@ -49,7 +49,7 @@ public class GraphShrinker {
                 }else{
                     end = secondEdge.getStartingVertex();
                 }
-                SmallGraph.addEdge(new Edge(start, end));
+                SmallGraph.addEdge(new Edge(start, end, firstEdge.getLength()+secondEdge.getLength()));
                 SmallGraph.deleteVertex(currentvertex);
                 i--;
             }
