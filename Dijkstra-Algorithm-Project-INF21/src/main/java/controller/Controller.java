@@ -4,10 +4,14 @@ import com.almasb.fxgl.core.collection.PropertyChangeListener;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import model.*;
@@ -53,7 +57,7 @@ public class Controller implements Initializable {
     @FXML
     private ComboBox<String> inputDestination;
 
-    private HashMap<String, Vertex> junctions;
+    private HashMap<String, Vertex> junctions = new HashMap<>();
 
     private GraphRenderer renderer;
 
@@ -96,6 +100,36 @@ public class Controller implements Initializable {
         });
     }
 
+    @FXML
+    protected void onInputStartKeyEvent(KeyEvent e) {
+        displaySuggestions(inputStart);
+    }
+
+    @FXML
+    protected void onInputDestinationKeyEvent(KeyEvent e) {
+        displaySuggestions(inputDestination);
+    }
+
+    private void displaySuggestions(ComboBox input) {
+        String text = input.getEditor().getText();
+        ObservableList<String> matches = FXCollections.observableList(findMatches(text));
+        input.setItems(matches);
+        if (matches.size() > 0) {
+            input.show();
+        } else {
+            input.hide();
+        }
+    }
+
+    private List<String> findMatches(String text) {
+        List<String> matches = new ArrayList<>();
+        for (String key : junctions.keySet()) {
+            if (key.toLowerCase(Locale.ROOT).contains(text.toLowerCase(Locale.ROOT))) {
+                matches.add(key);
+            }
+        }
+        return matches;
+    }
 
     @FXML
     protected void onButtonZoomOutClick() {

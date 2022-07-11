@@ -59,8 +59,8 @@
       </HBox>
       <Label prefHeight="17.0" prefWidth="34.0" text="Start" />
       <Label prefHeight="17.0" prefWidth="29.0" text="Ziel" GridPane.rowIndex="1" />
-      <ComboBox fx:id="inputStart" editable="true" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" />
-      <ComboBox fx:id="inputDestination" editable="true" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <ComboBox fx:id="inputStart" editable="true" onKeyReleased="#onInputStartKeyEvent" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" />
+      <ComboBox fx:id="inputDestination" editable="true" onKeyReleased="#onInputDestinationKeyEvent" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <padding>
          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
       </padding>
