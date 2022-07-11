@@ -8,32 +8,56 @@ import java.util.ArrayList;
 
 public class GraphShrinker {
     Graph BigGraph;
+    Graph SmallGraph;
 
-
-    public GraphShrinker(Graph g){
+    public GraphShrinker(Graph g) {
         BigGraph = g;
+        SmallGraph = g;
     }
 
-    public void shrinkGraph(){
-        ArrayList<Edge> finishingEdges = new ArrayList<Edge>();
-        ArrayList<Edge> startingEdges = new ArrayList<Edge>();
-        for (Vertex currentVertex : this.BigGraph.getVertexList()) {
-            if(currentVertex.getIdentifier() == ""){
-                for(Edge currentedge : this.BigGraph.getEdgeList()){
-                    if(currentedge.getEndingVertex().equals(currentVertex)){
-                        finishingEdges.add(currentedge);
-
+    public void shrinkGraph() {
+        Edge firstEdge = null;
+        Edge secondEdge = null;
+        Vertex start;
+        Vertex end;
+        for (int i = 0; i < this.BigGraph.getVertexList().size(); i++) {
+            Vertex currentvertex = this.BigGraph.getVertexList().get(i);
+            if (currentvertex.getIdentifier().equals("Hannover")) {
+                System.out.println("deleteNode");
+                //Go trough Edgelist and search the two Edges
+                for (int j = 0; j < this.BigGraph.getEdgeList().size(); j++) {
+                    Edge currentEdge = this.BigGraph.getEdgeList().get(j);
+                    if ((currentEdge.getStartingVertex() == currentvertex || currentEdge.getEndingVertex() == currentvertex) && firstEdge == null){
+                        this.SmallGraph.deleteEdge(currentEdge);
+                        firstEdge = currentEdge;
+                        j--;
                     }
-                    if(currentedge.getStartingVertex().equals(currentVertex)){
-                        startingEdges.add(currentedge);
+                    else if((currentEdge.getStartingVertex() == currentvertex || currentEdge.getEndingVertex() == currentvertex) && !(firstEdge.equals(currentEdge))){
+                        this.SmallGraph.deleteEdge(currentEdge);
+                        secondEdge = currentEdge;
+                        j--;
                     }
                 }
-                for(Edge fin : finishingEdges){
-
+                if(firstEdge.getStartingVertex().equals(currentvertex)){
+                    start = firstEdge.getEndingVertex();
+                }else{
+                    start = firstEdge.getStartingVertex();
                 }
+
+                if(secondEdge.getStartingVertex().equals(currentvertex)){
+                    end = secondEdge.getEndingVertex();
+                }else{
+                    end = secondEdge.getStartingVertex();
+                }
+                SmallGraph.addEdge(new Edge(start, end, firstEdge.getLength()+secondEdge.getLength()));
+                SmallGraph.deleteVertex(currentvertex);
+                i--;
             }
-
         }
+    }
+
+    public Graph getMinimizedGraph() {
+        return this.SmallGraph;
     }
 
 }

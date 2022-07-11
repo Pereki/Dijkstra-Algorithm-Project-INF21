@@ -302,21 +302,14 @@ public class Graph implements Serializable {
         return false;
     }
 
-    public void deleteEdge(Edge e){
+     public void deleteEdge(Edge e){
         this.edgeList.remove(e);
-        /* for(int i = 0; i < this.edgeList.size(); i++){
-            if(this.edgeList.get(i).equals(e)){
-                this.edgeList.remove(i);
-            }
-        } */
+
     }
 
     public void deleteVertex(Vertex v){
         this.vertexList.remove(v);
-        /* for(int i = 0; i < this.vertexList.size(); i++){
-            if(this.vertexList.get(i).equals(v)){
-                this.vertexList.remove(i);
-            }*/
+
         }
 
 
