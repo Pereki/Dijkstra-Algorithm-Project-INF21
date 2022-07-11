@@ -178,36 +178,34 @@ public class Controller implements Initializable {
         alert.showAndWait();
     }
 
-    // file
+    // file: borders
 
     @FXML
-    protected void onMenuButtonMapExportClick() {
+    protected void onMenuButtonBordersExportClick() {
         Graph graph = getBordersGraph();
         if (graph == null) {
-            showError("Es ist keine Karte geladen.");
+            showError("Es sind keine Ländergrenzen geladen.");
             return;
         }
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Karte speichern unter");
+        fileChooser.setTitle("Ländergrenzen speichern unter");
         File file = fileChooser.showSaveDialog(scrollpane.getScene().getWindow());
 
         Platform.runLater(() -> {
             try {
                 SerializeService.saveGraph(graph, file.getAbsolutePath());
-                setBordersGraph(graph);
             } catch (IOException e) {
-                showError("Die Karte konnte nicht exportiert werden.");
+                showError("Die Ländergrenzen konnten nicht exportiert werden.");
                 e.printStackTrace();
-                return;
             }
         });
     }
 
     @FXML
-    protected void onMenuButtonMapImportClick() {
+    protected void onMenuButtonBordersImportClick() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Karte öffnen");
+        fileChooser.setTitle("Ländergrenzen öffnen");
         File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
 
         Platform.runLater(() -> {
@@ -215,15 +213,17 @@ public class Controller implements Initializable {
                 Graph graph = SerializeService.loadGraph(file.getAbsolutePath());
                 setBordersGraph(graph);
             } catch (IOException | ClassNotFoundException e) {
-                showError("Die angegebene Datei konnte nicht als Karte geladen werden.");
+                showError("Die angegebene Datei konnte nicht als Ländergrenzen geladen werden.");
                 e.printStackTrace();
             }
         });
     }
 
+    // file: roads
+
     @FXML
-    protected void onMenuButtonRouteExportClick() {
-        Graph graph = getBordersGraph();
+    protected void onMenuButtonRoadsExportClick() {
+        Graph graph = getRoadsGraph();
         if (graph == null) {
             showError("Es ist kein Straßennetz geladen.");
             return;
@@ -236,17 +236,15 @@ public class Controller implements Initializable {
         Platform.runLater(() -> {
             try {
                 SerializeService.saveGraph(graph, file.getAbsolutePath());
-                setBordersGraph(graph);
             } catch (IOException e) {
                 showError("Das Straßennetz konnte nicht exportiert werden.");
                 e.printStackTrace();
-                return;
             }
         });
     }
 
     @FXML
-    protected void onMenuButtonRouteImportClick() {
+    protected void onMenuButtonRoadsImportClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Straßennetz öffnen");
         File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
@@ -262,18 +260,7 @@ public class Controller implements Initializable {
         });
     }
 
-    @FXML
-    protected void onMenuButtonOsmRoadsImportClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("OSM-Datei mit Straßennetz öffnen");
-        File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
-
-        Platform.runLater(() -> {
-            XmlParser p = new XmlParser(file.getAbsolutePath());
-            Graph g = p.getGraph();
-            setRoadsGraph(g);
-        });
-    }
+    // file: OSM
 
     @FXML
     protected void onMenuButtonOsmBordersImportClick() {
@@ -285,6 +272,19 @@ public class Controller implements Initializable {
             XmlParser p = new XmlParser(file.getAbsolutePath());
             Graph g = p.getGraph();
             setBordersGraph(g);
+        });
+    }
+
+    @FXML
+    protected void onMenuButtonOsmRoadsImportClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("OSM-Datei mit Straßennetz öffnen");
+        File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
+
+        Platform.runLater(() -> {
+            XmlParser p = new XmlParser(file.getAbsolutePath());
+            Graph g = p.getGraph();
+            setRoadsGraph(g);
         });
     }
 

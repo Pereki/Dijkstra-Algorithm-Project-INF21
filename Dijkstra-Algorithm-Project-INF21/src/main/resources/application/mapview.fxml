@@ -10,11 +10,11 @@
      <menus>
        <Menu mnemonicParsing="false" text="Datei">
          <items>
-           <MenuItem fx:id="menuButtonMapImport" mnemonicParsing="false" onAction="#onMenuButtonMapImportClick" text="Grenzen öffnen" />
-               <MenuItem fx:id="menuButtonMapExport" mnemonicParsing="false" onAction="#onMenuButtonMapExportClick" text="Grenzen speichern" />
+           <MenuItem fx:id="menuButtonMapImport" mnemonicParsing="false" onAction="#onMenuButtonBordersImportClick" text="Grenzen öffnen" />
+               <MenuItem fx:id="menuButtonMapExport" mnemonicParsing="false" onAction="#onMenuButtonBordersExportClick" text="Grenzen speichern" />
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem fx:id="menuButtonRouteImport" mnemonicParsing="false" onAction="#onMenuButtonRouteImportClick" text="Straßennetz öffnen" />
-               <MenuItem fx:id="menuButtonRouteExport" mnemonicParsing="false" onAction="#onMenuButtonRouteExportClick" text="Straßennetz speichern" />
+               <MenuItem fx:id="menuButtonRouteImport" mnemonicParsing="false" onAction="#onMenuButtonRoadsImportClick" text="Straßennetz öffnen" />
+               <MenuItem fx:id="menuButtonRouteExport" mnemonicParsing="false" onAction="#onMenuButtonRoadsExportClick" text="Straßennetz speichern" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem fx:id="menuButtonOsmRouteImport" mnemonicParsing="false" onAction="#onMenuButtonOsmRoadsImportClick" text="OSM Straßennetz importieren" />
                <MenuItem fx:id="menuButtonOsmBorderImport" mnemonicParsing="false" onAction="#onMenuButtonOsmBordersImportClick" text="OSM Grenzen importieren" />
