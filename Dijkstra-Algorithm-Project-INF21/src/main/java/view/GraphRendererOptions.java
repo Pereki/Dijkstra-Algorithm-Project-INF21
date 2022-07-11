@@ -12,6 +12,7 @@ public class GraphRendererOptions {
 
     private boolean showLabels = true;
     private boolean dotJunctions = true;
+    private boolean fillShape = false;
 
     private Font font = new Font(12);
 
@@ -46,6 +47,11 @@ public class GraphRendererOptions {
 
     public GraphRendererOptions dotJunctions(boolean junctions) {
         this.dotJunctions = junctions;
+        return this;
+    }
+
+    public GraphRendererOptions fillShape(boolean fill) {
+        this.fillShape = fill;
         return this;
     }
 
@@ -104,6 +110,14 @@ public class GraphRendererOptions {
 
     public void setDotJunctions(boolean dotJunctions) {
         this.dotJunctions = dotJunctions;
+    }
+
+    public boolean isFillShape() {
+        return fillShape;
+    }
+
+    public void setFillShape(boolean fillShape) {
+        this.fillShape = fillShape;
     }
 
     public Font getFont() {

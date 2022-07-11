@@ -13,13 +13,12 @@ import javafx.stage.FileChooser;
 import model.*;
 import service.Dijkstra;
 import service.XmlParser;
-import view.GraphRenderer;
+import view.GraphDisplay;
+import view.GraphLayer;
 import view.GraphRendererOptions;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 public class Controller implements Initializable {
@@ -28,20 +27,24 @@ public class Controller implements Initializable {
     private static final double MIN_ZOOM_LEVEL = 0.25;
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
-    private static final String ROADS_KEY = "ROADS";
+
+    private static final int BORDERS_POS = 0;
+    private static final GraphRendererOptions BORDERS_OPTIONS = new GraphRendererOptions()
+            .routeColor(Color.valueOf("#bfbfbf"))
+            .dotJunctions(false)
+            .showLabels(false)
+            .fillShape(false);
+
+    private static final int ROADS_POS = 1;
     private static final GraphRendererOptions ROADS_OPTIONS = new GraphRendererOptions()
             .routeColor(Color.valueOf("#154889"))
             .dotJunctions(false)
             .showLabels(false);
-    private static final String BORDERS_KEY = "BORDERS";
-    private static final GraphRendererOptions BORDERS_OPTIONS = new GraphRendererOptions()
-            .routeColor(Color.valueOf("#bfbfbf"))
-            .dotJunctions(false)
-            .showLabels(false);
-    private static final String ROUTE_KEY = "ROUTE";
+
+    private static final int ROUTE_POS = 2;
     private static final GraphRendererOptions ROUTE_OPTIONS = new GraphRendererOptions()
             .routeColor(Color.RED)
-            .dotJunctions(false)
+            .dotJunctions(true)
             .showLabels(true);
 
     @FXML
@@ -55,18 +58,20 @@ public class Controller implements Initializable {
 
     private HashMap<String, Vertex> junctions = new HashMap<>();
 
-    private GraphRenderer renderer;
+    private GraphDisplay renderer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
-        this.renderer = new GraphRenderer(groupGraphs, new GeoBounds(
+        this.renderer = new GraphDisplay(groupGraphs, new GeoBounds(
                 5.866342, 15.041892, 55.058307, 47.270112
         ));
     }
 
+    // FIND ROUTE
+
     @FXML
-    protected void onDrawButtonClick() {
+    protected void onCalculateButtonClick() {
         if (junctions.isEmpty()) {
             showError("Es muss zuerst ein Straßennetz geladen werden.");
             return;
@@ -95,6 +100,8 @@ public class Controller implements Initializable {
             setRouteGraph(route);
         });
     }
+
+    // TEXT FIELDS
 
     @FXML
     protected void onInputStartKeyEvent(KeyEvent e) {
@@ -127,6 +134,8 @@ public class Controller implements Initializable {
         return matches;
     }
 
+    // ZOOMING
+
     @FXML
     protected void onButtonZoomOutClick() {
         double scale = scrollpane.getContent().getScaleX();
@@ -149,6 +158,10 @@ public class Controller implements Initializable {
         scrollpane.getContent().setScaleY(factor);
     }
 
+    // MENUBAR BUTTONS
+
+    // about
+
     @FXML
     protected void onMenuButtonContributorsClick() {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
@@ -163,6 +176,8 @@ public class Controller implements Initializable {
         alert.setTitle("Mitwirkende");
         alert.showAndWait();
     }
+
+    // file
 
     @FXML
     protected void onMenuButtonMapExportClick() {
@@ -272,24 +287,46 @@ public class Controller implements Initializable {
         });
     }
 
+    // LAYER GETTERS/SETTERS
+
+    // borders
+
     protected void setBordersGraph(Graph graph) {
         Platform.runLater(() -> {
-            renderer.removeGraphLayer(BORDERS_KEY);
-            renderer.addGraphLayer(BORDERS_KEY, graph, BORDERS_OPTIONS);
+            renderer.setGraphLayer(BORDERS_POS, new GraphLayer(graph, BORDERS_OPTIONS));
         });
     }
 
     protected Graph getBordersGraph() {
-        return renderer.getGraphLayer(BORDERS_KEY);
+        return renderer.getGraphLayer(BORDERS_POS).getGraph();
     }
+
+    // roads
 
     protected void setRoadsGraph(Graph graph) {
         Platform.runLater(() -> {
             setJunctions(graph.getVertexList());
-            renderer.removeGraphLayer(ROADS_KEY);
-            renderer.addGraphLayer(ROADS_KEY, graph, ROADS_OPTIONS);
+            renderer.setGraphLayer(ROADS_POS, new GraphLayer(graph, ROADS_OPTIONS));
         });
     }
+
+    protected Graph getRoadsGraph() {
+        return renderer.getGraphLayer(ROADS_POS).getGraph();
+    }
+
+    // route
+
+    protected void setRouteGraph(Graph graph) {
+        Platform.runLater(() -> {
+            renderer.setGraphLayer(ROUTE_POS, new GraphLayer(graph, ROUTE_OPTIONS));
+        });
+    }
+
+    protected Graph getRouteGraph() {
+        return renderer.getGraphLayer(ROUTE_POS).getGraph();
+    }
+
+    // MISCELLANEOUS
 
     private void setJunctions(List<Vertex> vertices) {
         this.junctions = new HashMap<>();
@@ -308,21 +345,6 @@ public class Controller implements Initializable {
                 inputDestination.getItems().add(v.getIdentifier());
             }
         }
-    }
-
-    protected Graph getRoadsGraph() {
-        return renderer.getGraphLayer(ROADS_KEY);
-    }
-
-    protected void setRouteGraph(Graph graph) {
-        Platform.runLater(() -> {
-            renderer.removeGraphLayer(ROUTE_KEY);
-            renderer.addGraphLayer(ROUTE_KEY, graph, ROUTE_OPTIONS);
-        });
-    }
-
-    protected Graph getRouteGraph() {
-        return renderer.getGraphLayer(ROUTE_KEY);
     }
 
     private void showError(String text) {

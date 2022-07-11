@@ -46,7 +46,7 @@
             <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onDrawButtonClick" prefHeight="25.0" prefWidth="239.0" text="Route berechnen" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
+        <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onCalculateButtonClick" prefHeight="25.0" prefWidth="239.0" text="Route berechnen" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>
