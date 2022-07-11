@@ -9,9 +9,9 @@ public class Vertex implements Serializable {
     private Vertex predecessor;
     private double lat;//Breitengrad
     private double lon;//Längengrad
-    private String identifier;//Bezeichner
-    private boolean junction;//anschlussstelle
-    private boolean crossing;//Kreuzung
+    private String identifier="";//Bezeichner
+    private boolean junction=false;//anschlussstelle
+    private boolean crossing=false;//Kreuzung
 
     public Vertex(long id, double lat, double lon, Vertex predecessor, String identifier, boolean junction){
         this.id = id;

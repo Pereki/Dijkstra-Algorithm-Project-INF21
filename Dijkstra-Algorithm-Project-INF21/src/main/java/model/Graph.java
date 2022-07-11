@@ -269,7 +269,8 @@ public class Graph implements Serializable {
                 edgeList.remove(e);
                 edgeList.remove(compare);
 
-                Vertex v = new Vertex(0,lat,lon);// Id placeholder!!!!
+                Vertex v = new Vertex(0,lat,lon);
+                v.setCrossing(true);
                 vertexList.add(v);
 
                 Edge enew1 = new Edge(e1,v);
@@ -281,8 +282,6 @@ public class Graph implements Serializable {
                 edgeList.add(enew2);
                 edgeList.add(enew3);
                 edgeList.add(enew4);
-
-                System.out.println("Crossing added");
 
                 break;
             }
