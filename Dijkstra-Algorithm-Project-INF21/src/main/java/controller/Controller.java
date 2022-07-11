@@ -191,7 +191,9 @@ public class Controller implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Ländergrenzen speichern unter");
         File file = fileChooser.showSaveDialog(scrollpane.getScene().getWindow());
-
+        if (file == null) {
+            return;
+        }
         Platform.runLater(() -> {
             try {
                 SerializeService.saveGraph(graph, file.getAbsolutePath());
@@ -207,7 +209,9 @@ public class Controller implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Ländergrenzen öffnen");
         File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
-
+        if (file == null) {
+            return;
+        }
         Platform.runLater(() -> {
             try {
                 Graph graph = SerializeService.loadGraph(file.getAbsolutePath());
@@ -232,7 +236,9 @@ public class Controller implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Straßennetz speichern unter");
         File file = fileChooser.showSaveDialog(scrollpane.getScene().getWindow());
-
+        if (file == null) {
+            return;
+        }
         Platform.runLater(() -> {
             try {
                 SerializeService.saveGraph(graph, file.getAbsolutePath());
@@ -248,7 +254,9 @@ public class Controller implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Straßennetz öffnen");
         File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
-
+        if (file == null) {
+            return;
+        }
         Platform.runLater(() -> {
             try {
                 Graph graph = SerializeService.loadGraph(file.getAbsolutePath());
@@ -267,7 +275,9 @@ public class Controller implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OSM-Datei mit Ländergrenzen öffnen");
         File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
-
+        if (file == null) {
+            return;
+        }
         Platform.runLater(() -> {
             XmlParser p = new XmlParser(file.getAbsolutePath());
             Graph g = p.getGraph();
@@ -280,7 +290,9 @@ public class Controller implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("OSM-Datei mit Straßennetz öffnen");
         File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
-
+        if (file == null) {
+            return;
+        }
         Platform.runLater(() -> {
             XmlParser p = new XmlParser(file.getAbsolutePath());
             Graph g = p.getGraph();
