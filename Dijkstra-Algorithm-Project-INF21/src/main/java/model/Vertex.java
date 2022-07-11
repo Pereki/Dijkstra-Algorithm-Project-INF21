@@ -11,6 +11,7 @@ public class Vertex implements Serializable {
     private double lon;//Längengrad
     private String identifier;//Bezeichner
     private boolean junction;//anschlussstelle
+    private boolean crossing;//Kreuzung
 
     public Vertex(long id, double lat, double lon, Vertex predecessor, String identifier, boolean junction){
         this.id = id;
@@ -56,12 +57,19 @@ public class Vertex implements Serializable {
 
     public boolean getJunction(){return junction;}
 
+    public boolean isCrossing() {
+        return crossing;
+    }
+
     public void setIdentifier(String identifier){
         this.identifier = identifier;
     }
 
     public void setJunction(Boolean b){
         this.junction = b;
+    }
+    public void setCrossing(boolean isCrossing){
+        this.crossing = isCrossing;
     }
 
 
