@@ -1,12 +1,8 @@
 package controller;
 
-import com.almasb.fxgl.core.collection.PropertyChangeListener;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -20,10 +16,10 @@ import service.XmlParser;
 import view.GraphRenderer;
 import view.GraphRendererOptions;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
-import java.security.Timestamp;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class Controller implements Initializable {
@@ -71,7 +67,7 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onDrawButtonClick() {
-        if (junctions == null) {
+        if (junctions.isEmpty()) {
             showError("Es muss zuerst ein Straßennetz geladen werden.");
             return;
         }
@@ -155,8 +151,15 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onMenuButtonContributorsClick() {
-        String text = "Lukas Burkhardt (Algorithmus) # Pascal Fuchs (Datenstruktur) # Ruben Kraft (API) # Paul Lehmann (SVG Parser) # David Maier (GUI)";
-        Alert alert = new Alert(Alert.AlertType.NONE, text.replaceAll(" # ", "\n"), ButtonType.CLOSE);
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        StringBuilder text = new StringBuilder();
+        InputStream stream = classloader.getResourceAsStream("credits.txt");
+        if (stream == null) return;
+        Scanner scanner = new Scanner(stream);
+        while (scanner.hasNext()) {
+            text.append("\n").append(scanner.nextLine());
+        }
+        Alert alert = new Alert(Alert.AlertType.NONE, text.toString(), ButtonType.CLOSE);
         alert.setTitle("Mitwirkende");
         alert.showAndWait();
     }

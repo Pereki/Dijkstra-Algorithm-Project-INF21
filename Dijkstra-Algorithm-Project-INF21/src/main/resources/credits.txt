@@ -1,0 +1,6 @@
+Mitwirkende:
+	Lukas Burkhardt 	Algorithmus
+	Pascal Fuchs		Datenstruktur
+	Ruben Kraft		API, Controller
+	Paul Lehmann		SVG-Parser
+	David Maier		GUI, Controller
