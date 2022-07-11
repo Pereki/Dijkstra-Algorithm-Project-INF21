@@ -1,6 +1,6 @@
 Mitwirkende:
-	Lukas Burkhardt 	Algorithmus
+	Lukas Burkhardt 	Dijkstra-Algorithmus
 	Pascal Fuchs		Datenstruktur
 	Ruben Kraft		API, Controller
-	Paul Lehmann		SVG-Parser
+	Paul Lehmann		OSM XML-Parser
 	David Maier		GUI, Controller
