@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import model.*;
 import service.Dijkstra;
+import service.GraphShrinker;
 import service.XmlParser;
 import view.GraphRenderer;
 
@@ -223,6 +224,7 @@ public class Controller implements Initializable {
             try {
                 Graph graph = SerializeService.loadGraph(file.getAbsolutePath());
                 setRoadsGraph(graph);
+
             } catch (IOException | ClassNotFoundException e) {
                 showError("Die angegebene Datei konnte nicht als Straßennetz geladen werden.");
                 e.printStackTrace();
@@ -239,7 +241,6 @@ public class Controller implements Initializable {
         Platform.runLater(() -> {
             XmlParser p = new XmlParser(file.getAbsolutePath());
             Graph g = p.getGraph();
-            setRoadsGraph(g);
         });
     }
 
