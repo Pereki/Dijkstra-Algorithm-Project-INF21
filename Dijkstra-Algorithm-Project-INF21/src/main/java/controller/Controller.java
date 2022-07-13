@@ -14,10 +14,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import model.*;
-import service.Dijkstra;
-import service.OpenMapRequester;
-import service.SerializeService;
-import service.XmlParser;
+import service.*;
 import view.GraphDisplay;
 import view.GraphLayer;
 import view.GraphRendererOptions;
@@ -301,7 +298,9 @@ public class Controller implements Initializable {
         Platform.runLater(() -> {
             XmlParser p = new XmlParser(file.getAbsolutePath());
             Graph g = p.getGraph();
-            callback.accept(g);
+            GraphShrinker s = new GraphShrinker(g);
+            s.shrinkGraph();
+            callback.accept(s.getMinimizedGraph());
         });
     }
 
