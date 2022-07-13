@@ -69,9 +69,9 @@ public class DijkstraTest {
             //System.out.println("Parser läuft");
         //}
 
-        //parser.graphTest();
+        parser.graphTest();
 
-        parser.borderTest();
+        //parser.borderTest();
 
     }
 

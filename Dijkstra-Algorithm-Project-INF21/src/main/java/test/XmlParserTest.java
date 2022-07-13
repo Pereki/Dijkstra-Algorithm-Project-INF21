@@ -31,7 +31,7 @@ public class XmlParserTest {
     }
 
     public void graphTest(){
-        XmlParser x = new XmlParser("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\java\\service\\test2.osm");
+        XmlParser x = new XmlParser("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\test2.osm");
 
         Graph g = x.getGraph();
 

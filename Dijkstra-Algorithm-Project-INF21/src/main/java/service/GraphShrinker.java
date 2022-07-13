@@ -27,6 +27,34 @@ public class GraphShrinker {
         SmallGraph = g;
     }
 
+    public void mergeGraph(){
+        for(int i=0; i<SmallGraph.getVertexList().size();i++){
+            Vertex toCompare = SmallGraph.getVertexList().get(i);
+
+            if(toCompare.getIdentifier()!=null && !(toCompare.getIdentifier().equals(""))){
+                for(int a=0; a<SmallGraph.getVertexList().size();a++){
+                    if(toCompare.getIdentifier().equals(SmallGraph.getVertexList().get(a))&&a!=i){
+                        Vertex secondCompare = SmallGraph.getVertexList().get(a);
+                        for(int b=0;b<SmallGraph.getEdgeList().size();b++){
+                            Edge e = SmallGraph.getEdgeList().get(b);
+                            if(e.getStartingVertex().equals(secondCompare)||e.getEndingVertex().equals(secondCompare)){
+                                Edge newEdge = new Edge(e.getOtherVertex(secondCompare),toCompare);
+                                if(newEdge.getLength()<5){
+                                    SmallGraph.getEdgeList().add(newEdge);
+                                    SmallGraph.getEdgeList().remove(e);
+                                    SmallGraph.deleteVertex(secondCompare);
+                                    b--;
+                                    a--;
+                                    i--;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void shrinkGraph_2() {
         int i = 0, j = 0, k = 0;
         HashMap<Vertex, ArrayList<Edge>> count = new HashMap<Vertex, ArrayList<Edge>>();
@@ -76,8 +104,6 @@ public class GraphShrinker {
             }
         }
     }
-
-
 
     public void shrinkGraph() {
         Edge firstEdge = null;
