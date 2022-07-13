@@ -102,6 +102,7 @@ public class Graph implements Serializable {
     }
 
     public ArrayList<Edge> getEdges(Vertex vertex){
+
         ArrayList<Edge> edgesOfVertex = new ArrayList<>();
         for (Edge edge: edgeList) {
             if(edge.getStartingVertex().equals(vertex)||edge.getEndingVertex().equals(vertex)){
@@ -109,6 +110,7 @@ public class Graph implements Serializable {
             }
         }
         return edgesOfVertex;
+
     }
 
     public Edge getEdge(Vertex v1, Vertex v2){
@@ -311,6 +313,7 @@ public class Graph implements Serializable {
         this.vertexList.remove(v);
 
         }
+
 
 
     @Override
