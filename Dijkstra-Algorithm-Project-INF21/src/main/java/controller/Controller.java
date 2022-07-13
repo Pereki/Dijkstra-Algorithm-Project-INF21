@@ -94,8 +94,12 @@ public class Controller implements Initializable {
             Graph route;
             try {
                 route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
+                if (route == null) {
+                    showError(String.format("Es konnte keine Route von %s nach %s berechnet werden.", start.getIdentifier(), dest.getIdentifier()));
+                }
             } catch (Exception e) {
-                showError(String.format("Es konnte keine Route von %s nach %s berechnet werden.", start.getIdentifier(), dest.getIdentifier()));
+                e.printStackTrace();
+                showError(String.format("Beim Berechnen der Route ist ein Fehler aufgetreten: %s", e.getLocalizedMessage()));
                 return;
             }
             setRouteGraph(route);
@@ -139,6 +143,10 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onButtonZoomOutClick() {
+        zoomOut();
+    }
+
+    private void zoomOut() {
         double scale = scrollpane.getContent().getScaleX();
         scale *= ZOOM_OUT_MULTIPLIER;
         if (scale < MIN_ZOOM_LEVEL) return;
@@ -147,6 +155,10 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onButtonZoomInClick() {
+        zoomIn();
+    }
+
+    private void zoomIn() {
         double scale = scrollpane.getContent().getScaleX();
         scale *= ZOOM_IN_MULTIPLIER;
         if (scale > MAX_ZOOM_LEVEL) return;
