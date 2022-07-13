@@ -11,5 +11,5 @@ Technologien:
 	JUnit 			Tests
 
 Daten:
-	Openstreetmap		OSM-Daten
-	Overpass Turbo		OSM-Daten
+	Openstreetmap	OSM-Daten
+	Overpass Turbo	OSM-Daten

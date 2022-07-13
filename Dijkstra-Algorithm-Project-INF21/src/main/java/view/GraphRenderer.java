@@ -1,21 +1,15 @@
 package view;
 
-import com.almasb.fxgl.entity.level.tiled.Layer;
-import javafx.geometry.Dimension2D;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import model.Edge;
 import model.GeoBounds;
 import model.Graph;
 import model.Vertex;
 import service.MercatorProjector;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class GraphRenderer {
 
@@ -41,6 +35,8 @@ public class GraphRenderer {
         Graph graph = layer.getGraph();
         GraphRendererOptions options = layer.getOptions();
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setLineJoin(StrokeLineJoin.ROUND);
+        gc.setLineCap(StrokeLineCap.ROUND);
 
         double w = canvas.getWidth();
         double h = canvas.getHeight();
@@ -94,10 +90,11 @@ public class GraphRenderer {
 
                 gc.setFont(options.getFont());
                 Color color = options.getLabelColor();
+                double offset = options.getFont().getSize() / 20d;
                 gc.setFill(new Color(1-color.getRed(), 1-color.getGreen(), 1-color.getBlue(), 1));
-                gc.fillText(v.getIdentifier(), x + 1.5 * options.getDotRadius()+1, y+1);
+                gc.fillText(v.getIdentifier(), x+options.getDotRadius()+offset, y+offset);
                 gc.setFill(color);
-                gc.fillText(v.getIdentifier(), x + 1.5 * options.getDotRadius(), y);
+                gc.fillText(v.getIdentifier(), x+options.getDotRadius(), y);
             }
         }
         return canvas;

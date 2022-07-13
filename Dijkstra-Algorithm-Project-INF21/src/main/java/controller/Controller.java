@@ -8,9 +8,9 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import model.*;
 import service.*;
@@ -35,23 +35,32 @@ public class Controller implements Initializable {
 
     private static final Color BACKGROUND_COLOR = Color.valueOf("#2C2A2AFF");
 
+    private static final double LINE_WIDTH = 8;
+    private static final double DOT_RADIUS = LINE_WIDTH * 4;
+    private static final double FONT_SIZE = 36;
+
     private static final int BORDERS_POS = 0;
     private static final GraphRendererOptions BORDERS_OPTIONS = new GraphRendererOptions()
             .routeColor(Color.valueOf("#bfbfbf"))
             .dotJunctions(false)
+            .lineWidth(LINE_WIDTH)
             .showLabels(false);
 
     private static final int ROADS_POS = 1;
     private static final GraphRendererOptions ROADS_OPTIONS = new GraphRendererOptions()
             .routeColor(Color.valueOf("#154889"))
             .dotJunctions(false)
+            .lineWidth(LINE_WIDTH)
             .showLabels(false);
 
     private static final int ROUTE_POS = 2;
     private static final GraphRendererOptions ROUTE_OPTIONS = new GraphRendererOptions()
             .routeColor(Color.RED)
             .dotJunctions(false)
-            .showLabels(false);
+            .showLabels(false)
+            .lineWidth(LINE_WIDTH)
+            .dotRadius(DOT_RADIUS)
+            .font(new Font(FONT_SIZE));
 
     @FXML
     private ScrollPane scrollpane;
@@ -77,7 +86,7 @@ public class Controller implements Initializable {
                 5.866342, 15.041892, 55.058307, 47.270112
         ));
 
-        background.setFill(BACKGROUND_COLOR);
+        setZoomFactor(0.5);
 
         new Thread(() -> {
             try {
@@ -203,19 +212,11 @@ public class Controller implements Initializable {
     }
 
     protected void setZoomFactor(double factor) {
-//        Scale scale = new Scale(factor, factor, 0, 0);
-//        scrollpane.getContent().getTransforms().add(scale);
-//        scrollpane.setVmax(10);
-//        scrollpane.setHmax(10);
-        System.out.println(factor);
-//        scrollpane.setHmax(factor);
-//        scrollpane.setVmax(factor);
         groupGraphs.setScaleX(factor);
         groupGraphs.setScaleY(factor);
         groupGraphs.setScaleY(factor);
 
         Bounds b = groupGraphs.getLayoutBounds();
-
         background.setWidth(b.getWidth() * factor);
         background.setHeight(b.getHeight() * factor);
         labelZoom.setText(String.format("%.2fx", factor));
