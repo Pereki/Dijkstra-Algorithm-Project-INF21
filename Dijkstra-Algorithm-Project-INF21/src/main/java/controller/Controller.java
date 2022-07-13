@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 public class Controller implements Initializable {
 
     private static final double MAX_ZOOM_LEVEL = 5;
-    private static final double MIN_ZOOM_LEVEL = 0.25;
+    private static final double MIN_ZOOM_LEVEL = 0.1;
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
 
@@ -74,6 +74,8 @@ public class Controller implements Initializable {
     public Rectangle background;
     @FXML
     public Label labelZoom;
+    @FXML
+    public Button buttonDraw;
 
     private HashMap<String, Vertex> junctions = new HashMap<>();
 
@@ -126,21 +128,25 @@ public class Controller implements Initializable {
         }
 
         new Thread(() -> {
+            buttonDraw.setDisable(true);
             GraphWay route;
             double apiLength;
             try {
                 route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
                 if (route == null) {
+                    buttonDraw.setDisable(false);
                     showError(String.format("Es konnte keine Route von %s nach %s berechnet werden.", start.getIdentifier(), dest.getIdentifier()));
                     return;
                 }
                 apiLength = new OpenMapRequester().getDistance(start, dest) / 1000;
             } catch (Exception e) {
                 e.printStackTrace();
+                buttonDraw.setDisable(false);
                 showError(String.format("Beim Berechnen der Route ist ein Fehler aufgetreten: %s", e.getLocalizedMessage()));
                 return;
             }
             setRouteGraph(route);
+            buttonDraw.setDisable(false);
             Platform.runLater(() -> {
                 String message = "Es wurde eine Route gefunden!\n" +
                         String.format("Länge: %.2f km\n", route.getLength()) +
@@ -495,8 +501,10 @@ public class Controller implements Initializable {
     }
 
     private void showError(String text) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, text, ButtonType.CLOSE);
-        alert.setTitle("Fehler");
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR, text, ButtonType.CLOSE);
+            alert.setTitle("Fehler");
+            alert.showAndWait();
+        });
     }
 }
