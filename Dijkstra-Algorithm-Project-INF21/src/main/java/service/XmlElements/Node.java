@@ -1,11 +1,16 @@
 package service.XmlElements;
 
+/**
+ * this class represents a node in an .osm file
+ * @author i21017
+ */
 public class Node {
     private long id;
     private double lat;
     private double lon;
-    private boolean isJunction = false;
-    private String identifier = "";
+    private boolean isJunction = false;//Is this node a junction?
+    private String identifier = "";//the identifier is the name of the junction, if the node is not a junction, the identifier should be "" (empty)
+
 
     public void setId(long id) {
         this.id = id;

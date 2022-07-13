@@ -6,15 +6,26 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * this class represents a graph containing vertexes and edges
+ * @author
+ */
 public class Graph implements Serializable {
     private final ArrayList<Edge> edgeList;
     private final ArrayList<Vertex> vertexList;
 
+    /**
+     * standard constructor
+     */
     public Graph(){
         this.edgeList = new ArrayList<>();
         this.vertexList = new ArrayList<>();
     }
-    
+
+    /**
+     * constructs a graph out of a given list of edges and automaticly adds the vertexes to the vertex list
+     * @param edgesOfGraph list of edges for the graph
+     */
     public Graph(ArrayList<Edge> edgesOfGraph){
         ArrayList<Vertex> vertexList = new ArrayList<>();
         for (Edge edge: edgesOfGraph) {
@@ -29,6 +40,12 @@ public class Graph implements Serializable {
         this.edgeList = edgesOfGraph;
     }
 
+    /**
+     * constructs a graph out a given list of edges and a list of vertexes, also checking whether the vertexes are included in the edgelist
+     * @param edgelist the edgelist for the graph
+     * @param vertexList the vertexlist for the grap
+     * @throws Exception the exception when an vertex is not included in an edge of the edgelist
+     */
     public Graph(ArrayList<Edge> edgelist, ArrayList<Vertex> vertexList) throws Exception {
 
         this.vertexList = vertexList;
@@ -37,7 +54,7 @@ public class Graph implements Serializable {
         for (Edge edge: edgelist) {
             if (!vertexList.contains(edge.getStartingVertex())) {
                 if (!vertexList.contains(edge.getEndingVertex())) {
-                    throw new Exception("Vertex not included in Edgelist");
+                    throw new Exception("vertex not included in edgelist");
                 }
             }
         }
@@ -46,7 +63,7 @@ public class Graph implements Serializable {
             ArrayList<Edge> edgesOfVertex = getEdges(vertex);
             for (Edge edge:edgesOfVertex) {
                 if(!edgelist.contains(edge)){
-                    throw new Exception("Edge not includded in Vertexlist");
+                    throw new Exception("edge not included in vertexlist");
                 }
             }
         }
@@ -56,8 +73,8 @@ public class Graph implements Serializable {
 
     /**
      *
-     * @param selectedVertex The Vertex to get the Options to go to
-     * @return Returns a List of all the Edges connected to the Vertex
+     * @param selectedVertex the vertex to get the options to go to
+     * @return returns a list of all the edges connected to the vertex
      */
     public ArrayList<Edge> getOptionsOfVertex(Vertex selectedVertex){
         ArrayList<Edge> optionsEdges = new ArrayList<>();
@@ -77,13 +94,19 @@ public class Graph implements Serializable {
         return edgeList;
     }
 
+    /**
+     * adds a vertex to the vertexlist
+     * @param vertex the vertex to be added
+     */
     public void addVertex(Vertex vertex){
-        vertexList.add(vertex);
+        if(!vertexList.contains(vertex)){
+            vertexList.add(vertex);
+        }
     }
 
     /**
-     * Adds the Edge to the List and auto-adds the missing Vertexes
-     * @param edge the Edge which will be added to the EdgeList
+     * adds the edge to the list and auto-adds the missing vertexes
+     * @param edge the edge which will be added to the edgelist
      */
     public void addEdge (Edge edge) {
         if(vertexList.contains(edge.getStartingVertex()) && vertexList.contains(edge.getEndingVertex())){
@@ -101,7 +124,13 @@ public class Graph implements Serializable {
         }
     }
 
+    /**
+     * returns the edges of an vertex
+     * @param vertex the vertex to get the edges of
+     * @return a Arraylist<Edge> containing the edges
+     */
     public ArrayList<Edge> getEdges(Vertex vertex){
+
         ArrayList<Edge> edgesOfVertex = new ArrayList<>();
         for (Edge edge: edgeList) {
             if(edge.getStartingVertex().equals(vertex)||edge.getEndingVertex().equals(vertex)){
@@ -111,16 +140,11 @@ public class Graph implements Serializable {
         return edgesOfVertex;
     }
 
-    public Edge getEdge(Vertex v1, Vertex v2){
-        for (Edge edge: edgeList) {
-            if((v1.equals(edge.getStartingVertex())&&v2.equals(edge.getEndingVertex()))||
-                    (v2.equals(edge.getStartingVertex())&&v1.equals(edge.getEndingVertex()))){
-                return edge;
-            }
-        }
-        return null;
-    }
-
+    /**
+     * returns the nearest vertex, no matter of the edges
+     * @param vertexInput the vertex to find the nearest vertex of
+     * @return the nearest vertex
+     */
     public Vertex getNearestVertex(Vertex vertexInput){
         Vertex selectedVertex = null;
         for (Vertex vertex:vertexList) {
@@ -148,6 +172,11 @@ public class Graph implements Serializable {
         }
         return selectedVertex;
     }
+
+    /**
+     * Checks whether there is an edge crossing the edge e. If so, it creates a vertex at the intersection, deletes both edges and create four new ones with the intersection as one of the vertexes
+     * @param e edge which will be checked whether its crossing another edge or not
+     */
 
     public void createCrossingIfNeeded(Edge e){
         for(int i=0;i< edgeList.size();i++){
@@ -311,6 +340,7 @@ public class Graph implements Serializable {
         this.vertexList.remove(v);
 
         }
+
 
 
     @Override

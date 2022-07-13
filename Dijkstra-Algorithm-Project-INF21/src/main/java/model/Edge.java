@@ -41,6 +41,11 @@ public class Edge implements Serializable {
 
     public Vertex getEndingVertex(){return v2;}
 
+    /**
+     * Returns the other Vertex of a Edge
+     * @param vertex the known Vertex to get the other one
+     * @return the other Vertex of the Edge
+     */
     public Vertex getOtherVertex(Vertex vertex){
         if(vertex.equals(v1)){return v2;
         }else if(vertex.equals(v2)){return v1;
@@ -62,4 +67,6 @@ public class Edge implements Serializable {
     public int hashCode() {
         return Objects.hash(v1, v2, getLength());
     }
+
+
 }

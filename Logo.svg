@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
+   sodipodi:docname="Logo.svg"
+   inkscape:export-filename="Dijkstra-Algorithm-Project-INF21\src\main\resources\logo.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="2.7972783"
+     inkscape:cx="288.67346"
+     inkscape:cy="400.56794"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <inkscape:path-effect
+       effect="fillet_chamfer"
+       id="path-effect1646"
+       is_visible="true"
+       lpeversion="1"
+       nodesatellites_param="F,0,0,1,0,0.0013229167,0,1 @ F,0,0,1,0,0.0013229167,0,1 @ F,0,0,1,0,0.0013229167,0,1 @ F,0,0,1,0,0.0013229167,0,1"
+       unit="px"
+       method="auto"
+       mode="F"
+       radius="0.005"
+       chamfer_steps="1"
+       flexible="false"
+       use_knot_distance="true"
+       apply_no_radius="true"
+       apply_with_radius="true"
+       only_selected="false"
+       hide_knots="false" />
+  </defs>
+  <g
+     inkscape:label="Ebene 1 Kopie"
+     inkscape:groupmode="layer"
+     id="g2600"
+     style="stroke-width:17;stroke-dasharray:none;stroke:#e5e5e5;stroke-opacity:1;fill:none">
+    <path
+       style="fill:none;stroke:#e5e5e5;stroke-width:17;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;stroke-dasharray:none"
+       d="m 76.367531,89.138452 14.705911,25.283848 -29.024823,0.258"
+       id="path2590"
+       inkscape:export-filename="logo.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       style="fill:none;stroke:#e5e5e5;stroke-width:17;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;stroke-dasharray:none"
+       d="M 76.617665,89.118942 62.222258,114.97385"
+       id="path2592" />
+    <circle
+       style="fill:none;fill-rule:evenodd;stroke-width:17;stroke:#e5e5e5;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1"
+       id="circle2594"
+       cx="76.561035"
+       cy="89.331947"
+       r="6" />
+    <circle
+       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#e5e5e5;stroke-width:17;stroke-dasharray:none;stroke-opacity:1"
+       id="circle2596"
+       cx="90.944443"
+       cy="114.1643"
+       r="6" />
+    <circle
+       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#e5e5e5;stroke-width:17;stroke-dasharray:none;stroke-opacity:1"
+       id="circle2598"
+       cx="62.435619"
+       cy="114.42231"
+       r="6" />
+  </g>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:export-filename="Dijkstra-Algorithm-Project-INF21\src\main\resources\logo.png"
+     inkscape:export-xdpi="150"
+     inkscape:export-ydpi="150">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;stroke-dasharray:none"
+       d="m 76.367531,89.138452 14.705911,25.283848 -29.024823,0.258"
+       id="path4079"
+       inkscape:export-filename="logo.png"
+       inkscape:export-xdpi="150"
+       inkscape:export-ydpi="150" />
+    <path
+       style="fill:none;stroke:#ff0000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;stroke-dasharray:none"
+       d="M 76.617665,89.118942 62.222258,114.97385"
+       id="path4081" />
+    <circle
+       style="fill:#e5e5e5;fill-rule:evenodd;stroke-width:4;stroke:#ff0000;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1"
+       id="path176"
+       cx="76.561035"
+       cy="89.331947"
+       r="6" />
+    <circle
+       style="fill:#e5e5e5;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path176-2"
+       cx="90.944443"
+       cy="114.1643"
+       r="6" />
+    <circle
+       style="fill:#e5e5e5;fill-opacity:1;fill-rule:evenodd;stroke:#ff0000;stroke-width:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path176-0"
+       cx="62.435619"
+       cy="114.42231"
+       r="6" />
+  </g>
+</svg>
