@@ -19,13 +19,12 @@ public class Dijkstra {
 /**
  * Returns the shortest way between two points in a Graph.
  * This method is using the dijkstra algorithm to find the shortest way.
- * <bold>!!!!!!!This method is still in construction, for this reason is the return value an empty Graph!!!!!!! </bold>
  * @param rawGraph a unidirectional Graph as the base of the route.
  * @param start the Vertex to start from.
  * @param target the target Vertex.
  * @return the Graph with the shortest way.
  */
-public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target) throws Exception {
+public static GraphWay getShortWay(Graph rawGraph, Vertex start,Vertex target) throws Exception {
     ArrayList<GraphWay> possibleGraphWays = new ArrayList<>();
     Vertex actualVertex = start;
     HashSet<Edge> marked = new HashSet<>();
@@ -49,7 +48,7 @@ public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target) thro
 
         //printGraph(shortestGraphWay.getGraph());
         }
-    return shortestGraphWay.getGraph(); // return the shortest way as a Graph
+    return shortestGraphWay; // return the shortest way as a Graph
 }
 
     /**

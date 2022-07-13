@@ -54,7 +54,7 @@ public class DijkstraTest {
         Vertex Horb = getVertex(raw,"horb");
         Vertex Empf =   getVertex(raw,"würzburg");
 
-        Graph g = Dijkstra.getShortWay(raw,Horb,Empf);
+        Graph g = Dijkstra.getShortWay(raw,Horb,Empf).getGraph();
 
 
 

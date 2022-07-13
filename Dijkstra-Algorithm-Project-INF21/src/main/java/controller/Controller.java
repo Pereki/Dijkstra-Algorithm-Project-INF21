@@ -80,7 +80,7 @@ public class Controller implements Initializable {
 
         Platform.runLater(()->{Graph route;
             try {
-            route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
+            route = Dijkstra.getShortWay(getRoadsGraph(), start, dest).getGraph();
         } catch (Exception e) {
             e.printStackTrace();
             showError("Es konnte keine Route berechnet werden.");
