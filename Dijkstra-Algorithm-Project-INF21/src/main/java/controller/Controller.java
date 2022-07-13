@@ -7,8 +7,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import model.*;
 import service.*;
@@ -23,10 +23,13 @@ import java.util.function.Consumer;
 
 public class Controller implements Initializable {
 
-    private static final double MAX_ZOOM_LEVEL = 1.5;
+    private static final double MAX_ZOOM_LEVEL = 2.5;
     private static final double MIN_ZOOM_LEVEL = 0.25;
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
+
+    private static final String DEFAULT_GRAPH_ROADS = "src/main/resources/graphs/de_roads_rough.graph";
+    private static final String DEFAULT_GRAPH_BORDERS = "src/main/resources/graphs/de_borders_rough.graph";
 
     private static final int BORDERS_POS = 0;
     private static final GraphRendererOptions BORDERS_OPTIONS = new GraphRendererOptions()
@@ -54,6 +57,8 @@ public class Controller implements Initializable {
     private ComboBox<String> inputStart;
     @FXML
     private ComboBox<String> inputDestination;
+    @FXML
+    public Rectangle background;
 
     private HashMap<String, Vertex> junctions = new HashMap<>();
 
@@ -65,6 +70,17 @@ public class Controller implements Initializable {
         this.display = new GraphDisplay(groupGraphs, new GeoBounds(
                 5.866342, 15.041892, 55.058307, 47.270112
         ));
+
+        new Thread(() -> {
+            try {
+                Graph roads = SerializeService.loadGraph(DEFAULT_GRAPH_ROADS);
+                setRoadsGraph(roads);
+                Graph borders = SerializeService.loadGraph(DEFAULT_GRAPH_BORDERS);
+                setBordersGraph(borders);
+            } catch (IOException | ClassNotFoundException e) {
+                new Exception("Failed to load default graphs.", e).printStackTrace();
+            }
+        }).start();
     }
 
     // FIND ROUTE
@@ -87,14 +103,19 @@ public class Controller implements Initializable {
             showError("Der angegebene Zielort existiert im geladenen Straßennetz nicht.");
             return;
         }
+        if (dest.equals(start)) {
+            showError("Start- und Zielort sind identisch.");
+            return;
+        }
 
-        Platform.runLater(() -> {
+        new Thread(() -> {
             GraphWay route;
             double apiLength;
             try {
                 route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
                 if (route == null) {
                     showError(String.format("Es konnte keine Route von %s nach %s berechnet werden.", start.getIdentifier(), dest.getIdentifier()));
+                    return;
                 }
                 apiLength = new OpenMapRequester().getDistance(start, dest) / 1000;
             } catch (Exception e) {
@@ -103,28 +124,30 @@ public class Controller implements Initializable {
                 return;
             }
             setRouteGraph(route);
-            String message = "Es wurde eine Route gefunden!\n" +
-                    String.format("Länge: %.2f km\n", route.getLength()) +
-                    String.format("Länge der Route von Openrouteservice: %.2f km", apiLength);
-            Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.OK);
-            alert.setTitle("Route gefunden");
-            alert.show();
-        });
+            Platform.runLater(() -> {
+                String message = "Es wurde eine Route gefunden!\n" +
+                        String.format("Länge: %.2f km\n", route.getLength()) +
+                        String.format("Länge der Route von Openrouteservice: %.2f km", apiLength);
+                Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.OK);
+                alert.setTitle("Route gefunden");
+                alert.show();
+            });
+        }).start();
     }
 
     // TEXT FIELDS
 
     @FXML
-    protected void onInputStartKeyEvent(KeyEvent e) {
+    protected void onInputStartKeyEvent() {
         displaySuggestions(inputStart);
     }
 
     @FXML
-    protected void onInputDestinationKeyEvent(KeyEvent e) {
+    protected void onInputDestinationKeyEvent() {
         displaySuggestions(inputDestination);
     }
 
-    private void displaySuggestions(ComboBox input) {
+    private void displaySuggestions(ComboBox<String> input) {
         String text = input.getEditor().getText();
         ObservableList<String> matches = FXCollections.observableList(findMatches(text));
         input.setItems(matches);
@@ -174,10 +197,8 @@ public class Controller implements Initializable {
     protected void setZoomFactor(double factor) {
 //        Scale scale = new Scale(factor, factor, 0, 0);
 //        scrollpane.getContent().getTransforms().add(scale);
-        double width = display.getCanvas().getWidth() * factor;
-        double height = display.getCanvas().getHeight() * factor;
-        scrollpane.setVmax(height);
-        scrollpane.setHmax(width);
+        scrollpane.setVmax(10);
+        scrollpane.setHmax(10);
         System.out.println(factor);
 //        scrollpane.setHmax(factor);
 //        scrollpane.setVmax(factor);
@@ -223,7 +244,7 @@ public class Controller implements Initializable {
         if (file == null) {
             return;
         }
-        Platform.runLater(() -> {
+        new Thread(() -> {
             try {
                 Graph graph = SerializeService.loadGraph(file.getAbsolutePath());
                 callback.accept(graph);
@@ -231,7 +252,7 @@ public class Controller implements Initializable {
                 showError(loadingError);
                 e.printStackTrace();
             }
-        });
+        }).start();
     }
 
     /**
@@ -257,14 +278,14 @@ public class Controller implements Initializable {
         if (file == null) {
             return;
         }
-        Platform.runLater(() -> {
+        new Thread(() -> {
             try {
                 SerializeService.saveGraph(graph, file.getAbsolutePath());
             } catch (IOException e) {
                 showError(savingError);
                 e.printStackTrace();
             }
-        });
+        }).start();
     }
 
     /**
@@ -291,13 +312,13 @@ public class Controller implements Initializable {
                 return;
             }
         }
-        Platform.runLater(() -> {
+        new Thread(() -> {
             XmlParser p = new XmlParser(file.getAbsolutePath());
             Graph g = p.getGraph();
             GraphShrinker s = new GraphShrinker(g);
             s.shrinkGraph();
             callback.accept(s.getMinimizedGraph());
-        });
+        }).start();
     }
 
     // file: borders
@@ -407,35 +428,37 @@ public class Controller implements Initializable {
     // MISCELLANEOUS
 
     private void setJunctions(List<Vertex> vertices) {
-        this.junctions = new HashMap<>();
-        GeoBounds bounds = new GeoBounds(Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MAX_VALUE);
-        for (Vertex v : vertices) {
+        new Thread(() -> {
+            this.junctions = new HashMap<>();
+            GeoBounds bounds = new GeoBounds(Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MAX_VALUE);
+            for (Vertex v : vertices) {
 
-            // expand viewport if necessary
-            if (v.getLat() < bounds.getNorth()) bounds.setNorth(v.getLat());
-            if (v.getLat() > bounds.getSouth()) bounds.setSouth(v.getLat());
-            if (v.getLon() < bounds.getWest()) bounds.setWest(v.getLon());
-            if (v.getLon() > bounds.getEast()) bounds.setEast(v.getLon());
+                // expand viewport if necessary
+                if (v.getLat() < bounds.getNorth()) bounds.setNorth(v.getLat());
+                if (v.getLat() > bounds.getSouth()) bounds.setSouth(v.getLat());
+                if (v.getLon() < bounds.getWest()) bounds.setWest(v.getLon());
+                if (v.getLon() > bounds.getEast()) bounds.setEast(v.getLon());
 
-            // sorry :P
-            List<String> forbidden = List.of(
-                    "",
-                    "kreuz",
-                    "rasthof",
-                    "dreieck",
-                    "kreuzung",
-                    "rastplatz",
-                    "darmstädter",
-                    "autobahnkreuz",
-                    "autobahndreieck"
-            );
+                // sorry :P
+                List<String> forbidden = List.of(
+                        "",
+                        "kreuz",
+                        "rasthof",
+                        "dreieck",
+                        "kreuzung",
+                        "rastplatz",
+                        "darmstädter",
+                        "autobahnkreuz",
+                        "autobahndreieck"
+                );
 
-            if (v.getJunction() && v.getIdentifier() != null && !forbidden.contains(v.getIdentifier())) {
-                junctions.put(v.getIdentifier(), v);
-                inputStart.getItems().add(v.getIdentifier());
-                inputDestination.getItems().add(v.getIdentifier());
+                if (v.getJunction() && v.getIdentifier() != null && !forbidden.contains(v.getIdentifier())) {
+                    junctions.put(v.getIdentifier(), v);
+                    inputStart.getItems().add(v.getIdentifier());
+                    inputDestination.getItems().add(v.getIdentifier());
+                }
             }
-        }
+        }).start();
         //display.setGeoBounds(bounds);
     }
 

@@ -1,5 +1,6 @@
 package view;
 
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import model.*;
@@ -28,13 +29,6 @@ public class GraphDisplay {
         this.geoBounds = geoBounds;
     }
 
-    public Canvas getCanvas() {
-        MercatorProjector p = new MercatorProjector(geoBounds.getNorth(), geoBounds.getWest());
-        double height = p.getX(geoBounds.getEast()) * 100;
-        double width = p.getY(geoBounds.getNorth()) - p.getY(geoBounds.getSouth()) * 100;
-        return new Canvas(width, height);
-    }
-
     /**
      * Displays the given {@code GraphLayer} by adding it as a new layer at {@code pos} in the layer stack.
      * @param pos A unique number specifying the position in the layer stack.
@@ -50,12 +44,11 @@ public class GraphDisplay {
         if (layer == null) {
             return;
         }
-        Canvas canvas = getCanvas();
-        GraphRenderer.render(layer, canvas, geoBounds);
+        Canvas canvas = GraphRenderer.render(layer, geoBounds);
         canvas.setId(String.valueOf(pos));
         if (group.getChildren().size() <= pos) {
             for (int i = group.getChildren().size(); i <= pos; i++) {
-                group.getChildren().add(getCanvas());
+                group.getChildren().add(new Canvas());
             }
         }
         group.getChildren().set(pos, canvas);
