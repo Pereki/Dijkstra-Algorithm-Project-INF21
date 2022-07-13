@@ -65,8 +65,11 @@ public class GraphRenderer {
             double x = this.getX(v.getLon(), w);
             double y = this.getY(v.getLat(), h);
 
+            boolean dotJunction = options.isDotJunctions()
+                    || options.getShowLabelsEquals().contains(v.getIdentifier());
+
             // draw dot on junctions and cities
-            if (v.getJunction() && options.isDotJunctions()) {
+            if (v.getJunction() && dotJunction) {
                 gc.setFill(options.getRouteColor());
                 gc.fillOval(
                         x - 0.5 * options.getDotRadius(),
@@ -76,8 +79,11 @@ public class GraphRenderer {
                 );
             }
 
+            boolean drawLabel = options.isShowLabels()
+                    || options.getShowLabelsEquals().contains(v.getIdentifier());
+
             // draw labels
-            if (v.getIdentifier() != null && options.isShowLabels()) {
+            if (v.getIdentifier() != null && drawLabel) {
                 gc.setFill(options.getLabelColor());
                 gc.fillOval(
                         x - 0.25 * options.getDotRadius(),
@@ -87,8 +93,11 @@ public class GraphRenderer {
                 );
 
                 gc.setFont(options.getFont());
-                gc.setStroke(options.getLabelColor());
+                Color color = options.getLabelColor();
+                gc.setStroke(color);
                 gc.fillText(v.getIdentifier(), x + 1.5 * options.getDotRadius(), y);
+                gc.setStroke(new Color(1-color.getRed(), 1-color.getGreen(), 1-color.getBlue(), 1));
+                gc.fillText(v.getIdentifier(), x + 1.5 * options.getDotRadius() + 2, y + 2);
             }
         }
     }
