@@ -13,10 +13,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import model.*;
-import service.Dijkstra;
-import service.OpenMapRequester;
-import service.SerializeService;
-import service.XmlParser;
+import service.*;
 import view.GraphDisplay;
 import view.GraphLayer;
 import view.GraphRendererOptions;
@@ -197,9 +194,8 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onMenuButtonContributorsClick() {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         StringBuilder text = new StringBuilder();
-        InputStream stream = classloader.getResourceAsStream("credits.txt");
+        InputStream stream = ResourceLoader.get("credits.txt");
         if (stream == null) return;
         Scanner scanner = new Scanner(stream);
         while (scanner.hasNext()) {

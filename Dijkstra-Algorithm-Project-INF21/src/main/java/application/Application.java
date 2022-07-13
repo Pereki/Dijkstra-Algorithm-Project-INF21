@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import service.ResourceLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,8 +20,7 @@ public class Application extends javafx.application.Application {
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Dijkstra Routenfinder");
         stage.setScene(scene);
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream stream = classloader.getResourceAsStream("logo.png");
+        InputStream stream = ResourceLoader.get("logo.png");
         if (stream != null) {
             Image icon = new Image(stream);
             stage.getIcons().add(icon);
