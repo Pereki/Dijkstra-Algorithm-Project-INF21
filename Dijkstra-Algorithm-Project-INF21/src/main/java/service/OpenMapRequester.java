@@ -47,7 +47,7 @@ public class OpenMapRequester {
     /**
      * Returns the complete request.
      * @param start start of the starting coordinates in pattern: east coordinates, North/South coordinates.
-     * @param end end of the ending coordinates in Pattern: East/West Coordinates, North/South Coordinates.
+     * @param end end of the ending coordinates in Pattern: East/West Coordinates, North/South Coordinates.-
      * @return a double with the distance in meters.
      */
     public String getCompleteReturn(Vertex start, Vertex end) throws IOException {
@@ -58,14 +58,13 @@ public class OpenMapRequester {
         InputStreamReader stream = new InputStreamReader(connection.getInputStream());
         BufferedReader in = new BufferedReader(stream);
 
-        String inputLine;
+        String inputLine = in.readLine();
         String returner = "";
 
-        while ((inputLine = in.readLine()) != null){
+        while (inputLine != null){
             returner += inputLine;
+            inputLine = in.readLine();
         }
-
-
         in.close();
         return returner;
     }
