@@ -2,6 +2,7 @@ package test;
 
 import model.Edge;
 import model.Graph;
+import service.Dijkstra;
 import service.SerializeService;
 import model.Vertex;
 

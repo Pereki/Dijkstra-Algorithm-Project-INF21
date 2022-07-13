@@ -1,5 +1,6 @@
 package controller;
 
+import com.almasb.fxgl.ui.MDIWindow;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,8 +38,7 @@ public class Controller implements Initializable {
     private static final GraphRendererOptions BORDERS_OPTIONS = new GraphRendererOptions()
             .routeColor(Color.valueOf("#bfbfbf"))
             .dotJunctions(false)
-            .showLabels(false)
-            .fillShape(false);
+            .showLabels(false);
 
     private static final int ROADS_POS = 1;
     private static final GraphRendererOptions ROADS_OPTIONS = new GraphRendererOptions()
@@ -49,8 +49,8 @@ public class Controller implements Initializable {
     private static final int ROUTE_POS = 2;
     private static final GraphRendererOptions ROUTE_OPTIONS = new GraphRendererOptions()
             .routeColor(Color.RED)
-            .dotJunctions(true)
-            .showLabels(true);
+            .dotJunctions(false)
+            .showLabels(false);
 
     @FXML
     private ScrollPane scrollpane;
@@ -108,10 +108,10 @@ public class Controller implements Initializable {
                 showError(String.format("Beim Berechnen der Route ist ein Fehler aufgetreten: %s", e.getLocalizedMessage()));
                 return;
             }
-            setRouteGraph(route.getGraph());
+            setRouteGraph(route);
             String message = "Es wurde eine Route gefunden!\n" +
-                    String.format("Länge: %f km\n", route.getLength()) +
-                    String.format("Länge der Route von Openrouteservice: %f km", apiLength);
+                    String.format("Länge: %.2f km\n", route.getLength()) +
+                    String.format("Länge der Route von Openrouteservice: %.2f km", apiLength);
             Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.OK);
             alert.setTitle("Route gefunden");
             alert.show();
@@ -394,9 +394,14 @@ public class Controller implements Initializable {
 
     // route
 
-    protected void setRouteGraph(Graph graph) {
+    protected void setRouteGraph(GraphWay graph) {
         Platform.runLater(() -> {
-            display.setGraphLayer(ROUTE_POS, new GraphLayer(graph, ROUTE_OPTIONS));
+            display.setGraphLayer(ROUTE_POS, new GraphLayer(graph.getGraph(), ROUTE_OPTIONS
+                    .showLabelsEquals(
+                            graph.getStartVertex().getIdentifier(),
+                            graph.getEndVertex().getIdentifier()
+                    )));
+            ROUTE_OPTIONS.setShowLabelsEquals(new HashSet<>());
         });
     }
 
@@ -408,21 +413,35 @@ public class Controller implements Initializable {
 
     private void setJunctions(List<Vertex> vertices) {
         this.junctions = new HashMap<>();
-        GeoBounds b = new GeoBounds(Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MAX_VALUE);
+        GeoBounds bounds = new GeoBounds(Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MAX_VALUE);
         for (Vertex v : vertices) {
 
             // expand viewport if necessary
-//            if (v.getLat() < b.getNorth()) b.setNorth(v.getLat());
-//            if (v.getLat() > b.getSouth()) b.setSouth(v.getLat());
-//            if (v.getLon() < b.getWest()) b.setWest(v.getLon());
-//            if (v.getLon() > b.getEast()) b.setEast(v.getLon());
+            if (v.getLat() < bounds.getNorth()) bounds.setNorth(v.getLat());
+            if (v.getLat() > bounds.getSouth()) bounds.setSouth(v.getLat());
+            if (v.getLon() < bounds.getWest()) bounds.setWest(v.getLon());
+            if (v.getLon() > bounds.getEast()) bounds.setEast(v.getLon());
 
-            if (v.getJunction()) {
+            // sorry :P
+            List<String> forbidden = List.of(
+                    "",
+                    "kreuz",
+                    "rasthof",
+                    "dreieck",
+                    "kreuzung",
+                    "rastplatz",
+                    "darmstädter",
+                    "autobahnkreuz",
+                    "autobahndreieck"
+            );
+
+            if (v.getJunction() && v.getIdentifier() != null && !forbidden.contains(v.getIdentifier())) {
                 junctions.put(v.getIdentifier(), v);
                 inputStart.getItems().add(v.getIdentifier());
                 inputDestination.getItems().add(v.getIdentifier());
             }
         }
+        //display.setGeoBounds(bounds);
     }
 
     private void showError(String text) {
