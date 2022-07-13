@@ -151,6 +151,11 @@ public class Graph implements Serializable {
         return selectedVertex;
     }
 
+    /**
+     * Checks whether there is an edge crossing the edge e. If so, it creates a vertex at the intersection, deletes both edges and create four new ones with the intersection as one of the vertexes
+     * @param e Edge which will be checked whether its crossing another edge or not
+     */
+
     public void createCrossingIfNeeded(Edge e){
         for(int i=0;i< edgeList.size();i++){
             Edge compare = edgeList.get(i);

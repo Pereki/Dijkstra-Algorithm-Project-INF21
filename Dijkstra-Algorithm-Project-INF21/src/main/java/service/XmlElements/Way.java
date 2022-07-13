@@ -2,6 +2,11 @@ package service.XmlElements;
 
 import java.util.ArrayList;
 
+/**
+ * this class represents a way in an .osm file
+ * @author i21017
+ */
+
 public class Way {
     private ArrayList<Node> nodes = new ArrayList<Node>();
 
