@@ -30,7 +30,7 @@
    </MenuBar>
    <ScrollPane fx:id="scrollpane" cacheShape="false" hvalue="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true" vvalue="0.5" VBox.vgrow="ALWAYS">
       <content>
-         <StackPane>
+         <StackPane onScroll="#scrollpaneOnScroll" onZoom="#scrollpaneOnZoom">
             <children>
                <Rectangle fx:id="background" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="344.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="747.0" />
                <Group fx:id="groupGraphs" />

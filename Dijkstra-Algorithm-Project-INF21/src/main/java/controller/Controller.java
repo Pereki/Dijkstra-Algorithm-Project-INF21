@@ -8,6 +8,8 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.control.*;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -30,10 +32,8 @@ public class Controller implements Initializable {
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
 
-    private static final String DEFAULT_GRAPH_ROADS = "src/main/resources/graphs/de_roads_rough.graph";
+    private static final String DEFAULT_GRAPH_ROADS = "src/main/resources/graphs/de_roads.graph";
     private static final String DEFAULT_GRAPH_BORDERS = "src/main/resources/graphs/de_borders_rough.graph";
-
-    private static final Color BACKGROUND_COLOR = Color.valueOf("#2C2A2AFF");
 
     private static final double LINE_WIDTH = 8;
     private static final double DOT_RADIUS = LINE_WIDTH * 4;
@@ -186,6 +186,23 @@ public class Controller implements Initializable {
     }
 
     // ZOOMING
+
+    @FXML
+    protected void scrollpaneOnZoom(ZoomEvent e) {
+        setZoomFactor(e.getTotalZoomFactor());
+        e.consume();
+    }
+
+    @FXML
+    protected void scrollpaneOnScroll(ScrollEvent e) {
+        if (!e.isControlDown() || e.isShiftDown()) return;
+        if (e.getDeltaY() < 0) {
+            zoomOut();
+        } else {
+            zoomIn();
+        }
+        e.consume();
+    }
 
     @FXML
     protected void onButtonZoomOutClick() {
