@@ -4,6 +4,7 @@ import model.Edge;
 import model.Graph;
 import service.SerializeService;
 import model.Vertex;
+import service.XmlParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,11 +47,11 @@ public class DijkstraTest {
 
         //Graph raw = new Graph(edges,vertexes);
         //SerializeService.saveGraph(raw,"graph_non_junctions.graph");
-        Graph raw = SerializeService.loadGraph("C:\\Users\\Lukas\\Downloads\\finishedsmall.txt");
+        //Graph raw = SerializeService.loadGraph("C:\\Users\\Lukas\\Downloads\\finishedsmall.txt");
 
 
-        Vertex Horb = getVertex(raw,"horb");
-        Vertex Empf =   getVertex(raw,"würzburg");
+        //Vertex Horb = getVertex(raw,"horb");
+        //Vertex Empf =   getVertex(raw,"würzburg");
 
         //Graph g = Dijkstra.getShortWay(raw,Horb,Empf).getGraph();
 
@@ -74,6 +75,10 @@ public class DijkstraTest {
 
         parser.borderTest();
 */
+        XmlParser x = new XmlParser("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\test2.osm");
+        Graph g = x.getGraph();
+
+        SerializeService.saveGraph(g,"graph.graph");
     }
     static public Vertex getVertex(Graph graph,String  identifier){
         for(Vertex vertex:graph.getVertexList()){
