@@ -1,9 +1,13 @@
 package model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Edge implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1;
     private Vertex v1;
     private Vertex v2;
     private double length;
