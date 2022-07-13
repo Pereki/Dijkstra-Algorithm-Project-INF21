@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 /**
+ * this class provides the functionality for parsing border .osm files
  * @author i21017
  */
 
