@@ -52,17 +52,16 @@ public class DijkstraTest {
         Vertex Horb = getVertex(raw,"horb");
         Vertex Empf =   getVertex(raw,"würzburg");
 
-        Graph g = Dijkstra.getShortWay(raw,Horb,Empf).getGraph();
+        //Graph g = Dijkstra.getShortWay(raw,Horb,Empf).getGraph();
 
 
 
-        double length =0;
-        for(Edge e: g.getEdgeList()){
-            length+=e.getLength();
-       }
-       System.out.println(length);
-
-        System.out.println("finish");
+        //double length =0;
+        //for(Edge e: g.getEdgeList()){
+            //length+=e.getLength();
+       //}
+       //System.out.println(length);
+        //System.out.println("finish");
 
 /*
         XmlParserTest parser = new XmlParserTest();
