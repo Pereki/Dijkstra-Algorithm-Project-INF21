@@ -2,6 +2,11 @@ package view;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import model.Graph;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GraphRendererOptions {
     private Color routeColor = Color.GRAY;
@@ -15,6 +20,8 @@ public class GraphRendererOptions {
     private boolean fillShape = false;
 
     private Font font = new Font(12);
+
+    private HashSet<String> showLabelsEquals = new HashSet<>();
 
 
 
@@ -57,6 +64,11 @@ public class GraphRendererOptions {
 
     public GraphRendererOptions font(Font font) {
         this.font = font;
+        return this;
+    }
+
+    public GraphRendererOptions showLabelsEquals(String... strings) {
+        this.showLabelsEquals.addAll(Arrays.asList(strings));
         return this;
     }
 
@@ -126,5 +138,13 @@ public class GraphRendererOptions {
 
     public void setFont(Font font) {
         this.font = font;
+    }
+
+    public HashSet<String> getShowLabelsEquals() {
+        return showLabelsEquals;
+    }
+
+    public void setShowLabelsEquals(HashSet<String> showLabelsEquals) {
+        this.showLabelsEquals = showLabelsEquals;
     }
 }
