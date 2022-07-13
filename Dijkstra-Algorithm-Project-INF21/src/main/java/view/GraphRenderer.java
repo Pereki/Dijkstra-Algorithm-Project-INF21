@@ -35,8 +35,8 @@ public class GraphRenderer {
 
     public Canvas render(GraphLayer layer) {
         Canvas canvas = new Canvas(
-                projector.getX(geoBounds.getEast()) * 3000,
-                projector.getY(geoBounds.getNorth()) * 500
+                projector.getX(geoBounds.getEast()) * 12000,
+                projector.getY(geoBounds.getNorth()) * 2000
         );
         Graph graph = layer.getGraph();
         GraphRendererOptions options = layer.getOptions();
@@ -44,10 +44,6 @@ public class GraphRenderer {
 
         double w = canvas.getWidth();
         double h = canvas.getHeight();
-
-        gc.setStroke(Color.GRAY);
-        gc.setLineWidth(20);
-        gc.strokeRect(0, 0, w, h);
 
         // draw edges
         for (Edge e : graph.getEdgeList()) {

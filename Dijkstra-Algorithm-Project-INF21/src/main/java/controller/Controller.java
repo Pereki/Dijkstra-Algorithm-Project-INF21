@@ -5,8 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
@@ -23,13 +25,15 @@ import java.util.function.Consumer;
 
 public class Controller implements Initializable {
 
-    private static final double MAX_ZOOM_LEVEL = 2.5;
+    private static final double MAX_ZOOM_LEVEL = 5;
     private static final double MIN_ZOOM_LEVEL = 0.25;
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
 
     private static final String DEFAULT_GRAPH_ROADS = "src/main/resources/graphs/de_roads_rough.graph";
     private static final String DEFAULT_GRAPH_BORDERS = "src/main/resources/graphs/de_borders_rough.graph";
+
+    private static final Color BACKGROUND_COLOR = Color.valueOf("#2C2A2AFF");
 
     private static final int BORDERS_POS = 0;
     private static final GraphRendererOptions BORDERS_OPTIONS = new GraphRendererOptions()
@@ -59,6 +63,8 @@ public class Controller implements Initializable {
     private ComboBox<String> inputDestination;
     @FXML
     public Rectangle background;
+    @FXML
+    public Label labelZoom;
 
     private HashMap<String, Vertex> junctions = new HashMap<>();
 
@@ -70,6 +76,8 @@ public class Controller implements Initializable {
         this.display = new GraphDisplay(groupGraphs, new GeoBounds(
                 5.866342, 15.041892, 55.058307, 47.270112
         ));
+
+        background.setFill(BACKGROUND_COLOR);
 
         new Thread(() -> {
             try {
@@ -176,7 +184,7 @@ public class Controller implements Initializable {
     }
 
     private void zoomOut() {
-        double scale = scrollpane.getContent().getScaleX();
+        double scale = groupGraphs.getScaleX();
         scale = scale * ZOOM_OUT_MULTIPLIER;
         if (scale < MIN_ZOOM_LEVEL) return;
         setZoomFactor(scale);
@@ -188,7 +196,7 @@ public class Controller implements Initializable {
     }
 
     private void zoomIn() {
-        double scale = scrollpane.getContent().getScaleX();
+        double scale = groupGraphs.getScaleX();
         scale = scale * ZOOM_IN_MULTIPLIER;
         if (scale > MAX_ZOOM_LEVEL) return;
         setZoomFactor(scale);
@@ -197,14 +205,20 @@ public class Controller implements Initializable {
     protected void setZoomFactor(double factor) {
 //        Scale scale = new Scale(factor, factor, 0, 0);
 //        scrollpane.getContent().getTransforms().add(scale);
-        scrollpane.setVmax(10);
-        scrollpane.setHmax(10);
+//        scrollpane.setVmax(10);
+//        scrollpane.setHmax(10);
         System.out.println(factor);
 //        scrollpane.setHmax(factor);
 //        scrollpane.setVmax(factor);
-        scrollpane.getContent().setScaleX(factor);
-        scrollpane.getContent().setScaleY(factor);
-        scrollpane.getContent().setScaleY(factor);
+        groupGraphs.setScaleX(factor);
+        groupGraphs.setScaleY(factor);
+        groupGraphs.setScaleY(factor);
+
+        Bounds b = groupGraphs.getLayoutBounds();
+
+        background.setWidth(b.getWidth() * factor);
+        background.setHeight(b.getHeight() * factor);
+        labelZoom.setText(String.format("%.2fx", factor));
     }
 
     // MENUBAR BUTTONS

@@ -32,6 +32,7 @@
       <content>
          <StackPane>
             <children>
+               <Rectangle fx:id="background" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="344.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="747.0" />
                <Group fx:id="groupGraphs" />
             </children>
          </StackPane>
@@ -52,10 +53,11 @@
                 <Insets />
             </GridPane.margin>
         </Button>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <children>
               <Button fx:id="buttonZoomIn" mnemonicParsing="false" onAction="#onButtonZoomInClick" prefHeight="25.0" prefWidth="28.0" text="+" />
             <Button fx:id="buttonZoomOut" mnemonicParsing="false" onAction="#onButtonZoomOutClick" prefHeight="25.0" prefWidth="29.0" text="-" />
+            <Label fx:id="labelZoom" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
       <Label prefHeight="17.0" prefWidth="34.0" text="Start" />
