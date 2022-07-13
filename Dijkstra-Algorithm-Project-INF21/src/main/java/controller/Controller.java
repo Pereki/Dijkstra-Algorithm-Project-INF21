@@ -77,14 +77,16 @@ public class Controller implements Initializable {
 
         Vertex start = junctions.get(inputStart.getValue());
         Vertex dest = junctions.get(inputDestination.getValue());
-        Graph route;
-        try {
-            route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
+
+        Platform.runLater(()->{Graph route;
+            try {
+            route = Dijkstra.getShortWay(getRoadsGraph(), start, dest).getGraph();
         } catch (Exception e) {
+            e.printStackTrace();
             showError("Es konnte keine Route berechnet werden.");
             return;
         }
-        setRouteGraph(route);
+        setRouteGraph(route);});
 
 
 //        Graph g = new Graph();
@@ -268,7 +270,7 @@ public class Controller implements Initializable {
         return renderer.getGraphLayer(BORDERS_KEY);
     }
 
-    protected void setRoadsGraph(Graph graph) {
+    public void setRoadsGraph(Graph graph) {
         Platform.runLater(() -> {
             setJunctions(graph.getVertexList());
             renderer.removeGraphLayer(ROADS_KEY);

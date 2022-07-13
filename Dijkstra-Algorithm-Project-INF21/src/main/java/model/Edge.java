@@ -62,4 +62,6 @@ public class Edge implements Serializable {
     public int hashCode() {
         return Objects.hash(v1, v2, getLength());
     }
+
+
 }

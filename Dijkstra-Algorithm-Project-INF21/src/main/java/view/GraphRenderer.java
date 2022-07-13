@@ -66,7 +66,7 @@ public class GraphRenderer {
 
     // styling
     private GraphRendererStyle style = new GraphRendererStyle(
-            2, 8, new Font(12)
+            1, 4, new Font(5)
     );
     
     //projection
