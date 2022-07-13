@@ -11,11 +11,9 @@ import java.io.FileReader;
 public class XmlBorders {
     private String path;
     private Graph g = new Graph();
-    private int resolution;
 
-    public XmlBorders(String pathToFile, int resolution) {
+    public XmlBorders(String pathToFile) {
         this.path = pathToFile;
-        this.resolution = resolution;
         parseXml();
     }
 
@@ -66,7 +64,7 @@ public class XmlBorders {
                 for(int i=0;i<entries.length;i++){
                     if(entries[i].contains("<nd")){
                         if(doWeHaveANewWay){
-                            if(i%resolution==0){
+
                                 entries[i+1] = entries[i+1].replace("lat=","");
                                 entries[i+1] = entries[i+1].replace("\"","");
 
@@ -82,9 +80,9 @@ public class XmlBorders {
 
                                 v2 = v1;
                                 doWeHaveANewWay=false;
-                            }
+
                         }else{
-                            if(i%resolution==0){
+
                                 entries[i+1] = entries[i+1].replace("lat=","");
                                 entries[i+1] = entries[i+1].replace("\"","");
 
@@ -97,7 +95,7 @@ public class XmlBorders {
                                 g.addEdge(e);
 
                                 v2 = v1;
-                            }
+
                         }
                     }else if(entries[i].contains("type=\"way\"")){
                         doWeHaveANewWay=true;

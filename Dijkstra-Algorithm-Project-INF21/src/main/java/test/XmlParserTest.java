@@ -46,7 +46,7 @@ public class XmlParserTest {
     }
 
     public void borderTest(){
-        XmlBorders borders = new XmlBorders("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\java\\service\\border.osm", 1);
+        XmlBorders borders = new XmlBorders("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\java\\service\\border.osm");
 
         Graph g = borders.getGraph();
 
