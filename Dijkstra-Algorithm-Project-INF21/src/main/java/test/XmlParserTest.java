@@ -34,15 +34,6 @@ public class XmlParserTest {
         XmlParser x = new XmlParser("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\test2.osm");
 
         Graph g = x.getGraph();
-
-
-
-        try{
-            SerializeService.saveGraph(g, "graph.txt");
-        }catch(Exception e){
-            System.out.println(e.toString());
-        }
-
     }
 
     public void borderTest(){
@@ -52,11 +43,5 @@ public class XmlParserTest {
 
         System.out.println(g.getVertexList().size());
         System.out.println(g.getEdgeList().size());
-
-        try{
-            SerializeService.saveGraph(g, "border.txt");
-        }catch(Exception e){
-            System.out.println(e.toString());
-        }
     }
 }
