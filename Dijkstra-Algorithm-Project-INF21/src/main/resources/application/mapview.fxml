@@ -22,7 +22,7 @@
        </Menu>
          <Menu mnemonicParsing="false" text="Info">
             <items>
-               <MenuItem fx:id="menuButtonContributors" mnemonicParsing="false" onAction="#onMenuButtonContributorsClick" text="Mitwirkende" />
+               <MenuItem fx:id="menuButtonContributors" mnemonicParsing="false" onAction="#onMenuButtonContributorsClick" text="Credits" />
             </items>
          </Menu>
      </menus>

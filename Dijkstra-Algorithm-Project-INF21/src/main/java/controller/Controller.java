@@ -200,7 +200,7 @@ public class Controller implements Initializable {
             text.append("\n").append(scanner.nextLine());
         }
         Alert alert = new Alert(Alert.AlertType.NONE, text.toString(), ButtonType.CLOSE);
-        alert.setTitle("Mitwirkende");
+        alert.setTitle("Credits");
         alert.showAndWait();
     }
 
