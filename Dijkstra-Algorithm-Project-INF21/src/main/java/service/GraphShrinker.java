@@ -2,6 +2,7 @@ package service;
 
 import model.Edge;
 import model.Graph;
+import service.SerializeService;
 import model.Vertex;
 
 import java.io.IOException;

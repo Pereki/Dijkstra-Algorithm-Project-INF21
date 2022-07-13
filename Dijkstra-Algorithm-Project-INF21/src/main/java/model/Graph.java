@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +12,9 @@ import java.util.Objects;
  * @author
  */
 public class Graph implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1;
     private final ArrayList<Edge> edgeList;
     private final ArrayList<Vertex> vertexList;
 

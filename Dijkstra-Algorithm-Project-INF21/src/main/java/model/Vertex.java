@@ -1,9 +1,13 @@
 package model;//represents a node in osm xml
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Vertex implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1;
     private long id;
     private int costs = 0;
     private double lat;//Breitengrad
