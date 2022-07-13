@@ -6,6 +6,7 @@ import model.SerializeService;
 import model.Vertex;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,13 +16,30 @@ public class GraphShrinker {
     Graph SmallGraph;
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        int leer = 0;
+        int loeschen = 0;
         int leerzeichen = 0;
         int hasnull = 0;
         Graph f = SerializeService.loadGraph("C:/Users/ruben/Downloads/test.txt");
-        Graph g = SerializeService.loadGraph("C:/Users/ruben/Downloads/output.txt");
+        while(true) {
+            for (int i = 0; i < f.getEdgeList().size(); i++) {
+                // if(f.getVertexList().get(i).getIdentifier() == "autobahndreieck" || f.getVertexList().get(i).getIdentifier() == "kreuz" ||f.getVertexList().get(i).getIdentifier() == "westkreuz"  ||f.getVertexList().get(i).getIdentifier() == "rasthof" || f.getVertexList().get(i).getIdentifier() == "rastplatz" )
+                if (f.getEdgeList().get(i).getEndingVertex().getIdentifier() != null) {
+                    if (f.getEdgeList().get(i).getEndingVertex().getIdentifier().equals("horb") || f.getEdgeList().get(i).getStartingVertex().getIdentifier() == "horb") {
+                        System.out.println(f.getEdgeList().get(i).getStartingVertex().getIdentifier() + "  ---->  " + f.getEdgeList().get(i).getEndingVertex().getIdentifier());
+                    }
+                    loeschen++;
+                }
+            }
+        }
+
+
+       // GraphShrinker z = new GraphShrinker(f);
+       // z.shrinkGraph_2();
+       // SerializeService.saveGraph(z.getMinimizedGraph(), "C:/Users/ruben/Downloads/finishedsmall.txt");
 
     }
+
+
     public GraphShrinker(Graph g) {
         BigGraph = g;
         SmallGraph = g;
@@ -48,15 +66,33 @@ public class GraphShrinker {
 
         i = 0;
         System.out.println("\n\n\n\n\n\n\n\n\n\n NOW GOING THROUGH HASHMAP \n\n\n\n\n\n\n\n\n\n");
+        ArrayList<Vertex> onlyTwo = new ArrayList<>();
         for(Map.Entry<Vertex, ArrayList<Edge>> currentEntry : count.entrySet()){
+            if(currentEntry.getValue().size() == 2 && !currentEntry.getKey().getJunction() && !currentEntry.getKey().isCrossing()) {
+                onlyTwo.add(currentEntry.getKey());
+            }
+        }
+        System.out.println("This will be deleted: " + onlyTwo.size());
+        ArrayList<Edge> edges = new ArrayList<>();
+        for(Vertex v : onlyTwo){
             i++;
-            System.out.println("Abgearbeitet Knoten: " + i + "/" + count.size());
-            ArrayList<Edge> currentValue =  currentEntry.getValue();
-            Vertex currentvertex = currentEntry.getKey();
-            if(currentValue.size() == 2 && !currentvertex.getJunction() && !currentvertex.isCrossing()){
 
-                Edge firstEdge = currentValue.get(0);
-                Edge secondEdge = currentValue.get(1);
+            for(int n = 0; n < this.SmallGraph.getEdgeList().size(); n++){
+                if(this.SmallGraph.getEdgeList().get(n).getStartingVertex().equals(v) || this.SmallGraph.getEdgeList().get(n).getEndingVertex().equals(v)){
+                    if(edges.size() >= 1){
+                        if(!(edges.get(0).equals(this.SmallGraph.getEdgeList().get(n)))){
+                            edges.add(this.SmallGraph.getEdgeList().get(n));
+                        }
+                    }else{
+                        edges.add(this.SmallGraph.getEdgeList().get(n));
+                    }
+                }
+            }
+            System.out.println("Abgearbeitet Knoten: " + i + "/" + onlyTwo.size());
+            Vertex currentvertex = v;
+
+                Edge firstEdge = edges.get(0);
+                Edge secondEdge = edges.get(1);
                 Vertex start;
                 Vertex end;
                 if(firstEdge.getStartingVertex().equals(currentvertex)){
@@ -70,12 +106,12 @@ public class GraphShrinker {
                     end = secondEdge.getStartingVertex();
                 }
                 SmallGraph.addEdge(new Edge(start, end, firstEdge.getLength()+secondEdge.getLength()));
-                this.SmallGraph.deleteEdge(currentValue.get(0));
-                this.SmallGraph.deleteEdge(currentValue.get(1));
+                this.SmallGraph.deleteEdge(firstEdge);
+                this.SmallGraph.deleteEdge(secondEdge);
                 this.SmallGraph.deleteVertex(currentvertex);
+                edges = new ArrayList<>();
             }
         }
-    }
 
 
 
