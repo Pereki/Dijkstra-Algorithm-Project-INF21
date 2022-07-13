@@ -9,9 +9,12 @@ import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import model.*;
 import service.Dijkstra;
+import service.OpenMapRequester;
 import service.SerializeService;
 import service.XmlParser;
 import view.GraphDisplay;
@@ -21,10 +24,11 @@ import view.GraphRendererOptions;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class Controller implements Initializable {
 
-    private static final double MAX_ZOOM_LEVEL = 2.5;
+    private static final double MAX_ZOOM_LEVEL = 1.5;
     private static final double MIN_ZOOM_LEVEL = 0.25;
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
@@ -59,12 +63,12 @@ public class Controller implements Initializable {
 
     private HashMap<String, Vertex> junctions = new HashMap<>();
 
-    private GraphDisplay renderer;
+    private GraphDisplay display;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
-        this.renderer = new GraphDisplay(groupGraphs, new GeoBounds(
+        this.display = new GraphDisplay(groupGraphs, new GeoBounds(
                 5.866342, 15.041892, 55.058307, 47.270112
         ));
     }
@@ -91,18 +95,26 @@ public class Controller implements Initializable {
         }
 
         Platform.runLater(() -> {
-            Graph route;
+            GraphWay route;
+            double apiLength;
             try {
                 route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
                 if (route == null) {
                     showError(String.format("Es konnte keine Route von %s nach %s berechnet werden.", start.getIdentifier(), dest.getIdentifier()));
                 }
+                apiLength = new OpenMapRequester().getDistance(start, dest) / 1000;
             } catch (Exception e) {
                 e.printStackTrace();
                 showError(String.format("Beim Berechnen der Route ist ein Fehler aufgetreten: %s", e.getLocalizedMessage()));
                 return;
             }
-            setRouteGraph(route);
+            setRouteGraph(route.getGraph());
+            String message = "Es wurde eine Route gefunden!\n" +
+                    String.format("Länge: %f km\n", route.getLength()) +
+                    String.format("Länge der Route von Openrouteservice: %f km", apiLength);
+            Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.OK);
+            alert.setTitle("Route gefunden");
+            alert.show();
         });
     }
 
@@ -148,7 +160,7 @@ public class Controller implements Initializable {
 
     private void zoomOut() {
         double scale = scrollpane.getContent().getScaleX();
-        scale *= ZOOM_OUT_MULTIPLIER;
+        scale = scale * ZOOM_OUT_MULTIPLIER;
         if (scale < MIN_ZOOM_LEVEL) return;
         setZoomFactor(scale);
     }
@@ -160,12 +172,21 @@ public class Controller implements Initializable {
 
     private void zoomIn() {
         double scale = scrollpane.getContent().getScaleX();
-        scale *= ZOOM_IN_MULTIPLIER;
+        scale = scale * ZOOM_IN_MULTIPLIER;
         if (scale > MAX_ZOOM_LEVEL) return;
         setZoomFactor(scale);
     }
 
     protected void setZoomFactor(double factor) {
+//        Scale scale = new Scale(factor, factor, 0, 0);
+//        scrollpane.getContent().getTransforms().add(scale);
+        double width = display.getCanvas().getWidth() * factor;
+        double height = display.getCanvas().getHeight() * factor;
+        scrollpane.setVmax(height);
+        scrollpane.setHmax(width);
+        System.out.println(factor);
+//        scrollpane.setHmax(factor);
+//        scrollpane.setVmax(factor);
         scrollpane.getContent().setScaleX(factor);
         scrollpane.getContent().setScaleY(factor);
         scrollpane.getContent().setScaleY(factor);
@@ -350,12 +371,12 @@ public class Controller implements Initializable {
 
     protected void setBordersGraph(Graph graph) {
         Platform.runLater(() -> {
-            renderer.setGraphLayer(BORDERS_POS, new GraphLayer(graph, BORDERS_OPTIONS));
+            display.setGraphLayer(BORDERS_POS, new GraphLayer(graph, BORDERS_OPTIONS));
         });
     }
 
     protected Graph getBordersGraph() {
-        return renderer.getGraphLayer(BORDERS_POS).getGraph();
+        return display.getGraphLayer(BORDERS_POS).getGraph();
     }
 
     // roads
@@ -363,24 +384,24 @@ public class Controller implements Initializable {
     protected void setRoadsGraph(Graph graph) {
         Platform.runLater(() -> {
             setJunctions(graph.getVertexList());
-            renderer.setGraphLayer(ROADS_POS, new GraphLayer(graph, ROADS_OPTIONS));
+            display.setGraphLayer(ROADS_POS, new GraphLayer(graph, ROADS_OPTIONS));
         });
     }
 
     protected Graph getRoadsGraph() {
-        return renderer.getGraphLayer(ROADS_POS).getGraph();
+        return display.getGraphLayer(ROADS_POS).getGraph();
     }
 
     // route
 
     protected void setRouteGraph(Graph graph) {
         Platform.runLater(() -> {
-            renderer.setGraphLayer(ROUTE_POS, new GraphLayer(graph, ROUTE_OPTIONS));
+            display.setGraphLayer(ROUTE_POS, new GraphLayer(graph, ROUTE_OPTIONS));
         });
     }
 
     protected Graph getRouteGraph() {
-        return renderer.getGraphLayer(ROUTE_POS).getGraph();
+        return display.getGraphLayer(ROUTE_POS).getGraph();
     }
 
     // MISCELLANEOUS

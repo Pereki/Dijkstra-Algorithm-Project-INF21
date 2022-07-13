@@ -22,7 +22,7 @@ public class Dijkstra {
  * @param target the target Vertex.
  * @return the Graph with the shortest way.
  */
-public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target) throws Exception {
+public static GraphWay getShortWay(Graph rawGraph, Vertex start,Vertex target) throws Exception {
     ArrayList<GraphWay> possibleGraphWays = new ArrayList<>();
     Vertex actualVertex = start;
     GraphWay shortestGraphWay = new GraphWay(actualVertex);
@@ -40,7 +40,7 @@ public static Graph getShortWay(Graph rawGraph, Vertex start,Vertex target) thro
         }
         actualVertex = shortestGraphWay.getEndVertex(); //set the end vertex of the shortest way as the actual vertex
         }
-    return shortestGraphWay.getGraph(); // return the shortest way as a Graph
+    return shortestGraphWay; // return the shortest way as a Graph
 }
 
     /**

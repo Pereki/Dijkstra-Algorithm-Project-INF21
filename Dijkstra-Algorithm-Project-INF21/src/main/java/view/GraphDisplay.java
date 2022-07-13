@@ -26,7 +26,7 @@ public class GraphDisplay {
         this.geoBounds = geoBounds;
     }
 
-    private Canvas getCanvas() {
+    public Canvas getCanvas() {
         double height = geoBounds.getHeight() * 100;
         double width = geoBounds.getWidth() * 100;
         return new Canvas(width, height);

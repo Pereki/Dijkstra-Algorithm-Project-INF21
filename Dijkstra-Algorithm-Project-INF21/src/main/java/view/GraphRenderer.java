@@ -22,12 +22,15 @@ public class GraphRenderer {
     // display properties
     private final GeoBounds geoBounds;
 
+    private final MercatorProjector projector;
+
     /**
      * Creates a new {@code GraphRenderer}
      * @param geoBounds A {@code GeoBounds} object which specifies the geographical viewport.
      */
     public GraphRenderer(GeoBounds geoBounds) {
         this.geoBounds = geoBounds;
+        this.projector = new MercatorProjector(geoBounds.getNorth(), geoBounds.getWest());
     }
 
     public void render(GraphLayer layer, Canvas canvas) {
@@ -39,13 +42,10 @@ public class GraphRenderer {
         double h = canvas.getHeight();
 
         gc.setStroke(Color.GRAY);
+        gc.setLineWidth(20);
         gc.strokeRect(0, 0, w, h);
 
         // draw edges
-        if (options.isFillShape()) {
-            gc.beginPath();
-        }
-
         for (Edge e : graph.getEdgeList()) {
             Vertex start = e.getStartingVertex();
             double xStart = this.getX(start.getLon(), w);
@@ -55,20 +55,9 @@ public class GraphRenderer {
             double xEnd = this.getX(end.getLon(), w);
             double yEnd = this.getY(end.getLat(), h);
 
-            if (options.isFillShape()) {
-                gc.setFill(options.getRouteColor());
-                gc.moveTo(xStart, yStart);
-                gc.lineTo(xEnd, yEnd);
-            } else {
-                gc.setStroke(options.getRouteColor());
-                gc.setLineWidth(options.getLineWidth());
-                gc.strokeLine(xStart, yStart, xEnd, yEnd);
-            }
-        }
-
-        if (options.isFillShape()) {
-            gc.fill();
-            gc.closePath();
+            gc.setStroke(options.getRouteColor());
+            gc.setLineWidth(options.getLineWidth());
+            gc.strokeLine(xStart, yStart, xEnd, yEnd);
         }
 
         // draw vertices
@@ -115,11 +104,13 @@ public class GraphRenderer {
     }
 
     private double getX(double longitude, double width) {
-        return Math.abs(longitude / geoBounds.getEast()) * width;
+        //return projector.getX(longitude) / projector.getX(geoBounds.getEast()) * width;
+        return Math.abs(longitude - geoBounds.getWest()) / geoBounds.getWidth() * width;
     }
 
     private double getY(double latitude, double height) {
         //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
-        return Math.abs(latitude - geoBounds.getNorth()) / geoBounds.getHeight() * height;
+        //return projector.getY(latitude) / projector.getY(geoBounds.getSouth()) * height;
+        return height - (latitude - geoBounds.getSouth()) / geoBounds.getHeight() * height;
     }
 }
