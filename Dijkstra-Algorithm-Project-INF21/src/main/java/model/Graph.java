@@ -101,6 +101,11 @@ public class Graph implements Serializable {
         }
     }
 
+    /**
+     * Returns the Edges of an Vertex
+     * @param vertex the Vertex to get the Edges of
+     * @return a Arraylist<Edge> containing the Edges
+     */
     public ArrayList<Edge> getEdges(Vertex vertex){
 
         ArrayList<Edge> edgesOfVertex = new ArrayList<>();
@@ -110,19 +115,13 @@ public class Graph implements Serializable {
             }
         }
         return edgesOfVertex;
-
     }
 
-    public Edge getEdge(Vertex v1, Vertex v2){
-        for (Edge edge: edgeList) {
-            if((v1.equals(edge.getStartingVertex())&&v2.equals(edge.getEndingVertex()))||
-                    (v2.equals(edge.getStartingVertex())&&v1.equals(edge.getEndingVertex()))){
-                return edge;
-            }
-        }
-        return null;
-    }
-
+    /**
+     * Returns the nearest Vertex, no matter of the Edges
+     * @param vertexInput the Vertex you want to find the closest Vertex of
+     * @return the nearest Vertex
+     */
     public Vertex getNearestVertex(Vertex vertexInput){
         Vertex selectedVertex = null;
         for (Vertex vertex:vertexList) {
@@ -151,6 +150,10 @@ public class Graph implements Serializable {
         return selectedVertex;
     }
 
+    /**
+     * Creates a crossing if two Edges Crosses and creates a new Vertex
+     * @param e the Edge to check if any other crosses
+     */
     public void createCrossingIfNeeded(Edge e){
         for(int i=0;i< edgeList.size();i++){
             Edge compare = edgeList.get(i);
