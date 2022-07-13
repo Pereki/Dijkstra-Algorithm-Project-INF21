@@ -23,17 +23,19 @@ public class Edge implements Serializable {
     public Edge(Vertex v1, Vertex v2){
         this.v1 = v1;
         this.v2 = v2;
-        this.length=calcDistance();
+        this.length=calcDistance(v1,v2);
     }
 
     /**
      * calculates the distance in km between the two vertexes of this edge.
+     * @param vertex1 the first Vertex
+     * @param vertex2 the second Vertex
      * @return the distance in km.
      * @author i21005
      */
-    private double calcDistance(){
-        double dy = 111.3*(v1.getLat()- v2.getLat()); //the y distance between two y coordinates
-        double dx = 111.3*(Math.cos(Math.toRadians((v1.getLat()+v2.getLat())/2)))*(v1.getLon()-v2.getLon());// the x distance between two x coordinates.
+    private double calcDistance(Vertex vertex1, Vertex vertex2){
+        double dy = 111.3*(vertex1.getLat()- vertex2.getLat()); //the y distance between two y coordinates
+        double dx = 111.3*(Math.cos(Math.toRadians((vertex1.getLat()+vertex2.getLat())/2)))*(vertex1.getLon()-vertex2.getLon());// the x distance between two x coordinates.
         return Math.sqrt(dx*dx+dy*dy);
     }
 

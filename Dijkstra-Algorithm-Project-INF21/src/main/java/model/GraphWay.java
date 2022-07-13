@@ -100,6 +100,10 @@ public class GraphWay {
         return endVertex;
     }
 
+    /**
+     * Returns the last Edge of the Way
+     * @return  the last Edge
+     */
     public Edge getLastEdge() {
         return lastEdge;
     }

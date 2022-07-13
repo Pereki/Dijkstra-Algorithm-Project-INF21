@@ -32,10 +32,10 @@ public static GraphWay getShortWay(Graph rawGraph, Vertex start,Vertex target) t
     possibleGraphWays.add(shortestGraphWay);
     while (!actualVertex.equals(target)){
         for(Edge edge:rawGraph.getEdges(actualVertex)){ //generate new possible ways from the actual vertex
-            if(!marked.contains(edge)) {
+            if(!marked.contains(edge)) {    //Looking if the edge is already used
                 possibleGraphWays.add(new GraphWay(shortestGraphWay, edge));
             }
-            marked.add(edge);
+            marked.add(edge);   //Saves all used Edges to mark them as used
         }
         possibleGraphWays.remove(shortestGraphWay); //remove the way to the actual vertex
         shortestGraphWay = possibleGraphWays.get(0);
