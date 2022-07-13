@@ -3,6 +3,8 @@ package view;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import model.*;
+import service.MercatorProjector;
+
 import java.util.HashMap;
 
 public class GraphDisplay {
@@ -27,8 +29,9 @@ public class GraphDisplay {
     }
 
     public Canvas getCanvas() {
-        double height = geoBounds.getHeight() * 100;
-        double width = geoBounds.getWidth() * 100;
+        MercatorProjector p = new MercatorProjector(geoBounds.getNorth(), geoBounds.getWest());
+        double height = p.getX(geoBounds.getEast()) * 100;
+        double width = p.getY(geoBounds.getNorth()) - p.getY(geoBounds.getSouth()) * 100;
         return new Canvas(width, height);
     }
 

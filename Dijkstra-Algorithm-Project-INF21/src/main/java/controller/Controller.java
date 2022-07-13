@@ -1,6 +1,5 @@
 package controller;
 
-import com.almasb.fxgl.ui.MDIWindow;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,8 +9,6 @@ import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import model.*;
 import service.*;
@@ -195,9 +192,8 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onMenuButtonContributorsClick() {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         StringBuilder text = new StringBuilder();
-        InputStream stream = classloader.getResourceAsStream("credits.txt");
+        InputStream stream = ResourceLoader.get("credits.txt");
         if (stream == null) return;
         Scanner scanner = new Scanner(stream);
         while (scanner.hasNext()) {
@@ -440,7 +436,7 @@ public class Controller implements Initializable {
                 inputDestination.getItems().add(v.getIdentifier());
             }
         }
-        display.setGeoBounds(bounds);
+        //display.setGeoBounds(bounds);
     }
 
     private void showError(String text) {
