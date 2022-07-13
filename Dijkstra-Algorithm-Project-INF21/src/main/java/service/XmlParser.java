@@ -111,8 +111,6 @@ public class XmlParser {
                 }
 
                 line = br.readLine();
-                System.out.println(listOfNodes.size());
-                System.out.println(listOfWays.size());
 
                 if(line==null){
                     break;
@@ -138,14 +136,10 @@ public class XmlParser {
 
                 if(!graph.hasVertex(v1)){
                     graph.addVertex(v1);
-                }else{
-                    System.out.println("Vertex existiert");
                 }
 
                 if(!graph.hasVertex(v2)){
                     graph.addVertex(v2);
-                }else{
-                    System.out.println("Vertex existiert");
                 }
 
                 Edge e = new Edge(v1,v2);
