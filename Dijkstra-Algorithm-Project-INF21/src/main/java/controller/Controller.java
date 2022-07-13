@@ -1,6 +1,5 @@
 package controller;
 
-import com.almasb.fxgl.ui.MDIWindow;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
