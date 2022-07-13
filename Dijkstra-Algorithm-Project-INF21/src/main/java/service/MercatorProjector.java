@@ -3,15 +3,24 @@ package service;
 import model.CoordinatePair;
 
 public class MercatorProjector {
-    private CoordinatePair center;
+    private CoordinatePair origin;
 
     /**
-     * Creates a MercatorProjector with the given geo coordinates as {@code (0,0)}.
+     * Creates a {@code MercatorProjector} with latitude 0 (equator) and longitude 0 (null meridian) as origin {@code (0,0)}.
+     * Projected coordinates will be expressed as distance in x or y from this given origin point.
+     */
+    public MercatorProjector() {
+        this.origin = new CoordinatePair(0, 0);
+    }
+
+    /**
+     * Creates a {@code MercatorProjector} with the given geo coordinates as origin {@code (0,0)}.
+     * Projected coordinates will be expressed as distance in x or y from this given origin point.
      * @param latitude The latitude in degrees
      * @param longitude The longitude in degrees
      */
     public MercatorProjector(double latitude, double longitude) {
-        this.center = new CoordinatePair(latitude, longitude);
+        this.origin = new CoordinatePair(latitude, longitude);
     }
 
     /**
@@ -20,7 +29,7 @@ public class MercatorProjector {
      * @return The x-coordinate in radians
      */
     public double getX(double longitude) {
-        return Math.toRadians(longitude - center.getLongitude());
+        return Math.toRadians(longitude - origin.getLongitude());
     }
 
     /**
@@ -38,7 +47,7 @@ public class MercatorProjector {
      * @return The longitude in degrees
      */
     public double getLongitude(double x) {
-        return Math.toDegrees(x) + center.getLongitude();
+        return Math.toDegrees(x) + origin.getLongitude();
     }
 
     /**

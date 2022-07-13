@@ -10,11 +10,11 @@
      <menus>
        <Menu mnemonicParsing="false" text="Datei">
          <items>
-           <MenuItem fx:id="menuButtonMapImport" mnemonicParsing="false" onAction="#onMenuButtonMapImportClick" text="Grenzen öffnen" />
-               <MenuItem fx:id="menuButtonMapExport" mnemonicParsing="false" onAction="#onMenuButtonMapExportClick" text="Grenzen speichern" />
+           <MenuItem fx:id="menuButtonMapImport" mnemonicParsing="false" onAction="#onMenuButtonBordersImportClick" text="Grenzen öffnen" />
+               <MenuItem fx:id="menuButtonMapExport" mnemonicParsing="false" onAction="#onMenuButtonBordersExportClick" text="Grenzen speichern" />
                <SeparatorMenuItem mnemonicParsing="false" />
-               <MenuItem fx:id="menuButtonRouteImport" mnemonicParsing="false" onAction="#onMenuButtonRouteImportClick" text="Straßennetz öffnen" />
-               <MenuItem fx:id="menuButtonRouteExport" mnemonicParsing="false" onAction="#onMenuButtonRouteExportClick" text="Straßennetz speichern" />
+               <MenuItem fx:id="menuButtonRouteImport" mnemonicParsing="false" onAction="#onMenuButtonRoadsImportClick" text="Straßennetz öffnen" />
+               <MenuItem fx:id="menuButtonRouteExport" mnemonicParsing="false" onAction="#onMenuButtonRoadsExportClick" text="Straßennetz speichern" />
                <SeparatorMenuItem mnemonicParsing="false" />
                <MenuItem fx:id="menuButtonOsmRouteImport" mnemonicParsing="false" onAction="#onMenuButtonOsmRoadsImportClick" text="OSM Straßennetz importieren" />
                <MenuItem fx:id="menuButtonOsmBorderImport" mnemonicParsing="false" onAction="#onMenuButtonOsmBordersImportClick" text="OSM Grenzen importieren" />
@@ -46,21 +46,21 @@
             <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onDrawButtonClick" prefHeight="25.0" prefWidth="239.0" text="Route berechnen" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
+        <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onCalculateButtonClick" prefHeight="25.0" prefWidth="239.0" text="Route berechnen" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>
         </Button>
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <children>
-              <Button fx:id="buttonZoomIn" mnemonicParsing="false" onAction="#onButtonZoomInClick" prefHeight="25.0" prefWidth="63.0" text="+" />
-            <Button fx:id="buttonZoomOut" mnemonicParsing="false" onAction="#onButtonZoomOutClick" prefHeight="25.0" prefWidth="69.0" text="-" />
+              <Button fx:id="buttonZoomIn" mnemonicParsing="false" onAction="#onButtonZoomInClick" prefHeight="25.0" prefWidth="28.0" text="+" />
+            <Button fx:id="buttonZoomOut" mnemonicParsing="false" onAction="#onButtonZoomOutClick" prefHeight="25.0" prefWidth="29.0" text="-" />
          </children>
       </HBox>
       <Label prefHeight="17.0" prefWidth="34.0" text="Start" />
       <Label prefHeight="17.0" prefWidth="29.0" text="Ziel" GridPane.rowIndex="1" />
-      <ComboBox fx:id="inputStart" editable="true" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" />
-      <ComboBox fx:id="inputDestination" editable="true" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <ComboBox fx:id="inputStart" editable="true" onKeyReleased="#onInputStartKeyEvent" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" />
+      <ComboBox fx:id="inputDestination" editable="true" onKeyReleased="#onInputDestinationKeyEvent" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <padding>
          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
       </padding>

@@ -1,41 +1,56 @@
 package controller;
 
-import com.almasb.fxgl.core.collection.PropertyChangeListener;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Scale;
 import javafx.stage.FileChooser;
 import model.*;
 import service.Dijkstra;
-import service.GraphShrinker;
+import service.OpenMapRequester;
+import service.SerializeService;
 import service.XmlParser;
-import view.GraphRenderer;
+import view.GraphDisplay;
+import view.GraphLayer;
+import view.GraphRendererOptions;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class Controller implements Initializable {
 
-    private static final double MAX_ZOOM_LEVEL = 2.5;
+    private static final double MAX_ZOOM_LEVEL = 1.5;
     private static final double MIN_ZOOM_LEVEL = 0.25;
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
-    private static final String ROADS_KEY = "ROADS";
-    private static final Color ROADS_COLOR = Color.valueOf("#154889");
-    private static final String BORDERS_KEY = "BORDERS";
-    private static final Color BORDERS_COLOR = Color.valueOf("#bfbfbf");
-    private static final String ROUTE_KEY = "ROUTE";
-    private static final Color ROUTE_COLOR = Color.RED;
+
+    private static final int BORDERS_POS = 0;
+    private static final GraphRendererOptions BORDERS_OPTIONS = new GraphRendererOptions()
+            .routeColor(Color.valueOf("#bfbfbf"))
+            .dotJunctions(false)
+            .showLabels(false)
+            .fillShape(false);
+
+    private static final int ROADS_POS = 1;
+    private static final GraphRendererOptions ROADS_OPTIONS = new GraphRendererOptions()
+            .routeColor(Color.valueOf("#154889"))
+            .dotJunctions(false)
+            .showLabels(false);
+
+    private static final int ROUTE_POS = 2;
+    private static final GraphRendererOptions ROUTE_OPTIONS = new GraphRendererOptions()
+            .routeColor(Color.RED)
+            .dotJunctions(true)
+            .showLabels(true);
 
     @FXML
     private ScrollPane scrollpane;
@@ -46,237 +61,350 @@ public class Controller implements Initializable {
     @FXML
     private ComboBox<String> inputDestination;
 
-    private HashMap<String, Vertex> junctions;
+    private HashMap<String, Vertex> junctions = new HashMap<>();
 
-    private GraphRenderer renderer;
+    private GraphDisplay display;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
-        this.renderer = new GraphRenderer(groupGraphs, new GeoBounds(
+        this.display = new GraphDisplay(groupGraphs, new GeoBounds(
                 5.866342, 15.041892, 55.058307, 47.270112
         ));
-
-//        File f = new File("C:\\Users\\David\\OneDrive\\Dokumente\\Beruflich\\Duales Studium\\DH\\Vorlesungen\\2. Semester\\Programmieren\\Programmierprojekt\\Dijstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\resources\\de.svg");
-//        List<List<SVGPath>> svgs;
-//        try {
-//            svgs = SVGParser.parse(f);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//        for (SVGPath p : svgs.get(0)) {
-//            p.setFill(Paint.valueOf("#bfbfbf"));
-//            this.groupBackground.getChildren().add(p);
-//        }
-
-        //setZoomFactor(0.25);
     }
 
+    // FIND ROUTE
+
     @FXML
-    protected void onDrawButtonClick() {
+    protected void onCalculateButtonClick() {
+        if (junctions.isEmpty()) {
+            showError("Es muss zuerst ein Straßennetz geladen werden.");
+            return;
+        }
 
         Vertex start = junctions.get(inputStart.getValue());
         Vertex dest = junctions.get(inputDestination.getValue());
 
-        Platform.runLater(()->{Graph route;
-            try {
-            route = Dijkstra.getShortWay(getRoadsGraph(), start, dest).getGraph();
-        } catch (Exception e) {
-            e.printStackTrace();
-            showError("Es konnte keine Route berechnet werden.");
+        if (start == null) {
+            showError("Der angegebene Startort existiert im geladenen Straßennetz nicht.");
             return;
         }
-        setRouteGraph(route);});
+        if (dest == null) {
+            showError("Der angegebene Zielort existiert im geladenen Straßennetz nicht.");
+            return;
+        }
 
-
-//        Graph g = new Graph();
-//
-//        Vertex stuttgart = new Vertex(0, 48.800676, 9.143225, null, "Stuttgart", true);
-//        Vertex frankfurt = new Vertex(1, 50.102346, 8.703868, null, "Frankfurt", true);
-//        Vertex berlin = new Vertex(2, 52.503680, 13.480916, null, "Berlin", false);
-//
-//        g.addVertex(stuttgart);
-//        g.addVertex(frankfurt);
-//        g.addVertex(berlin);
-//
-//        g.addEdge(new Edge(stuttgart, frankfurt, 1));
-//        g.addEdge(new Edge(frankfurt, berlin,  2));
-//
-//        Platform.runLater(() -> renderer.addGraphLayer("Urlaubsroute", g, Color.RED));
-//
-//        Graph g2 = new Graph();
-//
-//        Vertex nuremberg = new Vertex(3, 49.424261, 11.124826, null, "Nürnberg", true);
-//        Vertex hamburg = new Vertex(4, 53.484564, 10.249799, null, "Hamburg", true);
-//
-//        g2.addVertex(frankfurt);
-//        g2.addVertex(nuremberg);
-//        g2.addVertex(hamburg);
-//
-//        g2.addEdge(new Edge(frankfurt, nuremberg, 3));
-//        g2.addEdge(new Edge(nuremberg, hamburg, 3));
-//
-//        Platform.runLater(() -> renderer.addGraphLayer("Pendelroute", g2, Color.CADETBLUE));
-
+        Platform.runLater(() -> {
+            GraphWay route;
+            double apiLength;
+            try {
+                route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
+                if (route == null) {
+                    showError(String.format("Es konnte keine Route von %s nach %s berechnet werden.", start.getIdentifier(), dest.getIdentifier()));
+                }
+                apiLength = new OpenMapRequester().getDistance(start, dest) / 1000;
+            } catch (Exception e) {
+                e.printStackTrace();
+                showError(String.format("Beim Berechnen der Route ist ein Fehler aufgetreten: %s", e.getLocalizedMessage()));
+                return;
+            }
+            setRouteGraph(route.getGraph());
+            String message = "Es wurde eine Route gefunden!\n" +
+                    String.format("Länge: %f km\n", route.getLength()) +
+                    String.format("Länge der Route von Openrouteservice: %f km", apiLength);
+            Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.OK);
+            alert.setTitle("Route gefunden");
+            alert.show();
+        });
     }
 
+    // TEXT FIELDS
+
+    @FXML
+    protected void onInputStartKeyEvent(KeyEvent e) {
+        displaySuggestions(inputStart);
+    }
+
+    @FXML
+    protected void onInputDestinationKeyEvent(KeyEvent e) {
+        displaySuggestions(inputDestination);
+    }
+
+    private void displaySuggestions(ComboBox input) {
+        String text = input.getEditor().getText();
+        ObservableList<String> matches = FXCollections.observableList(findMatches(text));
+        input.setItems(matches);
+        if (matches.size() > 0) {
+            input.show();
+        } else {
+            input.hide();
+        }
+    }
+
+    private List<String> findMatches(String text) {
+        List<String> matches = new ArrayList<>();
+        for (String key : junctions.keySet()) {
+            if (key.toLowerCase(Locale.ROOT).contains(text.toLowerCase(Locale.ROOT))) {
+                matches.add(key);
+            }
+        }
+        return matches;
+    }
+
+    // ZOOMING
 
     @FXML
     protected void onButtonZoomOutClick() {
+        zoomOut();
+    }
+
+    private void zoomOut() {
         double scale = scrollpane.getContent().getScaleX();
-        scale *= ZOOM_OUT_MULTIPLIER;
+        scale = scale * ZOOM_OUT_MULTIPLIER;
         if (scale < MIN_ZOOM_LEVEL) return;
         setZoomFactor(scale);
     }
 
     @FXML
     protected void onButtonZoomInClick() {
+        zoomIn();
+    }
+
+    private void zoomIn() {
         double scale = scrollpane.getContent().getScaleX();
-        scale *= ZOOM_IN_MULTIPLIER;
+        scale = scale * ZOOM_IN_MULTIPLIER;
         if (scale > MAX_ZOOM_LEVEL) return;
         setZoomFactor(scale);
     }
 
     protected void setZoomFactor(double factor) {
+//        Scale scale = new Scale(factor, factor, 0, 0);
+//        scrollpane.getContent().getTransforms().add(scale);
+        double width = display.getCanvas().getWidth() * factor;
+        double height = display.getCanvas().getHeight() * factor;
+        scrollpane.setVmax(height);
+        scrollpane.setHmax(width);
+        System.out.println(factor);
+//        scrollpane.setHmax(factor);
+//        scrollpane.setVmax(factor);
         scrollpane.getContent().setScaleX(factor);
         scrollpane.getContent().setScaleY(factor);
         scrollpane.getContent().setScaleY(factor);
     }
 
+    // MENUBAR BUTTONS
+
+    // about
+
     @FXML
     protected void onMenuButtonContributorsClick() {
-        String text = "Lukas Burkhardt (Algorithmus) # Pascal Fuchs (Datenstruktur) # Ruben Kraft (API) # Paul Lehmann (SVG Parser) # David Maier (GUI)";
-        Alert alert = new Alert(Alert.AlertType.NONE, text.replaceAll(" # ", "\n"), ButtonType.CLOSE);
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        StringBuilder text = new StringBuilder();
+        InputStream stream = classloader.getResourceAsStream("credits.txt");
+        if (stream == null) return;
+        Scanner scanner = new Scanner(stream);
+        while (scanner.hasNext()) {
+            text.append("\n").append(scanner.nextLine());
+        }
+        Alert alert = new Alert(Alert.AlertType.NONE, text.toString(), ButtonType.CLOSE);
         alert.setTitle("Mitwirkende");
         alert.showAndWait();
     }
 
-    @FXML
-    protected void onMenuButtonMapExportClick() {
-        Graph graph = getBordersGraph();
-        if (graph == null) {
-            showError("Es ist keine Karte geladen.");
+    // file
+
+    /**
+     * Loads a {@code Graph} object from a graph file selected by the user.
+     * @param callback A function to be called with the loaded {@code Graph}.
+     * @param title Title of the window.
+     * @param loadingError Text to be displayed when the file couldn't be loaded.
+     */
+    private void importGraph(
+            Consumer<Graph> callback,
+            String title,
+            String loadingError
+    ) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+        File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
+        if (file == null) {
             return;
         }
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Karte speichern unter");
-        File file = fileChooser.showSaveDialog(scrollpane.getScene().getWindow());
-
-        Platform.runLater(() -> {
-            try {
-                SerializeService.saveGraph(graph, file.getAbsolutePath());
-                setBordersGraph(graph);
-            } catch (IOException e) {
-                showError("Die Karte konnte nicht exportiert werden.");
-                e.printStackTrace();
-                return;
-            }
-        });
-    }
-
-    @FXML
-    protected void onMenuButtonMapImportClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Karte öffnen");
-        File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
-
         Platform.runLater(() -> {
             try {
                 Graph graph = SerializeService.loadGraph(file.getAbsolutePath());
-                setBordersGraph(graph);
+                callback.accept(graph);
             } catch (IOException | ClassNotFoundException e) {
-                showError("Die angegebene Datei konnte nicht als Karte geladen werden.");
+                showError(loadingError);
                 e.printStackTrace();
             }
         });
     }
 
-    @FXML
-    protected void onMenuButtonRouteExportClick() {
-        Graph graph = getBordersGraph();
+    /**
+     * Saves a {@code Graph} object to a graph file selected by the user.
+     * @param graph The {@code Graph} object to be saved.
+     * @param title Title of the window.
+     * @param noneLoaded Text to be displayed if graph is {@code null}.
+     * @param savingError Text to be displayed when the file couldn't be saved.
+     */
+    private void exportGraph(
+            Graph graph,
+            String title,
+            String noneLoaded,
+            String savingError
+    ) {
         if (graph == null) {
-            showError("Es ist kein Straßennetz geladen.");
+            showError(noneLoaded);
             return;
         }
-
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Straßennetz speichern unter");
+        fileChooser.setTitle(title);
         File file = fileChooser.showSaveDialog(scrollpane.getScene().getWindow());
-
+        if (file == null) {
+            return;
+        }
         Platform.runLater(() -> {
             try {
                 SerializeService.saveGraph(graph, file.getAbsolutePath());
-                setBordersGraph(graph);
             } catch (IOException e) {
-                showError("Das Straßennetz konnte nicht exportiert werden.");
+                showError(savingError);
                 e.printStackTrace();
-                return;
             }
         });
     }
 
-    @FXML
-    protected void onMenuButtonRouteImportClick() {
+    /**
+     * Creates a {@code Graph} object from an OSM-file selected by the user.
+     * @param callback A function to be called with the imported {@code Graph}.
+     * @param title Title of the window.
+     */
+    private void importOSM(
+            Consumer<Graph> callback,
+            String title
+    ) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Straßennetz öffnen");
+        fileChooser.setTitle(title);
         File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
-
-        Platform.runLater(() -> {
-            try {
-                Graph graph = SerializeService.loadGraph(file.getAbsolutePath());
-                setRoadsGraph(graph);
-
-            } catch (IOException | ClassNotFoundException e) {
-                showError("Die angegebene Datei konnte nicht als Straßennetz geladen werden.");
-                e.printStackTrace();
+        if (file == null) {
+            return;
+        }
+        if (!file.getName().toLowerCase().endsWith(".osm")) {
+            String text = "Die ausgewählte Datei scheint keine OSM-Datei zu sein. Sicher, dass sie geladen werden soll?";
+            Alert alert = new Alert(Alert.AlertType.WARNING, text, ButtonType.NO, ButtonType.YES);
+            alert.setTitle("Warnung");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isEmpty() || result.get() == ButtonType.NO) {
+                return;
             }
+        }
+        Platform.runLater(() -> {
+            XmlParser p = new XmlParser(file.getAbsolutePath());
+            Graph g = p.getGraph();
+            callback.accept(g);
         });
+    }
+
+    // file: borders
+
+    @FXML
+    protected void onMenuButtonBordersExportClick() {
+        exportGraph(
+                getBordersGraph(),
+                "Ländergrenzen speichern unter",
+                "Es sind keine Ländergrenzen geladen.",
+                "Die Ländergrenzen konnten nicht exportiert werden."
+        );
+    }
+
+    @FXML
+    protected void onMenuButtonBordersImportClick() {
+        importGraph(
+                this::setBordersGraph,
+                "Ländergrenzen öffnen",
+                "Die angegebene Datei konnte nicht als Ländergrenzen geladen werden."
+        );
+    }
+
+    // file: roads
+
+    @FXML
+    protected void onMenuButtonRoadsExportClick() {
+        exportGraph(
+                getRoadsGraph(),
+                "Straßennetz speichern unter",
+                "Es ist kein Straßennetz geladen.",
+                "Das Straßennetz konnte nicht exportiert werden."
+        );
+    }
+
+    @FXML
+    protected void onMenuButtonRoadsImportClick() {
+        importGraph(
+                this::setRoadsGraph,
+                "Straßennetz öffnen",
+                "Die angegebene Datei konnte nicht als Straßennetz geladen werden."
+        );
+    }
+
+    // file: OSM
+
+    @FXML
+    protected void onMenuButtonOsmBordersImportClick() {
+        importOSM(
+                this::setBordersGraph,
+                "OSM-Datei mit Ländergrenzen öffnen"
+        );
     }
 
     @FXML
     protected void onMenuButtonOsmRoadsImportClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("OSM-Datei mit Straßennetz öffnen");
-        File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
-
-        Platform.runLater(() -> {
-            XmlParser p = new XmlParser(file.getAbsolutePath());
-            Graph g = p.getGraph();
-        });
+        importOSM(
+                this::setRoadsGraph,
+                "OSM-Datei mit Straßennetz öffnen"
+        );
     }
 
-    @FXML
-    protected void onMenuButtonOsmBordersImportClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("OSM-Datei mit Ländergrenzen öffnen");
-        File file = fileChooser.showOpenDialog(scrollpane.getScene().getWindow());
+    // LAYER GETTERS/SETTERS
 
-        Platform.runLater(() -> {
-            XmlParser p = new XmlParser(file.getAbsolutePath());
-            Graph g = p.getGraph();
-            setBordersGraph(g);
-        });
-    }
+    // borders
 
     protected void setBordersGraph(Graph graph) {
         Platform.runLater(() -> {
-            renderer.removeGraphLayer(BORDERS_KEY);
-            renderer.addGraphLayer(BORDERS_KEY, graph, BORDERS_COLOR);
+            display.setGraphLayer(BORDERS_POS, new GraphLayer(graph, BORDERS_OPTIONS));
         });
     }
 
     protected Graph getBordersGraph() {
-        return renderer.getGraphLayer(BORDERS_KEY);
+        return display.getGraphLayer(BORDERS_POS).getGraph();
     }
+
+    // roads
 
     public void setRoadsGraph(Graph graph) {
         Platform.runLater(() -> {
             setJunctions(graph.getVertexList());
-            renderer.removeGraphLayer(ROADS_KEY);
-            renderer.addGraphLayer(ROADS_KEY, graph, ROADS_COLOR);
+            display.setGraphLayer(ROADS_POS, new GraphLayer(graph, ROADS_OPTIONS));
         });
     }
+
+    protected Graph getRoadsGraph() {
+        return display.getGraphLayer(ROADS_POS).getGraph();
+    }
+
+    // route
+
+    protected void setRouteGraph(Graph graph) {
+        Platform.runLater(() -> {
+            display.setGraphLayer(ROUTE_POS, new GraphLayer(graph, ROUTE_OPTIONS));
+        });
+    }
+
+    protected Graph getRouteGraph() {
+        return display.getGraphLayer(ROUTE_POS).getGraph();
+    }
+
+    // MISCELLANEOUS
 
     private void setJunctions(List<Vertex> vertices) {
         this.junctions = new HashMap<>();
@@ -295,21 +423,6 @@ public class Controller implements Initializable {
                 inputDestination.getItems().add(v.getIdentifier());
             }
         }
-    }
-
-    protected Graph getRoadsGraph() {
-        return renderer.getGraphLayer(ROADS_KEY);
-    }
-
-    protected void setRouteGraph(Graph graph) {
-        Platform.runLater(() -> {
-            renderer.removeGraphLayer(ROUTE_KEY);
-            renderer.addGraphLayer(ROUTE_KEY, graph, ROUTE_COLOR);
-        });
-    }
-
-    protected Graph getRouteGraph() {
-        return renderer.getGraphLayer(ROUTE_KEY);
     }
 
     private void showError(String text) {

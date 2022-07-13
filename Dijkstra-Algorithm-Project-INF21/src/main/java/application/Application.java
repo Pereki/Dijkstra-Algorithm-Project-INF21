@@ -19,8 +19,8 @@ public class Application extends javafx.application.Application {
         //stage.setResizable(false);
         stage.setTitle("Dijkstra Route Finder");
         stage.setScene(scene);
-//        stage.getIcons().add(new Image("file:icon.png"));
-//        stage.getIcons().add(new Image(Application.class.getResourceAsStream("icon.png")));
+        stage.getIcons().add(new Image("C:\\Users\\David\\OneDrive\\Dokumente\\Beruflich\\Duales Studium\\DH\\Vorlesungen\\2. Semester\\Programmieren\\Programmierprojekt\\Dijstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\resources\\logo.png"));
+//        stage.getIcons().add(new Image(Application.class.getResourceAsStream("logo.png")));
         stage.show();
         controller = fxmlLoader.getController();
     }
