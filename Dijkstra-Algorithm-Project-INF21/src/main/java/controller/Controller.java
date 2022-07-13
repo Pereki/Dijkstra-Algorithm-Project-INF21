@@ -88,7 +88,7 @@ public class Controller implements Initializable {
                 5.866342, 15.041892, 55.058307, 47.270112
         ));
 
-        setZoomFactor(0.5);
+        setZoomFactor(0.25);
 
         new Thread(() -> {
             try {

@@ -32,7 +32,7 @@
       <content>
          <StackPane onScroll="#scrollpaneOnScroll" onZoom="#scrollpaneOnZoom">
             <children>
-               <Rectangle fx:id="background" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="344.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="747.0" />
+               <Rectangle fx:id="background" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="327.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="736.0" />
                <Group fx:id="groupGraphs" />
             </children>
          </StackPane>
@@ -40,13 +40,14 @@
    </ScrollPane>
     <GridPane hgap="5.0" prefHeight="68.0" vgap="5.0" VBox.vgrow="NEVER">
         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" percentWidth="42.0" />
-            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="299.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="NEVER" percentWidth="177.0" />
+            <ColumnConstraints hgrow="NEVER" percentWidth="42.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="408.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" percentWidth="228.0" />
+         <ColumnConstraints hgrow="ALWAYS" minWidth="0.0" percentWidth="0.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
-            <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="50.0" vgrow="NEVER" />
+            <RowConstraints percentHeight="50.0" vgrow="NEVER" />
         </rowConstraints>
         <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onCalculateButtonClick" prefHeight="25.0" prefWidth="239.0" text="Route berechnen" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
             <GridPane.margin>
