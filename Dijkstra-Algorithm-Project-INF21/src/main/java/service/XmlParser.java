@@ -16,6 +16,10 @@ public class XmlParser {
     private final ArrayList<Way> listOfWays;
     private final Graph graph;
 
+    /**
+     * reads the .osm file given in path and constructs a graph containing the highways, highway junctions and crossings
+     * @param path the path to the .osm file
+     */
     public XmlParser(String path){
         this.path = path;
         listOfNodes = new ArrayList<Node>();
@@ -25,6 +29,9 @@ public class XmlParser {
         parseXmlToGraph();
     }
 
+    /**
+     * creates the graph out of the given file, gets called from the constructor
+     */
     private void parseXmlToGraph() {
 
         //get all nodes and save them in listOfNodes
@@ -111,8 +118,6 @@ public class XmlParser {
                 }
 
                 line = br.readLine();
-                System.out.println(listOfNodes.size());
-                System.out.println(listOfWays.size());
 
                 if(line==null){
                     break;
@@ -138,14 +143,10 @@ public class XmlParser {
 
                 if(!graph.hasVertex(v1)){
                     graph.addVertex(v1);
-                }else{
-                    System.out.println("Vertex existiert");
                 }
 
                 if(!graph.hasVertex(v2)){
                     graph.addVertex(v2);
-                }else{
-                    System.out.println("Vertex existiert");
                 }
 
                 Edge e = new Edge(v1,v2);
@@ -170,6 +171,11 @@ public class XmlParser {
         }
     }
 
+    /**
+     * returns the index of a node in the ListOfNodes from a given id
+     * @param id the id to be searched for
+     * @return the index of the node in ListOfNodes
+     */
     private int getIndexOfNodeById(long id){
         int ergebnis = -1;
         for(int i=0;i<listOfNodes.size();i++){
@@ -180,6 +186,10 @@ public class XmlParser {
         return ergebnis;
     }
 
+    /**
+     *
+     * @return returns the constructed graph
+     */
     public Graph getGraph(){
         return graph;
     }

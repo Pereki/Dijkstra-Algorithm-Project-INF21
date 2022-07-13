@@ -31,32 +31,17 @@ public class XmlParserTest {
     }
 
     public void graphTest(){
-        XmlParser x = new XmlParser("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\java\\service\\test2.osm");
+        XmlParser x = new XmlParser("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\test2.osm");
 
         Graph g = x.getGraph();
-
-
-
-        try{
-            SerializeService.saveGraph(g, "graph.txt");
-        }catch(Exception e){
-            System.out.println(e.toString());
-        }
-
     }
 
     public void borderTest(){
-        XmlBorders borders = new XmlBorders("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\java\\service\\border.osm", 1);
+        XmlBorders borders = new XmlBorders("C:\\Users\\ykont\\Documents\\GitHub\\Dijkstra-Algorithm-Project-INF21\\Dijkstra-Algorithm-Project-INF21\\src\\main\\java\\service\\border.osm");
 
         Graph g = borders.getGraph();
 
         System.out.println(g.getVertexList().size());
         System.out.println(g.getEdgeList().size());
-
-        try{
-            SerializeService.saveGraph(g, "border.txt");
-        }catch(Exception e){
-            System.out.println(e.toString());
-        }
     }
 }

@@ -17,8 +17,8 @@ public class MercatorProjectorTest {
     public void test1() {
         MercatorProjector p = new MercatorProjector(0, 0);
 
-        Assertions.assertEquals(p.getX(9.15), 0.15969762655748115, ACCURACY);
-        Assertions.assertEquals(p.getY(48.8), 0.978497869120544, ACCURACY);
+        Assertions.assertEquals(0.15969762655748115, p.getX(9.15), ACCURACY);
+        Assertions.assertEquals(0.978497869120544, p.getY(48.8), ACCURACY);
     }
 
     /**
@@ -29,8 +29,8 @@ public class MercatorProjectorTest {
     public void test2() {
         MercatorProjector p = new MercatorProjector(51.309929, 9.470913);
         //TODO: Adjust values
-        Assertions.assertEquals(p.getX(9.15), 0.15969762655748115, ACCURACY);
-        Assertions.assertEquals(p.getY(48.8), 0.978497869120544, ACCURACY);
+        Assertions.assertEquals(0.15969762655748115, p.getX(9.15), ACCURACY);
+        Assertions.assertEquals(0.978497869120544, p.getY(48.8), ACCURACY);
     }
 
     /**
