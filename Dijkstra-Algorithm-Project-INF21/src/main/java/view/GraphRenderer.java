@@ -33,7 +33,11 @@ public class GraphRenderer {
         this.projector = new MercatorProjector(geoBounds.getSouth(), geoBounds.getWest());
     }
 
-    public void render(GraphLayer layer, Canvas canvas) {
+    public Canvas render(GraphLayer layer) {
+        Canvas canvas = new Canvas(
+                projector.getX(geoBounds.getEast()) * 3000,
+                projector.getY(geoBounds.getNorth()) * 500
+        );
         Graph graph = layer.getGraph();
         GraphRendererOptions options = layer.getOptions();
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -94,22 +98,22 @@ public class GraphRenderer {
 
                 gc.setFont(options.getFont());
                 Color color = options.getLabelColor();
-                gc.setStroke(color);
+                gc.setFill(new Color(1-color.getRed(), 1-color.getGreen(), 1-color.getBlue(), 1));
+                gc.fillText(v.getIdentifier(), x + 1.5 * options.getDotRadius()+1, y+1);
+                gc.setFill(color);
                 gc.fillText(v.getIdentifier(), x + 1.5 * options.getDotRadius(), y);
-                gc.setStroke(new Color(1-color.getRed(), 1-color.getGreen(), 1-color.getBlue(), 1));
-                gc.fillText(v.getIdentifier(), x + 1.5 * options.getDotRadius() + 2, y + 2);
             }
         }
+        return canvas;
     }
 
     /**
      * Renders the given {@code GraphLayer} onto the given canvas.
      * @param layer The {@code GraphLayer} to be rendered.
-     * @param canvas A {@code Canvas} on which the layer should be rendered.
      * @param geoBounds The geographical viewport.
      */
-    public static void render(GraphLayer layer, Canvas canvas, GeoBounds geoBounds) {
-        new GraphRenderer(geoBounds).render(layer, canvas);
+    public static Canvas render(GraphLayer layer, GeoBounds geoBounds) {
+        return new GraphRenderer(geoBounds).render(layer);
     }
 
     private double getX(double longitude, double width) {

@@ -2,13 +2,11 @@ package test;
 
 import model.Edge;
 import model.Graph;
-import service.Dijkstra;
 import service.SerializeService;
 import model.Vertex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 
 public class DijkstraTest {
@@ -45,13 +43,13 @@ public class DijkstraTest {
         Edge e13 = new Edge(D,L);
         ArrayList edges = new ArrayList(Arrays.asList(new Edge[]{e1,e2,e3,e4,e5,e6,e7,e7b,e8,e9,e10,e11,e12,e13}));
 
-        //Graph raw = new Graph(edges,vertexes);
-        //SerializeService.saveGraph(raw,"graph_non_junctions.graph");
-        Graph raw = SerializeService.loadGraph("C:\\Users\\Lukas\\Downloads\\finishedsmall.txt");
-
-
-        Vertex Horb = getVertex(raw,"horb");
-        Vertex Empf =   getVertex(raw,"würzburg");
+        Graph raw = new Graph(edges,vertexes);
+        SerializeService.saveGraph(raw, "graphs/de_borders_rough.graph");
+//        Graph raw = SerializeService.loadGraph("C:\\Users\\Lukas\\Downloads\\finishedsmall.txt");
+//
+//
+//        Vertex Horb = getVertex(raw,"horb");
+//        Vertex Empf =   getVertex(raw,"würzburg");
 
         //Graph g = Dijkstra.getShortWay(raw,Horb,Empf).getGraph();
 
