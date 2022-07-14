@@ -1,7 +1,7 @@
 Mitwirkende:
 	Lukas Burkhardt 	Dijkstra-Algorithmus
 	Pascal Fuchs		Datenstruktur
-	Ruben Kraft		API-Connection, Controller
+	Ruben Kraft		API-Connection, Graph Shrinker
 	Paul Lehmann		OSM XML-Parser
 	David Maier		GUI, Controller
 
