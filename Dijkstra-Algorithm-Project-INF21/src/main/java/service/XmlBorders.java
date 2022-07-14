@@ -85,10 +85,10 @@ public class XmlBorders {
                                 entries[i+3] = entries[i+3].replace("/>","");
 
                                 v1 = new Vertex(0,Double.parseDouble(entries[i+2]), Double.parseDouble(entries[i+3]));
-                                Edge e = new Edge(v1, g.getNearestVertex(v1));
-                                if(e.getLength()<1){
-                                    g.addEdge(e);
-                                }
+                                //Edge e = new Edge(v1, g.getNearestVertex(v1));
+                                //if(e.getLength()<1){
+                                    //g.addEdge(e);
+                                //}
 
                                 v2 = v1;
                                 doWeHaveANewWay=false;
@@ -117,8 +117,8 @@ public class XmlBorders {
                 line = br.readLine();
             }
 
-            v1 = g.getVertexList().get(0);
-            Edge e = new Edge(v1, g.getNearestVertex(v1));
+            //v1 = g.getVertexList().get(0);
+            //Edge e = new Edge(v1, g.getNearestVertex(v1));
             //g.addEdge(e);
         }catch(Exception e){
             System.out.println(e.toString());
