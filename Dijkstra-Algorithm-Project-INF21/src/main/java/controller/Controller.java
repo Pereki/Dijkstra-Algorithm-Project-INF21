@@ -71,11 +71,13 @@ public class Controller implements Initializable {
     @FXML
     private ComboBox<String> inputDestination;
     @FXML
-    public Rectangle background;
+    private Rectangle background;
     @FXML
-    public Label labelZoom;
+    private Label labelZoom;
     @FXML
-    public Button buttonDraw;
+    private Button buttonDraw;
+    @FXML
+    private ProgressIndicator progressIndicator;
 
     private HashMap<String, Vertex> junctions = new HashMap<>();
 
@@ -128,19 +130,19 @@ public class Controller implements Initializable {
         }
 
         new Thread(() -> {
-            buttonDraw.setDisable(true);
+            startProcess();
             GraphWay route;
             double apiLength = -1;
             try {
                 route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
                 if (route == null) {
-                    buttonDraw.setDisable(false);
+                    endProcess();
                     showError(String.format("Es konnte keine Route von %s nach %s berechnet werden.", start.getIdentifier(), dest.getIdentifier()));
                     return;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                buttonDraw.setDisable(false);
+                endProcess();
                 showError(String.format("Beim Berechnen der Route ist ein Fehler aufgetreten: %s", e.getLocalizedMessage()));
                 return;
             }
@@ -154,7 +156,7 @@ public class Controller implements Initializable {
                 message += "Keine Verbindung";
             }
             setRouteGraph(route);
-            buttonDraw.setDisable(false);
+            endProcess();
             String finalMessage = message;
             Platform.runLater(() -> {
                 Alert alert = new Alert(Alert.AlertType.NONE, finalMessage, ButtonType.OK);
@@ -162,6 +164,20 @@ public class Controller implements Initializable {
                 alert.show();
             });
         }).start();
+    }
+
+    private synchronized void startProcess() {
+        Platform.runLater(() -> {
+            buttonDraw.setDisable(true);
+            progressIndicator.setVisible(true);
+        });
+    }
+
+    private synchronized void endProcess() {
+        Platform.runLater(() -> {
+            buttonDraw.setDisable(false);
+            progressIndicator.setVisible(false);
+        });
     }
 
     // TEXT FIELDS
@@ -333,12 +349,12 @@ public class Controller implements Initializable {
     }
 
     /**
-     * Creates a {@code Graph} object from an OSM-file selected by the user.
-     * @param callback A function to be called with the imported {@code Graph}.
+     * Lets the user select an OSM-{@code File}.
+     * @param callback A function to be called with the selected {@code File}.
      * @param title Title of the window.
      */
     private void importOSM(
-            Consumer<Graph> callback,
+            Consumer<File> callback,
             String title
     ) {
         FileChooser fileChooser = new FileChooser();
@@ -357,11 +373,7 @@ public class Controller implements Initializable {
             }
         }
         new Thread(() -> {
-            XmlParser p = new XmlParser(file.getAbsolutePath());
-            Graph g = p.getGraph();
-            GraphShrinker s = new GraphShrinker(g);
-            s.shrinkGraph();
-            callback.accept(s.getMinimizedGraph());
+            callback.accept(file);
         }).start();
     }
 
@@ -411,16 +423,27 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onMenuButtonOsmBordersImportClick() {
+        Consumer<File> callback = file -> {
+            XmlBorders p = new XmlBorders(file.getAbsolutePath());
+            setBordersGraph(p.getGraph());
+        };
         importOSM(
-                this::setBordersGraph,
+                callback,
                 "OSM-Datei mit Ländergrenzen öffnen"
         );
     }
 
     @FXML
     protected void onMenuButtonOsmRoadsImportClick() {
+        Consumer<File> callback = file -> {
+            XmlParser p = new XmlParser(file.getAbsolutePath());
+            Graph g = p.getGraph();
+            GraphShrinker s = new GraphShrinker(g);
+            s.shrinkGraph();
+            setRoadsGraph(s.getMinimizedGraph());
+        };
         importOSM(
-                this::setRoadsGraph,
+                callback,
                 "OSM-Datei mit Straßennetz öffnen"
         );
     }
