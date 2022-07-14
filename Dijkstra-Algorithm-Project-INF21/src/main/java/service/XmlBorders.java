@@ -48,12 +48,12 @@ public class XmlBorders {
 
                 for (int i = 0; i < entries.length; i++) {
                     if (entries[i].contains("<nd")) {
-                        entries[i + 1] = entries[i + 1].replace("lat=", "");
-                        entries[i + 1] = entries[i + 1].replace("\"", "");
+                        entries[i+1] = entries[i+1].replace("lat=","");
+                        entries[i+1] = entries[i+1].replace("\"","");
 
-                        entries[i + 2] = entries[i + 2].replace("lon=", "");
-                        entries[i + 2] = entries[i + 2].replace("\"", "");
-                        entries[i + 2] = entries[i + 2].replace("/>", "");
+                        entries[i+2] = entries[i+2].replace("lon=","");
+                        entries[i+2] = entries[i+2].replace("\"","");
+                        entries[i+2] = entries[i+2].replace("/>","");
 
                         v1 = new Vertex(0, Double.parseDouble(entries[i + 1]), Double.parseDouble(entries[i + 2]));
                     }
@@ -86,7 +86,7 @@ public class XmlBorders {
 
                                 v1 = new Vertex(0,Double.parseDouble(entries[i+1]), Double.parseDouble(entries[i+2]));
                                 Edge e = new Edge(v1, g.getNearestVertex(v1));
-                                if(e.getLength()<1){
+                                if(e.getLength()<30){
                                     g.addEdge(e);
                                 }
 
@@ -104,7 +104,7 @@ public class XmlBorders {
 
                                 v1 = new Vertex(0,Double.parseDouble(entries[i+1]), Double.parseDouble(entries[i+2]));
                                 Edge e = new Edge(v1, v2);
-                                if(e.getLength()<1) {
+                                if(e.getLength()<30) {
                                     g.addEdge(e);
                                 }
 
@@ -122,8 +122,8 @@ public class XmlBorders {
             v1 = g.getVertexList().get(0);
             Edge e = new Edge(v1, g.getNearestVertex(v1));
 
-            if(e.getLength()<1) {
-                g.addEdge(e);
+            if(e.getLength()<30) {
+                //g.addEdge(e);
             }
 
         }catch(Exception e){
