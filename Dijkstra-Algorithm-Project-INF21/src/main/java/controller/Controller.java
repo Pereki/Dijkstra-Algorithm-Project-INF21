@@ -97,7 +97,7 @@ public class Controller implements Initializable {
                 Graph borders = SerializeService.loadGraph(DEFAULT_GRAPH_BORDERS);
                 setBordersGraph(borders);
             } catch (IOException | ClassNotFoundException e) {
-                new Exception("Failed to load default graphs.", e).printStackTrace();
+                System.out.println("Failed to load one or more default graphs: " + e.getMessage());
             }
         }).start();
     }
