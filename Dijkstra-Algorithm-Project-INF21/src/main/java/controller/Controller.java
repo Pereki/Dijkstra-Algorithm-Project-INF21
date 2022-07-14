@@ -85,6 +85,8 @@ public class Controller implements Initializable {
 
     private GraphDisplay display;
 
+    private boolean runningCalculation;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
@@ -110,6 +112,10 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onCalculateButtonClick() {
+        if (runningCalculation) {
+            showError("Es wird bereits eine Route berechnet.");
+            return;
+        }
         if (junctions.isEmpty()) {
             showError("Es muss zuerst ein Straßennetz geladen werden.");
             return;
@@ -170,6 +176,7 @@ public class Controller implements Initializable {
 
     private synchronized void startProcess() {
         Platform.runLater(() -> {
+            runningCalculation = true;
             buttonDraw.setDisable(true);
             buttonDraw.setText("Route wird berechnet...");
             menuButtonFile.setDisable(true);
@@ -179,6 +186,7 @@ public class Controller implements Initializable {
 
     private synchronized void endProcess() {
         Platform.runLater(() -> {
+            runningCalculation = false;
             buttonDraw.setDisable(false);
             buttonDraw.setText("Route berechnen");
             menuButtonFile.setDisable(false);
