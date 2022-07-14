@@ -48,14 +48,14 @@ public class XmlBorders {
 
                 for (int i = 0; i < entries.length; i++) {
                     if (entries[i].contains("<nd")) {
-                        entries[i + 2] = entries[i + 2].replace("lat=", "");
+                        entries[i + 1] = entries[i + 1].replace("lat=", "");
+                        entries[i + 1] = entries[i + 1].replace("\"", "");
+
+                        entries[i + 2] = entries[i + 2].replace("lon=", "");
                         entries[i + 2] = entries[i + 2].replace("\"", "");
+                        entries[i + 2] = entries[i + 2].replace("/>", "");
 
-                        entries[i + 3] = entries[i + 3].replace("lon=", "");
-                        entries[i + 3] = entries[i + 3].replace("\"", "");
-                        entries[i + 3] = entries[i + 3].replace("/>", "");
-
-                        v1 = new Vertex(0, Double.parseDouble(entries[i + 2]), Double.parseDouble(entries[i + 3]));
+                        v1 = new Vertex(0, Double.parseDouble(entries[i + 1]), Double.parseDouble(entries[i + 2]));
                     }
                 }
 
@@ -77,34 +77,36 @@ public class XmlBorders {
                     if(entries[i].contains("<nd")){
                         if(doWeHaveANewWay){
 
-                                entries[i+2] = entries[i+2].replace("lat=","");
+                                entries[i+1] = entries[i+1].replace("lat=","");
+                                entries[i+1] = entries[i+1].replace("\"","");
+
+                                entries[i+2] = entries[i+2].replace("lon=","");
                                 entries[i+2] = entries[i+2].replace("\"","");
+                                entries[i+2] = entries[i+2].replace("/>","");
 
-                                entries[i+3] = entries[i+3].replace("lon=","");
-                                entries[i+3] = entries[i+3].replace("\"","");
-                                entries[i+3] = entries[i+3].replace("/>","");
-
-                                v1 = new Vertex(0,Double.parseDouble(entries[i+2]), Double.parseDouble(entries[i+3]));
-                                //Edge e = new Edge(v1, g.getNearestVertex(v1));
-                                //if(e.getLength()<1){
-                                    //g.addEdge(e);
-                                //}
+                                v1 = new Vertex(0,Double.parseDouble(entries[i+1]), Double.parseDouble(entries[i+2]));
+                                Edge e = new Edge(v1, g.getNearestVertex(v1));
+                                if(e.getLength()<1){
+                                    g.addEdge(e);
+                                }
 
                                 v2 = v1;
                                 doWeHaveANewWay=false;
 
                         }else{
 
-                                entries[i+2] = entries[i+2].replace("lat=","");
+                                entries[i+1] = entries[i+1].replace("lat=","");
+                                entries[i+1] = entries[i+1].replace("\"","");
+
+                                entries[i+2] = entries[i+2].replace("lon=","");
                                 entries[i+2] = entries[i+2].replace("\"","");
+                                entries[i+2] = entries[i+2].replace("/>","");
 
-                                entries[i+3] = entries[i+3].replace("lon=","");
-                                entries[i+3] = entries[i+3].replace("\"","");
-                                entries[i+3] = entries[i+3].replace("/>","");
-
-                                v1 = new Vertex(0,Double.parseDouble(entries[i+2]), Double.parseDouble(entries[i+3]));
+                                v1 = new Vertex(0,Double.parseDouble(entries[i+1]), Double.parseDouble(entries[i+2]));
                                 Edge e = new Edge(v1, v2);
-                                g.addEdge(e);
+                                if(e.getLength()<1) {
+                                    g.addEdge(e);
+                                }
 
                                 v2 = v1;
 
@@ -117,9 +119,13 @@ public class XmlBorders {
                 line = br.readLine();
             }
 
-            //v1 = g.getVertexList().get(0);
-            //Edge e = new Edge(v1, g.getNearestVertex(v1));
-            //g.addEdge(e);
+            v1 = g.getVertexList().get(0);
+            Edge e = new Edge(v1, g.getNearestVertex(v1));
+
+            if(e.getLength()<1) {
+                g.addEdge(e);
+            }
+
         }catch(Exception e){
             System.out.println(e.toString());
         }
