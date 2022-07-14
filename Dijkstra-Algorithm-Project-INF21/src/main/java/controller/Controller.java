@@ -130,7 +130,7 @@ public class Controller implements Initializable {
         new Thread(() -> {
             buttonDraw.setDisable(true);
             GraphWay route;
-            double apiLength;
+            double apiLength = -1;
             try {
                 route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
                 if (route == null) {
@@ -138,20 +138,26 @@ public class Controller implements Initializable {
                     showError(String.format("Es konnte keine Route von %s nach %s berechnet werden.", start.getIdentifier(), dest.getIdentifier()));
                     return;
                 }
-                apiLength = new OpenMapRequester().getDistance(start, dest) / 1000;
             } catch (Exception e) {
                 e.printStackTrace();
                 buttonDraw.setDisable(false);
                 showError(String.format("Beim Berechnen der Route ist ein Fehler aufgetreten: %s", e.getLocalizedMessage()));
                 return;
             }
+            String message = "Es wurde eine Route gefunden!\n" +
+                    String.format("Länge: %.2f km\n", route.getLength()) +
+                    "Länge der Route von Openrouteservice: ";
+            try {
+                apiLength = new OpenMapRequester().getDistance(start, dest) / 1000;
+                message += String.format("%.2f km", apiLength);
+            } catch (IOException e) {
+                message += "Keine Verbindung";
+            }
             setRouteGraph(route);
             buttonDraw.setDisable(false);
+            String finalMessage = message;
             Platform.runLater(() -> {
-                String message = "Es wurde eine Route gefunden!\n" +
-                        String.format("Länge: %.2f km\n", route.getLength()) +
-                        String.format("Länge der Route von Openrouteservice: %.2f km", apiLength);
-                Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.NONE, finalMessage, ButtonType.OK);
                 alert.setTitle("Route gefunden");
                 alert.show();
             });
