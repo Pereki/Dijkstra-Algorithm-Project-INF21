@@ -33,7 +33,7 @@ public class Controller implements Initializable {
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
 
     private static final String DEFAULT_GRAPH_ROADS = "src/main/resources/graphs/de_roads.graph";
-    private static final String DEFAULT_GRAPH_BORDERS = "src/main/resources/graphs/de_borders_rough.graph";
+    private static final String DEFAULT_GRAPH_BORDERS = "src/main/resources/graphs/de_borders.graph";
 
     private static final double LINE_WIDTH = 8;
     private static final double DOT_RADIUS = LINE_WIDTH * 4;
@@ -89,9 +89,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
+        // for Germany: W: 5.866342; E: 15.041892; N: 55.124401; S: 47.270112;
         this.display = new GraphDisplay(groupGraphs, new GeoBounds(
-                5.866342, 15.041892, 55.058307, 47.270112
+                5.866342, 15.041892, 55.124401, 47.270112
         ));
 
         setZoomFactor(0.25);

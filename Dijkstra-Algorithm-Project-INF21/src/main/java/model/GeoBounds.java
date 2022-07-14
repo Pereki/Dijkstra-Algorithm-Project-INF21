@@ -6,7 +6,7 @@ public class GeoBounds {
     double south;
     double west;
 
-    // for Germany: W: 5.866342; E: 15.041892; N: 55.058307; S: 47.270112;
+    // for Germany: W: 5.866342; E: 15.041892; N: 55.124401; S: 47.270112;
     public GeoBounds(double westLon, double eastLon, double northLat, double southLat) {
         this.north = northLat;
         this.east = eastLon;
