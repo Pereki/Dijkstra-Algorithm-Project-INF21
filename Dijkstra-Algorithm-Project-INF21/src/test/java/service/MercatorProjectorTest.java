@@ -22,18 +22,6 @@ public class MercatorProjectorTest {
     }
 
     /**
-     * Tests of conversion geo coordinate -> x/y coordinate
-     * With center Kassel (DE)
-     */
-    @Test
-    public void test2() {
-        MercatorProjector p = new MercatorProjector(51.309929, 9.470913);
-        //TODO: Adjust values
-        Assertions.assertEquals(0.15969762655748115, p.getX(9.15), ACCURACY);
-        Assertions.assertEquals(0.978497869120544, p.getY(48.8), ACCURACY);
-    }
-
-    /**
      * Tests of conversion x/y coordinate -> geo coordinate
      * With center 0/0
      */
