@@ -9,7 +9,7 @@
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="451.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
    <MenuBar fx:id="menuBar">
      <menus>
-       <Menu mnemonicParsing="false" text="Datei">
+       <Menu fx:id="menuButtonFile" mnemonicParsing="false" text="Datei">
          <items>
            <MenuItem fx:id="menuButtonMapImport" mnemonicParsing="false" onAction="#onMenuButtonBordersImportClick" text="Grenzen öffnen" />
                <MenuItem fx:id="menuButtonMapExport" mnemonicParsing="false" onAction="#onMenuButtonBordersExportClick" text="Grenzen speichern" />
@@ -42,20 +42,15 @@
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER" percentWidth="77.0" />
             <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="704.0" prefWidth="100.0" />
-         <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="395.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" percentWidth="292.0" />
+         <ColumnConstraints hgrow="ALWAYS" percentWidth="254.0" />
+            <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" percentWidth="433.0" />
          <ColumnConstraints hgrow="ALWAYS" minWidth="0.0" percentWidth="0.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints percentHeight="50.0" vgrow="NEVER" />
             <RowConstraints percentHeight="50.0" vgrow="NEVER" />
         </rowConstraints>
-        <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onCalculateButtonClick" prefHeight="25.0" prefWidth="239.0" text="Route berechnen" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS">
-            <GridPane.margin>
-                <Insets />
-            </GridPane.margin>
-        </Button>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
          <children>
               <Button fx:id="buttonZoomIn" mnemonicParsing="false" onAction="#onButtonZoomInClick" prefHeight="25.0" prefWidth="28.0" text="+" />
             <Button fx:id="buttonZoomOut" mnemonicParsing="false" onAction="#onButtonZoomOutClick" prefHeight="25.0" prefWidth="29.0" text="-" />
@@ -66,7 +61,12 @@
       <Label prefHeight="17.0" prefWidth="29.0" text="Ziel" GridPane.rowIndex="1" />
       <ComboBox fx:id="inputStart" editable="true" onKeyReleased="#onInputStartKeyEvent" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" />
       <ComboBox fx:id="inputDestination" editable="true" onKeyReleased="#onInputDestinationKeyEvent" prefHeight="25.0" prefWidth="348.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <ProgressIndicator fx:id="progressIndicator" maxHeight="20.0" maxWidth="20.0" prefHeight="26.0" prefWidth="27.0" visible="false" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER" />
+      <HBox alignment="CENTER_LEFT" prefHeight="26.0" prefWidth="173.0" spacing="5.0" GridPane.columnIndex="3">
+         <children>
+              <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onCalculateButtonClick" prefHeight="25.0" prefWidth="239.0" text="Route berechnen" />
+            <ProgressIndicator fx:id="progressIndicator" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="20.0" visible="false" />
+         </children>
+      </HBox>
       <padding>
          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
       </padding>
