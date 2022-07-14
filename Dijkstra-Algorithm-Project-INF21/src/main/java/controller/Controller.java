@@ -77,6 +77,8 @@ public class Controller implements Initializable {
     @FXML
     private Button buttonDraw;
     @FXML
+    private Menu menuButtonFile;
+    @FXML
     private ProgressIndicator progressIndicator;
 
     private HashMap<String, Vertex> junctions = new HashMap<>();
@@ -169,6 +171,8 @@ public class Controller implements Initializable {
     private synchronized void startProcess() {
         Platform.runLater(() -> {
             buttonDraw.setDisable(true);
+            buttonDraw.setText("Route wird berechnet...");
+            menuButtonFile.setDisable(true);
             progressIndicator.setVisible(true);
         });
     }
@@ -176,6 +180,8 @@ public class Controller implements Initializable {
     private synchronized void endProcess() {
         Platform.runLater(() -> {
             buttonDraw.setDisable(false);
+            buttonDraw.setText("Route berechnen");
+            menuButtonFile.setDisable(false);
             progressIndicator.setVisible(false);
         });
     }
