@@ -4,6 +4,7 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
 <VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="451.0" prefWidth="740.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
    <MenuBar fx:id="menuBar">
@@ -22,15 +23,16 @@
        </Menu>
          <Menu mnemonicParsing="false" text="Info">
             <items>
-               <MenuItem fx:id="menuButtonContributors" mnemonicParsing="false" onAction="#onMenuButtonContributorsClick" text="Mitwirkende" />
+               <MenuItem fx:id="menuButtonContributors" mnemonicParsing="false" onAction="#onMenuButtonContributorsClick" text="Credits" />
             </items>
          </Menu>
      </menus>
    </MenuBar>
    <ScrollPane fx:id="scrollpane" cacheShape="false" hvalue="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" pannable="true" vvalue="0.5" VBox.vgrow="ALWAYS">
       <content>
-         <StackPane>
+         <StackPane onScroll="#scrollpaneOnScroll" onZoom="#scrollpaneOnZoom">
             <children>
+               <Rectangle fx:id="background" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="327.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="736.0" />
                <Group fx:id="groupGraphs" />
             </children>
          </StackPane>
@@ -38,23 +40,25 @@
    </ScrollPane>
     <GridPane hgap="5.0" prefHeight="68.0" vgap="5.0" VBox.vgrow="NEVER">
         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" percentWidth="42.0" />
-            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="299.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="NEVER" percentWidth="177.0" />
+            <ColumnConstraints hgrow="NEVER" percentWidth="42.0" />
+            <ColumnConstraints hgrow="NEVER" minWidth="10.0" percentWidth="408.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" percentWidth="228.0" />
+         <ColumnConstraints hgrow="ALWAYS" minWidth="0.0" percentWidth="0.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
-            <RowConstraints percentHeight="50.0" vgrow="SOMETIMES" />
+            <RowConstraints percentHeight="50.0" vgrow="NEVER" />
+            <RowConstraints percentHeight="50.0" vgrow="NEVER" />
         </rowConstraints>
         <Button fx:id="buttonDraw" mnemonicParsing="false" onAction="#onCalculateButtonClick" prefHeight="25.0" prefWidth="239.0" text="Route berechnen" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>
         </Button>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
          <children>
               <Button fx:id="buttonZoomIn" mnemonicParsing="false" onAction="#onButtonZoomInClick" prefHeight="25.0" prefWidth="28.0" text="+" />
             <Button fx:id="buttonZoomOut" mnemonicParsing="false" onAction="#onButtonZoomOutClick" prefHeight="25.0" prefWidth="29.0" text="-" />
+            <Label fx:id="labelZoom" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
       <Label prefHeight="17.0" prefWidth="34.0" text="Start" />

@@ -1,17 +1,18 @@
 package controller;
 
-import com.almasb.fxgl.ui.MDIWindow;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.input.ZoomEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Scale;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import model.*;
 import service.*;
@@ -26,28 +27,40 @@ import java.util.function.Consumer;
 
 public class Controller implements Initializable {
 
-    private static final double MAX_ZOOM_LEVEL = 1.5;
-    private static final double MIN_ZOOM_LEVEL = 0.25;
+    private static final double MAX_ZOOM_LEVEL = 5;
+    private static final double MIN_ZOOM_LEVEL = 0.1;
     private static final double ZOOM_IN_MULTIPLIER = 1.25;
     private static final double ZOOM_OUT_MULTIPLIER = 0.8;
+
+    private static final String DEFAULT_GRAPH_ROADS = "src/main/resources/graphs/de_roads.graph";
+    private static final String DEFAULT_GRAPH_BORDERS = "src/main/resources/graphs/de_borders_rough.graph";
+
+    private static final double LINE_WIDTH = 8;
+    private static final double DOT_RADIUS = LINE_WIDTH * 4;
+    private static final double FONT_SIZE = 36;
 
     private static final int BORDERS_POS = 0;
     private static final GraphRendererOptions BORDERS_OPTIONS = new GraphRendererOptions()
             .routeColor(Color.valueOf("#bfbfbf"))
             .dotJunctions(false)
+            .lineWidth(LINE_WIDTH)
             .showLabels(false);
 
     private static final int ROADS_POS = 1;
     private static final GraphRendererOptions ROADS_OPTIONS = new GraphRendererOptions()
             .routeColor(Color.valueOf("#154889"))
             .dotJunctions(false)
+            .lineWidth(LINE_WIDTH)
             .showLabels(false);
 
     private static final int ROUTE_POS = 2;
     private static final GraphRendererOptions ROUTE_OPTIONS = new GraphRendererOptions()
             .routeColor(Color.RED)
             .dotJunctions(false)
-            .showLabels(false);
+            .showLabels(false)
+            .lineWidth(LINE_WIDTH)
+            .dotRadius(DOT_RADIUS)
+            .font(new Font(FONT_SIZE));
 
     @FXML
     private ScrollPane scrollpane;
@@ -57,6 +70,12 @@ public class Controller implements Initializable {
     private ComboBox<String> inputStart;
     @FXML
     private ComboBox<String> inputDestination;
+    @FXML
+    public Rectangle background;
+    @FXML
+    public Label labelZoom;
+    @FXML
+    public Button buttonDraw;
 
     private HashMap<String, Vertex> junctions = new HashMap<>();
 
@@ -68,6 +87,19 @@ public class Controller implements Initializable {
         this.display = new GraphDisplay(groupGraphs, new GeoBounds(
                 5.866342, 15.041892, 55.058307, 47.270112
         ));
+
+        setZoomFactor(0.25);
+
+        new Thread(() -> {
+            try {
+                Graph roads = SerializeService.loadGraph(DEFAULT_GRAPH_ROADS);
+                setRoadsGraph(roads);
+                Graph borders = SerializeService.loadGraph(DEFAULT_GRAPH_BORDERS);
+                setBordersGraph(borders);
+            } catch (IOException | ClassNotFoundException e) {
+                new Exception("Failed to load default graphs.", e).printStackTrace();
+            }
+        }).start();
     }
 
     // FIND ROUTE
@@ -90,44 +122,61 @@ public class Controller implements Initializable {
             showError("Der angegebene Zielort existiert im geladenen Straßennetz nicht.");
             return;
         }
+        if (dest.equals(start)) {
+            showError("Start- und Zielort sind identisch.");
+            return;
+        }
 
-        Platform.runLater(() -> {
+        new Thread(() -> {
+            buttonDraw.setDisable(true);
             GraphWay route;
-            double apiLength;
+            double apiLength = -1;
             try {
                 route = Dijkstra.getShortWay(getRoadsGraph(), start, dest);
                 if (route == null) {
+                    buttonDraw.setDisable(false);
                     showError(String.format("Es konnte keine Route von %s nach %s berechnet werden.", start.getIdentifier(), dest.getIdentifier()));
+                    return;
                 }
-                apiLength = new OpenMapRequester().getDistance(start, dest) / 1000;
             } catch (Exception e) {
                 e.printStackTrace();
+                buttonDraw.setDisable(false);
                 showError(String.format("Beim Berechnen der Route ist ein Fehler aufgetreten: %s", e.getLocalizedMessage()));
                 return;
             }
-            setRouteGraph(route);
             String message = "Es wurde eine Route gefunden!\n" +
                     String.format("Länge: %.2f km\n", route.getLength()) +
-                    String.format("Länge der Route von Openrouteservice: %.2f km", apiLength);
-            Alert alert = new Alert(Alert.AlertType.NONE, message, ButtonType.OK);
-            alert.setTitle("Route gefunden");
-            alert.show();
-        });
+                    "Länge der Route von Openrouteservice: ";
+            try {
+                apiLength = new OpenMapRequester().getDistance(start, dest) / 1000;
+                message += String.format("%.2f km", apiLength);
+            } catch (IOException e) {
+                message += "Keine Verbindung";
+            }
+            setRouteGraph(route);
+            buttonDraw.setDisable(false);
+            String finalMessage = message;
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.NONE, finalMessage, ButtonType.OK);
+                alert.setTitle("Route gefunden");
+                alert.show();
+            });
+        }).start();
     }
 
     // TEXT FIELDS
 
     @FXML
-    protected void onInputStartKeyEvent(KeyEvent e) {
+    protected void onInputStartKeyEvent() {
         displaySuggestions(inputStart);
     }
 
     @FXML
-    protected void onInputDestinationKeyEvent(KeyEvent e) {
+    protected void onInputDestinationKeyEvent() {
         displaySuggestions(inputDestination);
     }
 
-    private void displaySuggestions(ComboBox input) {
+    private void displaySuggestions(ComboBox<String> input) {
         String text = input.getEditor().getText();
         ObservableList<String> matches = FXCollections.observableList(findMatches(text));
         input.setItems(matches);
@@ -151,12 +200,29 @@ public class Controller implements Initializable {
     // ZOOMING
 
     @FXML
+    protected void scrollpaneOnZoom(ZoomEvent e) {
+        setZoomFactor(e.getTotalZoomFactor());
+        e.consume();
+    }
+
+    @FXML
+    protected void scrollpaneOnScroll(ScrollEvent e) {
+        if (!e.isControlDown() || e.isShiftDown()) return;
+        if (e.getDeltaY() < 0) {
+            zoomOut();
+        } else {
+            zoomIn();
+        }
+        e.consume();
+    }
+
+    @FXML
     protected void onButtonZoomOutClick() {
         zoomOut();
     }
 
     private void zoomOut() {
-        double scale = scrollpane.getContent().getScaleX();
+        double scale = groupGraphs.getScaleX();
         scale = scale * ZOOM_OUT_MULTIPLIER;
         if (scale < MIN_ZOOM_LEVEL) return;
         setZoomFactor(scale);
@@ -168,25 +234,21 @@ public class Controller implements Initializable {
     }
 
     private void zoomIn() {
-        double scale = scrollpane.getContent().getScaleX();
+        double scale = groupGraphs.getScaleX();
         scale = scale * ZOOM_IN_MULTIPLIER;
         if (scale > MAX_ZOOM_LEVEL) return;
         setZoomFactor(scale);
     }
 
     protected void setZoomFactor(double factor) {
-//        Scale scale = new Scale(factor, factor, 0, 0);
-//        scrollpane.getContent().getTransforms().add(scale);
-        double width = display.getCanvas().getWidth() * factor;
-        double height = display.getCanvas().getHeight() * factor;
-        scrollpane.setVmax(height);
-        scrollpane.setHmax(width);
-        System.out.println(factor);
-//        scrollpane.setHmax(factor);
-//        scrollpane.setVmax(factor);
-        scrollpane.getContent().setScaleX(factor);
-        scrollpane.getContent().setScaleY(factor);
-        scrollpane.getContent().setScaleY(factor);
+        groupGraphs.setScaleX(factor);
+        groupGraphs.setScaleY(factor);
+        groupGraphs.setScaleY(factor);
+
+        Bounds b = groupGraphs.getLayoutBounds();
+        background.setWidth(b.getWidth() * factor);
+        background.setHeight(b.getHeight() * factor);
+        labelZoom.setText(String.format("%.2fx", factor));
     }
 
     // MENUBAR BUTTONS
@@ -195,16 +257,15 @@ public class Controller implements Initializable {
 
     @FXML
     protected void onMenuButtonContributorsClick() {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         StringBuilder text = new StringBuilder();
-        InputStream stream = classloader.getResourceAsStream("credits.txt");
+        InputStream stream = ResourceLoader.get("credits.txt");
         if (stream == null) return;
         Scanner scanner = new Scanner(stream);
         while (scanner.hasNext()) {
             text.append("\n").append(scanner.nextLine());
         }
         Alert alert = new Alert(Alert.AlertType.NONE, text.toString(), ButtonType.CLOSE);
-        alert.setTitle("Mitwirkende");
+        alert.setTitle("Credits");
         alert.showAndWait();
     }
 
@@ -227,7 +288,7 @@ public class Controller implements Initializable {
         if (file == null) {
             return;
         }
-        Platform.runLater(() -> {
+        new Thread(() -> {
             try {
                 Graph graph = SerializeService.loadGraph(file.getAbsolutePath());
                 callback.accept(graph);
@@ -235,7 +296,7 @@ public class Controller implements Initializable {
                 showError(loadingError);
                 e.printStackTrace();
             }
-        });
+        }).start();
     }
 
     /**
@@ -261,14 +322,14 @@ public class Controller implements Initializable {
         if (file == null) {
             return;
         }
-        Platform.runLater(() -> {
+        new Thread(() -> {
             try {
                 SerializeService.saveGraph(graph, file.getAbsolutePath());
             } catch (IOException e) {
                 showError(savingError);
                 e.printStackTrace();
             }
-        });
+        }).start();
     }
 
     /**
@@ -295,13 +356,13 @@ public class Controller implements Initializable {
                 return;
             }
         }
-        Platform.runLater(() -> {
+        new Thread(() -> {
             XmlParser p = new XmlParser(file.getAbsolutePath());
             Graph g = p.getGraph();
             GraphShrinker s = new GraphShrinker(g);
             s.shrinkGraph();
             callback.accept(s.getMinimizedGraph());
-        });
+        }).start();
     }
 
     // file: borders
@@ -411,41 +472,45 @@ public class Controller implements Initializable {
     // MISCELLANEOUS
 
     private void setJunctions(List<Vertex> vertices) {
-        this.junctions = new HashMap<>();
-        GeoBounds bounds = new GeoBounds(Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MAX_VALUE);
-        for (Vertex v : vertices) {
+        new Thread(() -> {
+            this.junctions = new HashMap<>();
+            GeoBounds bounds = new GeoBounds(Double.MAX_VALUE, Double.MIN_VALUE, Double.MIN_VALUE, Double.MAX_VALUE);
+            for (Vertex v : vertices) {
 
-            // expand viewport if necessary
-            if (v.getLat() < bounds.getNorth()) bounds.setNorth(v.getLat());
-            if (v.getLat() > bounds.getSouth()) bounds.setSouth(v.getLat());
-            if (v.getLon() < bounds.getWest()) bounds.setWest(v.getLon());
-            if (v.getLon() > bounds.getEast()) bounds.setEast(v.getLon());
+                // expand viewport if necessary
+                if (v.getLat() < bounds.getNorth()) bounds.setNorth(v.getLat());
+                if (v.getLat() > bounds.getSouth()) bounds.setSouth(v.getLat());
+                if (v.getLon() < bounds.getWest()) bounds.setWest(v.getLon());
+                if (v.getLon() > bounds.getEast()) bounds.setEast(v.getLon());
 
-            // sorry :P
-            List<String> forbidden = List.of(
-                    "",
-                    "kreuz",
-                    "rasthof",
-                    "dreieck",
-                    "kreuzung",
-                    "rastplatz",
-                    "darmstädter",
-                    "autobahnkreuz",
-                    "autobahndreieck"
-            );
+                // sorry :P
+                List<String> forbidden = List.of(
+                        "",
+                        "kreuz",
+                        "rasthof",
+                        "dreieck",
+                        "kreuzung",
+                        "rastplatz",
+                        "darmstädter",
+                        "autobahnkreuz",
+                        "autobahndreieck"
+                );
 
-            if (v.getJunction() && v.getIdentifier() != null && !forbidden.contains(v.getIdentifier())) {
-                junctions.put(v.getIdentifier(), v);
-                inputStart.getItems().add(v.getIdentifier());
-                inputDestination.getItems().add(v.getIdentifier());
+                if (v.getJunction() && v.getIdentifier() != null && !forbidden.contains(v.getIdentifier())) {
+                    junctions.put(v.getIdentifier(), v);
+                    inputStart.getItems().add(v.getIdentifier());
+                    inputDestination.getItems().add(v.getIdentifier());
+                }
             }
-        }
-        display.setGeoBounds(bounds);
+        }).start();
+        //display.setGeoBounds(bounds);
     }
 
     private void showError(String text) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, text, ButtonType.CLOSE);
-        alert.setTitle("Fehler");
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR, text, ButtonType.CLOSE);
+            alert.setTitle("Fehler");
+            alert.showAndWait();
+        });
     }
 }

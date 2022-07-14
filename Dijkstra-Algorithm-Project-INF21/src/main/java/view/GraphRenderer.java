@@ -1,21 +1,15 @@
 package view;
 
-import com.almasb.fxgl.entity.level.tiled.Layer;
-import javafx.geometry.Dimension2D;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.shape.StrokeLineJoin;
 import model.Edge;
 import model.GeoBounds;
 import model.Graph;
 import model.Vertex;
 import service.MercatorProjector;
-
-import java.util.HashMap;
-import java.util.List;
 
 public class GraphRenderer {
 
@@ -30,20 +24,22 @@ public class GraphRenderer {
      */
     public GraphRenderer(GeoBounds geoBounds) {
         this.geoBounds = geoBounds;
-        this.projector = new MercatorProjector(geoBounds.getNorth(), geoBounds.getWest());
+        this.projector = new MercatorProjector(geoBounds.getSouth(), geoBounds.getWest());
     }
 
-    public void render(GraphLayer layer, Canvas canvas) {
+    public Canvas render(GraphLayer layer) {
+        Canvas canvas = new Canvas(
+                projector.getX(geoBounds.getEast()) * 12000,
+                projector.getY(geoBounds.getNorth()) * 2000
+        );
         Graph graph = layer.getGraph();
         GraphRendererOptions options = layer.getOptions();
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setLineJoin(StrokeLineJoin.ROUND);
+        gc.setLineCap(StrokeLineCap.ROUND);
 
         double w = canvas.getWidth();
         double h = canvas.getHeight();
-
-        gc.setStroke(Color.GRAY);
-        gc.setLineWidth(20);
-        gc.strokeRect(0, 0, w, h);
 
         // draw edges
         for (Edge e : graph.getEdgeList()) {
@@ -94,32 +90,33 @@ public class GraphRenderer {
 
                 gc.setFont(options.getFont());
                 Color color = options.getLabelColor();
-                gc.setStroke(color);
-                gc.fillText(v.getIdentifier(), x + 1.5 * options.getDotRadius(), y);
-                gc.setStroke(new Color(1-color.getRed(), 1-color.getGreen(), 1-color.getBlue(), 1));
-                gc.fillText(v.getIdentifier(), x + 1.5 * options.getDotRadius() + 2, y + 2);
+                double offset = options.getFont().getSize() / 20d;
+                gc.setFill(new Color(1-color.getRed(), 1-color.getGreen(), 1-color.getBlue(), 1));
+                gc.fillText(v.getIdentifier(), x+options.getDotRadius()+offset, y+offset);
+                gc.setFill(color);
+                gc.fillText(v.getIdentifier(), x+options.getDotRadius(), y);
             }
         }
+        return canvas;
     }
 
     /**
      * Renders the given {@code GraphLayer} onto the given canvas.
      * @param layer The {@code GraphLayer} to be rendered.
-     * @param canvas A {@code Canvas} on which the layer should be rendered.
      * @param geoBounds The geographical viewport.
      */
-    public static void render(GraphLayer layer, Canvas canvas, GeoBounds geoBounds) {
-        new GraphRenderer(geoBounds).render(layer, canvas);
+    public static Canvas render(GraphLayer layer, GeoBounds geoBounds) {
+        return new GraphRenderer(geoBounds).render(layer);
     }
 
     private double getX(double longitude, double width) {
-        //return projector.getX(longitude) / projector.getX(geoBounds.getEast()) * width;
-        return Math.abs(longitude - geoBounds.getWest()) / geoBounds.getWidth() * width;
+        return projector.getX(longitude) / projector.getX(geoBounds.getEast()) * width;
     }
 
     private double getY(double latitude, double height) {
-        //latitude = Math.toDegrees(Math.log(Math.tan(Math.PI/4 + Math.toRadians(latitude)/2)));
-        //return projector.getY(latitude) / projector.getY(geoBounds.getSouth()) * height;
-        return height - (latitude - geoBounds.getSouth()) / geoBounds.getHeight() * height;
+        double geoHeight = projector.getY(geoBounds.getNorth()) - projector.getY(geoBounds.getSouth());
+        double yFromBottom = projector.getY(latitude) - projector.getY(geoBounds.getSouth());
+        double yFromTop = geoHeight - yFromBottom;
+        return yFromTop / geoHeight * height;
     }
 }

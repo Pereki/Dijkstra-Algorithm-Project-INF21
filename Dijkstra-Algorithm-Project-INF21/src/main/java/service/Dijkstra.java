@@ -38,6 +38,7 @@ public static GraphWay getShortWay(Graph rawGraph, Vertex start,Vertex target) t
             marked.add(edge);
         }
         possibleGraphWays.remove(shortestGraphWay); //remove the way to the actual vertex
+        if (possibleGraphWays.size() == 0) return null;
         shortestGraphWay = possibleGraphWays.get(0);
         for(GraphWay graphWay : possibleGraphWays){ //get the new shortest way
             if(graphWay.getLength()< shortestGraphWay.getLength()){
